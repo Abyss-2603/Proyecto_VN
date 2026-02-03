@@ -1,0 +1,4 @@
+*.rpyc
+/cache/
+/saves/
+/tmp/
