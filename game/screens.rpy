@@ -75,7 +75,10 @@ style frame:
     padding gui.frame_borders.padding
     background Frame("gui/frame.png", gui.frame_borders, tile=gui.frame_tile)
 
-
+## Transformación para convertir imágenes gigantes en miniaturas
+transform miniatura_galeria:
+    xysize (360, 203)  # Forzamos un tamaño pequeño (formato 16:9)
+    fit "cover"          # Esto asegura que la imagen rellene el hueco sin deformarse
 
 ################################################################################
 ## Pantallas internas del juego
@@ -347,64 +350,273 @@ style navigation_button_text:
 ## Pantalla del menú principal #################################################
 ##
 ## Usado para mostrar el menú principal cuando Ren'Py arranca.
-##
-## https://www.renpy.org/doc/html/screen_special.html#main-menu
-
 screen main_menu():
 
     ## Esto asegura que cualquier otra pantalla de menu es remplazada.
     tag menu
 
-    add gui.main_menu_background
+    ## 1. EL FONDO
+    add "fondo_menu.png": 
+        xysize(1920, 1080) #Se fuerza el tamaño de la imagen
 
-    ## Este marco vacío oscurece el menu principal.
+    ## 2. EL TÍTULO
+    text "Proyecto WASD":
+        font "gui/fonts/Micro5.ttf"
+        size 150
+        color "#ffffff"
+        xalign 0.5
+        ypos 100
+        outlines [(4, "#000000", 0, 0)]
+
+    ## 3. LOS BOTONES 
+    vbox:
+        xalign 0.5
+        yalign 0.6
+        spacing 20
+        
+        textbutton "Nueva Partida" action ShowMenu("confirmacion_inicio") text_style "menu_texto" style "menu_caja"
+        textbutton "Cargar Partida" action ShowMenu("load") text_style "menu_texto" style "menu_caja"
+        textbutton "Galería" action ShowMenu("gallery") text_style "menu_texto" style "menu_caja"
+        textbutton "Opciones" action ShowMenu("preferences") text_style "menu_texto" style "menu_caja"
+        textbutton "Salir" action Quit(confirm=not main_menu) text_style "menu_texto" style "menu_caja"
+
+
+## ESTILOS PERSONALIZADOS PARA MENÚ
+## 1. ESTILO PARA LA CAJA
+style menu_caja:
+    xsize 600               
+    ysize 70
+    xalign 0.5                 
+    ypadding 0              
+    hover_background Solid("#333333") 
+    hover_yoffset 4
+    
+
+## 2. ESTILO PARA EL TEXTO
+style menu_texto:
+    font "gui/fonts/Micro5.ttf"
+    size 70
+    color "#aaaaaa"
+    hover_color "#ffffff"
+    outlines [(2, "#000000", 0, 0)]
+    
+    xalign 0.5                 
+    text_align 0.5             
+
+## --- PANTALLA DE AVISO (antes del menú) ---
+
+screen aviso_legal():
+
+    modal True
+
+    ## 1. El Fondo
+    add "fondo_menu.png": 
+        xysize(1920, 1080) #Se fuerza el tamaño de la imagen
+
+    ## 2. El cuadro negro central
     frame:
-        style "main_menu_frame"
-
-    ## La sentencia 'use' incluye otra pantalla dentro de esta. El contenido
-    ## real del menú principal está en la pantalla de navegación.
-    use navigation
-
-    if gui.show_name:
+        background "#000000" 
+        xalign 0.5
+        yalign 0.5
+        padding (80, 60) 
+        xsize 1000  
 
         vbox:
-            style "main_menu_vbox"
+            spacing 40
+            xalign 0.5
 
-            text "[config.name!t]":
-                style "main_menu_title"
+            ## TÍTULO "Aviso"
+            text "Aviso":
+                font "gui/fonts/Jacquard24.ttf"
+                size 110
+                color "#ffffff"
+                xalign 0.5
 
-            text "[config.version]":
-                style "main_menu_version"
+            ## EL TEXTO LEGAL
+            text ("Este juego recopilará y almacenará algunos de los datos "
+                "introducidos por el jugador con el fin de mejorar la experiencia de juego.\n\n"
+                "Al continuar, aceptas que los datos introducidos (como dirección de "
+                "correo electrónico u otra información) podrán ser utilizados dentro "
+                "de la experiencia interactiva.\n"
+                "¿Deseas continuar?"):
+                font "gui/fonts/Jacquard24.ttf"
+                size 45
+                color "#ffffff"
+                text_align 0.5
+                layout "subtitle"
+                xalign 0.5
 
+            ## BOTÓN ACEPTAR
+            imagebutton:
+                # La imagen normal
+                idle Transform("images/boton_aceptar_blanco.png", zoom=0.2)
+                # La imagen al pasar el ratón
+                hover Transform ("images/boton_aceptar_rojo.png", zoom=0.2)
+    
+                focus_mask True
 
-style main_menu_frame is empty
-style main_menu_vbox is vbox
-style main_menu_text is gui_text
-style main_menu_title is main_menu_text
-style main_menu_version is main_menu_text
+                action Return()
+                xalign 0.5
 
-style main_menu_frame:
-    xsize 420
-    yfill True
+#Pantalla de galería 
+screen gallery():
+    tag menu
 
-    background "gui/overlay/main_menu.png"
+    ## 1. Fondo
+    add "fondo_menu.png":
+        xysize(1920, 1080)
 
-style main_menu_vbox:
-    xalign 1.0
-    xoffset -30
-    xmaximum 1200
-    yalign 1.0
-    yoffset -30
+    ## 2. Título
+    text "Galería de Imágenes":
+        font "gui/fonts/Jacquard24.ttf"
+        size 90
+        xalign 0.5
+        ypos 50
+        color "#ffffff"
+        outlines [(3, "#000000", 0, 0)]
 
-style main_menu_text:
-    properties gui.text_properties("main_menu", accent=True)
+    ## 3. EL MARCO GRIS (Contenedor)
+    frame:
+        background Solid("#000000aa")
+        xalign 0.5
+        yalign 0.55
+        padding (40, 40) 
+        
+        ## LA CUADRÍCULA
+        grid 4 2:
+            spacing 30 
+            
+            # --- IMAGEN 1 ---
+            vbox: 
+                xalign 0.5 
+                spacing 10
+                
+                # La Foto / Botón
+                if renpy.seen_image("cg1"):
+                    add g.make_button("cg1", "images/cg1_mini.png") at miniatura_galeria
+                else:
+                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                
+                # El Texto de abajo
+                text "Imagen 1":
+                    font "gui/fonts/Jacquard24.ttf"
+                    size 40
+                    color "#ffffff"
+                    xalign 0.5 
 
-style main_menu_title:
-    properties gui.text_properties("title")
+            # --- IMAGEN 2 ---
+            vbox:
+                xalign 0.5
+                spacing 10
+                if renpy.seen_image("cg2"):
+                    add g.make_button("cg2", "images/cg2_mini.png") at miniatura_galeria
+                else:
+                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                
+                text "Imagen 2":
+                    font "gui/fonts/Jacquard24.ttf"
+                    size 40
+                    color "#ffffff"
+                    xalign 0.5
 
-style main_menu_version:
-    properties gui.text_properties("version")
+            # --- IMAGEN 3 ---
+            vbox:
+                xalign 0.5
+                spacing 10
+                if renpy.seen_image("cg3"):
+                    add g.make_button("cg3", "images/cg3_mini.png") at miniatura_galeria
+                else:
+                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                
+                text "Imagen 3":
+                    font "gui/fonts/Jacquard24.ttf"
+                    size 40
+                    color "#ffffff"
+                    xalign 0.5
 
+            # --- IMAGEN 4 ---
+            vbox:
+                xalign 0.5
+                spacing 10
+                if renpy.seen_image("cg4"):
+                    add g.make_button("cg4", "images/cg4_mini.png") at miniatura_galeria
+                else:
+                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                
+                text "Imagen 4":
+                    font "gui/fonts/Jacquard24.ttf"
+                    size 40
+                    color "#ffffff"
+                    xalign 0.5
+
+            # --- IMAGEN 5 ---
+            vbox:
+                xalign 0.5
+                spacing 10
+                if renpy.seen_image("cg5"):
+                    add g.make_button("cg5", "images/cg5_mini.png") at miniatura_galeria
+                else:
+                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                
+                text "Imagen 5":
+                    font "gui/fonts/Jacquard24.ttf"
+                    size 40
+                    color "#ffffff"
+                    xalign 0.5
+
+            # --- IMAGEN 6 ---
+            vbox:
+                xalign 0.5
+                spacing 10
+                if renpy.seen_image("cg6"):
+                    add g.make_button("cg6", "images/cg6_mini.png") at miniatura_galeria
+                else:
+                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                
+                text "Imagen 6":
+                    font "gui/fonts/Jacquard24.ttf"
+                    size 40
+                    color "#ffffff"
+                    xalign 0.5
+
+            # --- IMAGEN 7 ---
+            vbox:
+                xalign 0.5
+                spacing 10
+                if renpy.seen_image("cg7"):
+                    add g.make_button("cg7", "images/cg7_mini.png") at miniatura_galeria
+                else:
+                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                
+                text "Imagen 7":
+                    font "gui/fonts/Jacquard24.ttf"
+                    size 40
+                    color "#ffffff"
+                    xalign 0.5
+
+            # --- IMAGEN 8 ---
+            vbox:
+                xalign 0.5
+                spacing 10
+                if renpy.seen_image("cg8"):
+                    add g.make_button("cg8", "images/cg8_mini.png") at miniatura_galeria
+                else:
+                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                
+                text "Imagen 8":
+                    font "gui/fonts/Jacquard24.ttf"
+                    size 40
+                    color "#ffffff"
+                    xalign 0.5
+
+    ## 4. BOTÓN VOLVER
+    imagebutton:        
+        idle Transform("images/boton_volver_blanco.png", zoom=1)
+        hover Transform("images/boton_volver_rojo.png", zoom=1)
+        focus_mask True
+        action Return()
+        xalign 0.5 
+        yalign 0.95
 
 ## Pantalla del menú del juego #################################################
 ##
@@ -1622,3 +1834,67 @@ style slider_vbox:
 style slider_slider:
     variant "small"
     xsize 900
+
+
+transform tamaño_boton_aviso:
+    zoom 0.7  
+    nearest True
+##Pantalla de confirmacion de inicio de partida ##
+screen confirmacion_inicio():
+    tag menu
+    modal True 
+
+    ## 1. Fondo de pantalla (Scanlines)
+    add "fondo_menu.png":
+        xysize(1920, 1080)
+
+    ## 2. EL CONTENEDOR TRANSPARENTE
+    frame:
+        background Solid("#000000aa")      
+        xalign 0.5
+        yalign 0.5
+        xsize 1100
+        padding (60, 60)
+
+        ## 3. CONTENIDO
+        vbox:
+            xalign 0.5
+            spacing 20
+
+            # --- LOS TEXTOS ---
+            text "Todo comienzo implica olvidar." xalign 0.5 font "gui/fonts/Micro5.ttf" size 50 color "#ffffff" outlines [(2, "#000000", 0, 0)]
+            text "Lo que recuerdas ya no te pertenece." xalign 0.5 font "gui/fonts/Micro5.ttf" size 50 color "#ffffff" outlines [(2, "#000000", 0, 0)]
+            text "Una nueva historia requiere un nuevo\ntú." xalign 0.5 text_align 0.5 font "gui/fonts/Micro5.ttf" size 50 color "#ffffff" outlines [(2, "#000000", 0, 0)]
+            text "Tus decisiones definirán la persona que eres en realidad." xalign 0.5 text_align 0.5 font "gui/fonts/Micro5.ttf" size 50 color "#ffffff" outlines [(2, "#000000", 0, 0)]
+            
+            null height 30
+            
+            text "¿Deseas continuar?":
+                xalign 0.5 
+                font "gui/fonts/Micro5.ttf" 
+                size 60 
+                color "#ffffff" 
+                outlines [(2, "#000000", 0, 0)] 
+
+            null height 20
+
+            # --- LOS BOTONES ---
+            hbox:
+                xalign 0.5
+                spacing 80 
+
+                # BOTÓN CANCELAR
+                imagebutton:
+                    idle "images/boton_cancelar_blanco.png"
+                    hover "images/boton_cancelar_rojo.png"
+                    action Return()
+                    at tamaño_boton_aviso 
+                    hover_yoffset 4
+
+                # BOTÓN CONTINUAR
+                imagebutton:
+                    idle "images/boton_continuar_blanco.png"
+                    hover "images/boton_continuar_rojo.png"
+                    action Start()
+                    at tamaño_boton_aviso
+                    hover_yoffset 4

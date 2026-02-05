@@ -1,5 +1,23 @@
 ﻿# Coloca el código de tu juego en este archivo.
 
+# Pantalla inicial de aviso legal
+label splashscreen:
+    
+    call screen aviso_legal
+    pause 0.4
+
+    #Con esto continuamos al menu
+    return
+
+#Definir la galería con el block
+image imagenBloqueada:
+    #estado normal
+    "images/boton_block.png"
+    on hover:
+        "images/boton_block_seleccionado.png"
+    on idle:
+        "images/boton_block.png"
+
 # Declara los personajes usados en el juego como en el ejemplo:
 
 define e = Character("Eileen")
