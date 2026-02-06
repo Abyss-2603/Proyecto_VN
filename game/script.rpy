@@ -6,45 +6,37 @@ label splashscreen:
     call screen aviso_legal
     pause 0.4
 
-    #Con esto continuamos al menu
     return
 
-#Definir la galería con el block
+# --- VARIABLES de Inicio de Sesión y Registro ---
+default pc_usuario = ""
+default pc_email = ""
+default pc_pass = ""
+default pc_pass_confirm = ""
+
+default registro_completado = False
+
+#Galería con imagen de block
 image imagenBloqueada:
-    #estado normal
-    "images/boton_block.png"
+    "images/menus/boton_block.png"
     on hover:
-        "images/boton_block_seleccionado.png"
+        "images/menus/boton_block_seleccionado.png"
     on idle:
-        "images/boton_block.png"
+        "images/menus/boton_block.png"
 
-# Declara los personajes usados en el juego como en el ejemplo:
-
-define e = Character("Eileen")
-
-
-# El juego comienza aquí.
 
 label start:
-
-    # Muestra una imagen de fondo: Aquí se usa un marcador de posición por
-    # defecto. Es posible añadir un archivo en el directorio 'images' con el
-    # nombre "bg room.png" or "bg room.jpg" para que se muestre aquí.
-
-    scene bg room
-
-    # Muestra un personaje: Se usa un marcador de posición. Es posible
-    # reemplazarlo añadiendo un archivo llamado "eileen happy.png" al directorio
-    # 'images'.
-
-    show eileen happy
-
-    # Presenta las líneas del diálogo.
-
-    e "Has creado un nuevo juego Ren'Py."
-
-    e "Añade una historia, imágenes y música, ¡y puedes presentarlo al mundo!"
-
-    # Finaliza el juego:
-
-    return
+    # Llamada pantalla registro
+    # Iniciar Variables de registro
+    python:
+        if not hasattr(store, 'pc_usuario'): store.pc_usuario = ""
+        if not hasattr(store, 'pc_email'): store.pc_email = ""
+        if not hasattr(store, 'pc_pass'): store.pc_pass = ""
+        if not hasattr(store, 'pc_pass_confirm'): store.pc_pass_confirm = ""
+    call screen registro_pc 
+    # El juego NO pasará de aquí hasta que el registro sea exitoso
+    
+    scene bg habitacion
+    "Registro completado. Bienvenido, [pc_usuario]."
+    
+    # Aquí sigue el juego normal...

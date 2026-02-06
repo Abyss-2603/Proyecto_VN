@@ -4,7 +4,7 @@ init python:
 
     # 2. Definimos qué imagen se usa cuando el hueco está CERRADO
     # Aquí es donde Ren'Py usará tu imagen negra "Block" automáticamente
-    g.locked_button = "images/boton_block.png"
+    g.locked_button = "images/menus/boton_block.png"
     
     # 3. Transición suave al abrir una foto (para el futuro)
     g.transition = dissolve

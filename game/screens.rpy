@@ -356,7 +356,7 @@ screen main_menu():
     tag menu
 
     ## 1. EL FONDO
-    add "fondo_menu.png": 
+    add "images/menus/fondo_menu.png": 
         xysize(1920, 1080) #Se fuerza el tamaño de la imagen
 
     ## 2. EL TÍTULO
@@ -410,8 +410,8 @@ screen aviso_legal():
     modal True
 
     ## 1. El Fondo
-    add "fondo_menu.png": 
-        xysize(1920, 1080) #Se fuerza el tamaño de la imagen
+    add "images/menus/fondo_menu.png": 
+        xysize(1920, 1080)
 
     ## 2. El cuadro negro central
     frame:
@@ -448,10 +448,8 @@ screen aviso_legal():
 
             ## BOTÓN ACEPTAR
             imagebutton:
-                # La imagen normal
-                idle Transform("images/boton_aceptar_blanco.png", zoom=0.2)
-                # La imagen al pasar el ratón
-                hover Transform ("images/boton_aceptar_rojo.png", zoom=0.2)
+                idle Transform("images/menus/boton_aceptar_blanco.png", zoom=0.2)
+                hover Transform ("images/menus/boton_aceptar_rojo.png", zoom=0.2)
     
                 focus_mask True
 
@@ -463,7 +461,7 @@ screen gallery():
     tag menu
 
     ## 1. Fondo
-    add "fondo_menu.png":
+    add "images/menus/fondo_menu.png":
         xysize(1920, 1080)
 
     ## 2. Título
@@ -491,13 +489,12 @@ screen gallery():
                 xalign 0.5 
                 spacing 10
                 
-                # La Foto / Botón
+                # Botón
                 if renpy.seen_image("cg1"):
                     add g.make_button("cg1", "images/cg1_mini.png") at miniatura_galeria
                 else:
-                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
                 
-                # El Texto de abajo
                 text "Imagen 1":
                     font "gui/fonts/Jacquard24.ttf"
                     size 40
@@ -511,7 +508,7 @@ screen gallery():
                 if renpy.seen_image("cg2"):
                     add g.make_button("cg2", "images/cg2_mini.png") at miniatura_galeria
                 else:
-                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
                 
                 text "Imagen 2":
                     font "gui/fonts/Jacquard24.ttf"
@@ -526,7 +523,7 @@ screen gallery():
                 if renpy.seen_image("cg3"):
                     add g.make_button("cg3", "images/cg3_mini.png") at miniatura_galeria
                 else:
-                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
                 
                 text "Imagen 3":
                     font "gui/fonts/Jacquard24.ttf"
@@ -541,7 +538,7 @@ screen gallery():
                 if renpy.seen_image("cg4"):
                     add g.make_button("cg4", "images/cg4_mini.png") at miniatura_galeria
                 else:
-                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
                 
                 text "Imagen 4":
                     font "gui/fonts/Jacquard24.ttf"
@@ -556,7 +553,7 @@ screen gallery():
                 if renpy.seen_image("cg5"):
                     add g.make_button("cg5", "images/cg5_mini.png") at miniatura_galeria
                 else:
-                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
                 
                 text "Imagen 5":
                     font "gui/fonts/Jacquard24.ttf"
@@ -571,7 +568,7 @@ screen gallery():
                 if renpy.seen_image("cg6"):
                     add g.make_button("cg6", "images/cg6_mini.png") at miniatura_galeria
                 else:
-                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
                 
                 text "Imagen 6":
                     font "gui/fonts/Jacquard24.ttf"
@@ -586,7 +583,7 @@ screen gallery():
                 if renpy.seen_image("cg7"):
                     add g.make_button("cg7", "images/cg7_mini.png") at miniatura_galeria
                 else:
-                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
                 
                 text "Imagen 7":
                     font "gui/fonts/Jacquard24.ttf"
@@ -601,7 +598,7 @@ screen gallery():
                 if renpy.seen_image("cg8"):
                     add g.make_button("cg8", "images/cg8_mini.png") at miniatura_galeria
                 else:
-                    imagebutton idle "images/boton_block.png" hover "images/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
+                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
                 
                 text "Imagen 8":
                     font "gui/fonts/Jacquard24.ttf"
@@ -611,8 +608,8 @@ screen gallery():
 
     ## 4. BOTÓN VOLVER
     imagebutton:        
-        idle Transform("images/boton_volver_blanco.png", zoom=1)
-        hover Transform("images/boton_volver_rojo.png", zoom=1)
+        idle Transform("images/menus/boton_volver_blanco.png", zoom=1)
+        hover Transform("images/menus/boton_volver_rojo.png", zoom=1)
         focus_mask True
         action Return()
         xalign 0.5 
@@ -1839,13 +1836,13 @@ style slider_slider:
 transform tamaño_boton_aviso:
     zoom 0.7  
     nearest True
-##Pantalla de confirmacion de inicio de partida ##
+##Pantalla de confirmacion de inicio ##
 screen confirmacion_inicio():
     tag menu
     modal True 
 
     ## 1. Fondo de pantalla (Scanlines)
-    add "fondo_menu.png":
+    add "images/menus/fondo_menu.png":
         xysize(1920, 1080)
 
     ## 2. EL CONTENEDOR TRANSPARENTE
@@ -1885,16 +1882,139 @@ screen confirmacion_inicio():
 
                 # BOTÓN CANCELAR
                 imagebutton:
-                    idle "images/boton_cancelar_blanco.png"
-                    hover "images/boton_cancelar_rojo.png"
+                    idle "images/menus/boton_cancelar_blanco.png"
+                    hover "images/menus/boton_cancelar_rojo.png"
                     action Return()
                     at tamaño_boton_aviso 
                     hover_yoffset 4
 
                 # BOTÓN CONTINUAR
                 imagebutton:
-                    idle "images/boton_continuar_blanco.png"
-                    hover "images/boton_continuar_rojo.png"
+                    idle "images/menus/boton_continuar_blanco.png"
+                    hover "images/menus/boton_continuar_rojo.png"
                     action Start()
                     at tamaño_boton_aviso
                     hover_yoffset 4
+
+################################################################################
+## PANTALLA DE REGISTRO - CORREGIDA
+################################################################################
+
+## 1. EL TRANSFORMADOR
+transform forzar_tamano_icono:
+    xysize (50, 50) 
+    fit "contain"   
+    xalign 0.98     
+    yalign 0.5    
+
+style input_texto_pc:
+    font "gui/fonts/VT323.ttf" 
+    size 35
+    color "#555555" 
+    xalign 0.0
+    yalign 0.5
+
+style texto_placeholder:
+    font "gui/fonts/VT323.ttf"
+    size 35
+    color "#aaaaaa"
+    xalign 0.0
+    yalign 0.5
+
+## 2. EL ESTILO DE LA CAJA
+style caja_blanca:
+    background Solid("#ffffff") 
+    xsize 600
+    ysize 60
+    padding (20, 0) 
+    xalign 0.5
+
+screen registro_pc():
+    modal True
+    tag menu 
+
+    add "images/inicio_sesion/imagen_login_fondo.png":
+        xysize(1920, 1080)
+
+    vbox:
+        xalign 0.5
+        yalign 0.45
+        spacing 20
+
+        # Avatar
+        add "images/inicio_sesion/imagen_login_perfil.png":
+            xalign 0.5
+            xysize (150, 150)
+            fit "contain"
+        
+        text "Registro de Usuario":
+            font "gui/fonts/VT323.ttf"
+            size 50
+            xalign 0.5
+            color "#ffffff"
+
+        null height 10
+
+        # --- CAMPO 1: USUARIO ---
+        frame:
+            style "caja_blanca"
+            
+            fixed:
+                yalign 0.5
+                if pc_usuario == "":
+                    text "Nombre de Usuario" style "texto_placeholder"
+                
+                input value VariableInputValue("pc_usuario") length 15 style "input_texto_pc" xfill True ysize 60
+
+        # --- CAMPO 2: EMAIL ---
+        frame:
+            style "caja_blanca"
+
+            fixed:
+                yalign 0.5
+                
+                if pc_email == "":
+                    text "Correo Electrónico" style "texto_placeholder"
+
+                input value VariableInputValue("pc_email") length 40 style "input_texto_pc" xsize 510 ysize 60
+
+                add "images/inicio_sesion/nota_login.png" at forzar_tamano_icono  
+
+        # --- CAMPO 3: CONTRASEÑA ---
+        frame:
+            style "caja_blanca"
+
+            fixed:
+                yalign 0.5
+                if pc_pass == "":
+                    text "Contraseña" style "texto_placeholder"
+                
+                input value VariableInputValue("pc_pass") length 20 mask "*" style "input_texto_pc" xfill True ysize 60
+
+        # --- CAMPO 4: CONFIRMAR CONTRASEÑA ---
+        frame:
+            style "caja_blanca"
+
+            fixed:
+                yalign 0.5
+                if pc_pass_confirm == "":
+                    text "Confirmar Contraseña" style "texto_placeholder"
+                
+                input value VariableInputValue("pc_pass_confirm") length 20 mask "*" style "input_texto_pc" xfill True ysize 60
+
+        null height 30
+
+        # --- BOTÓN COMPLETAR ---
+        imagebutton:
+            idle Transform("images/inicio_sesion/boton_completar_registro.png", zoom=2)
+            hover Transform("images/inicio_sesion/boton_completar_registro_activo.png", zoom=2)
+            xalign 0.5
+            
+            action If(
+                pc_usuario != "" and pc_pass != "" and pc_pass == pc_pass_confirm,
+                true=[
+                    Function(conectar_registro, pc_usuario, pc_email, pc_pass),
+                    If(registro_msg == "¡Éxito! Cuenta creada.", Return())
+                ],
+                false=Notify("Revisa los datos.")
+            )

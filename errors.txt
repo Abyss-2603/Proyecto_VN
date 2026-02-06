@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 1859: 'outlines' is not a keyword argument or valid child of the frame statement.
-    outlines [(4, "#000000", 0, 0)]
-            ^
+File "game/screens.rpy", line 2022: 'zoom' is not a keyword argument or valid child of the imagebutton statement.
+    zoom 0.2
+        ^
 
 Ren'Py Version: Ren'Py 8.5.0.25111603
-Thu Feb  5 03:21:32 2026
+Fri Feb  6 14:17:54 2026
