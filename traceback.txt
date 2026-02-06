@@ -1,25 +1,31 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 48, in script
+  File "game/script.rpy", line 36, in script
     call screen registro_pc
-  File "game/screens.rpy", line 1922, in execute
+  File "game/screens.rpy", line 1955, in execute
     screen registro_pc():
-  File "game/screens.rpy", line 1922, in execute
+  File "game/screens.rpy", line 1955, in execute
     screen registro_pc():
-  File "game/screens.rpy", line 1928, in execute
-    on "show" action [
-  File "game/screens.rpy", line 1928, in keywords
-    on "show" action [
-  File "game/screens.rpy", line 1929, in <module>
-    SetVariable("pc_usuario", pc_usuario if defined("pc_usuario") else ""),
-                                            ^^^^^^^                        
-NameError: name 'defined' is not defined. Did you mean: 'define'?
+  File "game/screens.rpy", line 1967, in execute
+    vbox:
+  File "game/screens.rpy", line 2007, in execute
+    if foco_actual == "email":
+  File "game/screens.rpy", line 2017, in execute
+    button:
+  File "game/screens.rpy", line 2021, in execute
+    fixed:
+  File "game/screens.rpy", line 2033, in execute
+    if mostrar_aviso:
+  File "game/screens.rpy", line 2033, in <module>
+    if mostrar_aviso:
+       ^^^^^^^^^^^^^ 
+NameError: name 'mostrar_aviso' is not defined
 
 -- Full Traceback ------------------------------------------------------------
 
 Traceback (most recent call last):
-  File "game/script.rpy", line 48, in script
+  File "game/script.rpy", line 36, in script
     call screen registro_pc
   File "renpy/ast.py", line 2241, in execute
     self.call("execute")
@@ -73,26 +79,32 @@ Traceback (most recent call last):
   File "renpy/display/screen.py", line 715, in update
     self.screen.function(**self.scope)
     ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
-  File "game/screens.rpy", line 1922, in execute
+  File "game/screens.rpy", line 1955, in execute
     screen registro_pc():
-  File "game/screens.rpy", line 1922, in execute
+  File "game/screens.rpy", line 1955, in execute
     screen registro_pc():
-  File "game/screens.rpy", line 1928, in execute
-    on "show" action [
-  File "game/screens.rpy", line 1928, in keywords
-    on "show" action [
+  File "game/screens.rpy", line 1967, in execute
+    vbox:
+  File "game/screens.rpy", line 2007, in execute
+    if foco_actual == "email":
+  File "game/screens.rpy", line 2017, in execute
+    button:
+  File "game/screens.rpy", line 2021, in execute
+    fixed:
+  File "game/screens.rpy", line 2033, in execute
+    if mostrar_aviso:
   File "renpy/python.py", line 1305, in py_eval
     return py_eval_bytecode(code, globals, locals)
            ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
   File "renpy/python.py", line 1298, in py_eval_bytecode
     return eval(bytecode, globals, locals)
            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "game/screens.rpy", line 1929, in <module>
-    SetVariable("pc_usuario", pc_usuario if defined("pc_usuario") else ""),
-                                            ^^^^^^^                        
-NameError: name 'defined' is not defined. Did you mean: 'define'?
+  File "game/screens.rpy", line 2033, in <module>
+    if mostrar_aviso:
+       ^^^^^^^^^^^^^ 
+NameError: name 'mostrar_aviso' is not defined
 
 Windows-10-10.0.19045-SP0 AMD64
 Ren'Py 8.5.2.26010301
 Proyecto_VN 1.0
-Fri Feb  6 17:49:08 2026
+Fri Feb  6 19:35:42 2026

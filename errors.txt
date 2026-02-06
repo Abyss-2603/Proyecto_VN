@@ -2,9 +2,8 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 1973: 'mouse' is not a keyword argument or valid child of the text statement.
-    mouse False
-         ^
+File "game/screens.rpy", line 2080: Indentation mismatch.
+    if foco_actual == "pass":
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Fri Feb  6 18:02:09 2026
+Fri Feb  6 19:46:17 2026

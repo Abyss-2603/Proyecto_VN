@@ -1920,14 +1920,14 @@ style texto_input_activo:
 style texto_placeholder:
     font "gui/fonts/VT323.ttf"
     size 35
-    color "#aaaaaa" # Gris claro
+    color "#aaaaaa" 
     xalign 0.0
     yalign 0.5
 
 style texto_valor_fijo:
     font "gui/fonts/VT323.ttf"
     size 35
-    color "#555555" # Gris oscuro
+    color "#555555" 
     xalign 0.0
     yalign 0.5
 
@@ -1939,10 +1939,45 @@ style caja_blanca_base:
     xalign 0.5
 
 transform icono_nota:
-    xysize (40, 40)
+    xysize (60, 60)
     fit "contain"
     xalign 0.98
     yalign 0.5
+
+transform estilo_bocadillo:
+    zoom 0.5
+    anchor (0.0, 1.0)
+    xpos 590
+    ypos -10
+    on show:
+        alpha 0.0 yoffset 20 
+        easein 0.3 alpha 1.0 yoffset 0 
+    on hide:
+        easeout 0.2 alpha 0.0 yoffset 10 
+
+transform aparicion_bocadillo:
+    on show:
+        alpha 0.0
+        easein 0.2 alpha 1.0
+    on hide:
+        easeout 0.2 alpha 0.0
+
+transform icono_externo:
+    xysize (60, 60)
+    fit "contain"
+    xpos 610 
+    yalign 0.5
+
+transform estilo_bocadillo_externo:
+    zoom 0.5
+    anchor (0.0, 1.0)
+    xpos 640
+    ypos 10
+    on show:
+        alpha 0.0 yoffset 20 
+        easein 0.3 alpha 1.0 yoffset 0 
+    on hide:
+        easeout 0.2 alpha 0.0 yoffset 10
 
 # --- 3. PANTALLA ---
 screen registro_pc():
@@ -1952,6 +1987,8 @@ screen registro_pc():
     # Controla quién tiene el turno para escribir.
     default foco_actual = "None"
 
+    default mostrar_aviso = False
+
     on "show" action Function(check_vars_safe)
 
     add "images/inicio_sesion/imagen_login_fondo.png":
@@ -1959,12 +1996,12 @@ screen registro_pc():
 
     vbox:
         xalign 0.5
-        yalign 0.45
+        yalign 0.35
         spacing 25
 
         add "images/inicio_sesion/imagen_login_perfil.png":
             xalign 0.5
-            xysize (130, 130)
+            xysize (350, 350)
             fit "contain"
         
         text "Registro de Usuario":
@@ -1994,31 +2031,39 @@ screen registro_pc():
                 else:
                     text "[pc_usuario]" style "texto_valor_fijo"
 
+        #==========================================================
+        # CAJA 2: EMAIL (CORREGIDA Y LIMPIA)
         # =========================================================
-        # CAJA 2: EMAIL
-        # =========================================================
-        if foco_actual == "email":
-            # ACTIVO
-            frame:
-                style "caja_blanca_base"
-                fixed:
-                    yalign 0.5
-                    input value VariableInputValue("pc_email") style "texto_input_activo" length 40 xsize 520 yfill True
-                    add "images/inicio_sesion/nota_login.png" at icono_nota
-        else:
-            # INACTIVO (BOTÓN)
-            button:
-                style "caja_blanca_base"
-                action SetScreenVariable("foco_actual", "email")
-                
-                fixed:
-                    yalign 0.5
-                    if pc_email == "":
-                        text "Correo Electrónico" style "texto_placeholder"
-                    else:
-                        text "[pc_email]" style "texto_valor_fijo"
-                    
-                    add "images/inicio_sesion/nota_login.png" at icono_nota
+        fixed:
+            xsize 600 ysize 60 xalign 0.5
+
+            # 1. LÓGICA DE LA CAJA (INPUT O BOTÓN)
+            if foco_actual == "email":
+                # Si estamos escribiendo -> INPUT
+                frame:
+                    style "caja_blanca_base"
+                    input value VariableInputValue("pc_email") style "texto_input_activo" length 40 xsize 600 yfill True
+            else:
+                # Si no estamos escribiendo -> BOTÓN
+                button:
+                    style "caja_blanca_base"
+                    action SetScreenVariable("foco_actual", "email")
+                    fixed:
+                        yalign 0.5
+                        if pc_email == "":
+                            text "Correo Electrónico" style "texto_placeholder"
+                        else:
+                            text "[pc_email]" style "texto_valor_fijo"
+
+            add "images/inicio_sesion/nota_login.png" at icono_externo
+
+            mousearea:
+                area (610, 0, 60, 60) 
+                hovered SetScreenVariable("mostrar_aviso", True)
+                unhovered SetScreenVariable("mostrar_aviso", False)
+
+            if mostrar_aviso:
+                add "images/inicio_sesion/icono_advertencia.png" at estilo_bocadillo_externo
 
         # =========================================================
         # CAJA 3: CONTRASEÑA
