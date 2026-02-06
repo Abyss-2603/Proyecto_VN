@@ -1,44 +1,239 @@
-2026-02-06 13:59:53 UTC
-Windows-11-10.0.26100-SP0
-Ren'Py 8.5.0.25111603
+2026-02-06 17:34:41 UTC
+Windows-10-10.0.19045-SP0
+Ren'Py 8.5.2.26010301
 
-Early init took 26 ms
-Loading error handling took 13 ms
-Loading script took 192 ms
-Loading save slot metadata took 17 ms
+Early init took 100 ms
+Loading error handling took 36 ms
+Loading script took 536 ms
+Loading save slot metadata took 43 ms
 Loading persistent took 0 ms
-Running init code took 24 ms
-Loading analysis data took 2 ms
+Running init code took 121 ms
+Loading analysis data took 0 ms
 Analyze and compile ATL took 0 ms
-Reloading save slot metadata took 8 ms
-Backing up script files to 'C:\\Users\\swort\\AppData\\Roaming/RenPy/backups\\Proyecto_VN':
-Dump and make backups took 26 ms
+Reloading save slot metadata took 46 ms
+Backing up script files to 'C:\\Users\\Abyss\\AppData\\Roaming/RenPy/backups\\Proyecto_VN-1':
+Dump and make backups took 324 ms
 Cleaning cache took 0 ms
 Making clean stores took 0 ms
-Initial gc took 22 ms
-DPI scale factor: 1.750000
+Initial gc took 176 ms
+DPI scale factor: 1.250000
 nvdrs: Loaded, about to disable thread optimizations.
-nvdrs: Disabled thread optimizations.
-Creating interface object took 177 ms
+nvdrs: b"Couldn't load nvlib." (can be ignored)
+Creating interface object took 0 ms
 Init translation took 0 ms
 Cleaning stores took 0 ms
 Load screen analysis took 0 ms
-Analyze screens took 6 ms
-Save screen analysis took 6 ms
-Save pyanalysis took 2 ms
-Save bytecode took 15 ms
-Running _start took 1 ms
-Interface start took 152 ms
+Analyze screens took 405 ms
+Save screen analysis took 90 ms
+Save pyanalysis took 18 ms
+Save bytecode took 71 ms
+Running _start took 0 ms
+Interface start took 1251 ms
 
 Initializing gl2 renderer:
-primary display bounds: (0, 0, 2560, 1440)
+primary display bounds: (0, 0, 1920, 997)
 swap interval: 1 frames
 Windowed mode.
-Vendor: 'NVIDIA Corporation'
-Renderer: 'NVIDIA GeForce RTX 4070 SUPER/PCIe/SSE2'
-Version: '4.6.0 NVIDIA 591.59'
-Display Info: <Info({'bitsize': 32, 'bytesize': 4, 'masks': (16711680, 65280, 255, 0), 'shifts': (16, 8, 0, 0), 'losses': (0, 0, 0, 8), 'current_w': 2560, 'current_h': 1440, 'refresh_rate': 144, 'hw': False, 'wm': True, 'video_mem': 268435456, 'blit_hw': False, 'blit_hw_CC': False, 'blit_hw_A': False, 'blit_sw': False, 'blit_sw_CC': False, 'blit_sw_A': False})>
-Screen sizes: virtual=(1920, 1080) physical=(2560, 1316) drawable=(2560, 1316)
+UGUU couldn't find b'glActiveTexture': b'That operation is not supported'
+UGUU couldn't find b'glAttachShader': b'That operation is not supported'
+UGUU couldn't find b'glBeginQuery': b'That operation is not supported'
+UGUU couldn't find b'glBeginTransformFeedback': b'That operation is not supported'
+UGUU couldn't find b'glBindAttribLocation': b'That operation is not supported'
+UGUU couldn't find b'glBindBuffer': b'That operation is not supported'
+UGUU couldn't find b'glBindBufferBase': b'That operation is not supported'
+UGUU couldn't find b'glBindBufferRange': b'That operation is not supported'
+UGUU couldn't find b'glBindFramebuffer': b'That operation is not supported'
+UGUU couldn't find b'glBindRenderbuffer': b'That operation is not supported'
+UGUU couldn't find b'glBindVertexArray': b'That operation is not supported'
+UGUU couldn't find b'glBlendColor': b'That operation is not supported'
+UGUU couldn't find b'glBlendEquation': b'That operation is not supported'
+UGUU couldn't find b'glBlendEquationSeparate': b'That operation is not supported'
+UGUU couldn't find b'glBlendFuncSeparate': b'That operation is not supported'
+UGUU couldn't find b'glBlitFramebuffer': b'That operation is not supported'
+UGUU couldn't find b'glBufferData': b'That operation is not supported'
+UGUU couldn't find b'glBufferSubData': b'That operation is not supported'
+UGUU couldn't find b'glCheckFramebufferStatus': b'That operation is not supported'
+UGUU couldn't find b'glClearBufferfi': b'That operation is not supported'
+UGUU couldn't find b'glClearBufferfv': b'That operation is not supported'
+UGUU couldn't find b'glClearBufferiv': b'That operation is not supported'
+UGUU couldn't find b'glClearBufferuiv': b'That operation is not supported'
+UGUU couldn't find b'glCompileShader': b'That operation is not supported'
+UGUU couldn't find b'glCompressedTexImage2D': b'That operation is not supported'
+UGUU couldn't find b'glCompressedTexImage3D': b'That operation is not supported'
+UGUU couldn't find b'glCompressedTexSubImage2D': b'That operation is not supported'
+UGUU couldn't find b'glCompressedTexSubImage3D': b'That operation is not supported'
+UGUU couldn't find b'glCopyTexSubImage3D': b'That operation is not supported'
+UGUU couldn't find b'glCreateProgram': b'That operation is not supported'
+UGUU couldn't find b'glCreateShader': b'That operation is not supported'
+UGUU couldn't find b'glDeleteBuffers': b'That operation is not supported'
+UGUU couldn't find b'glDeleteFramebuffers': b'That operation is not supported'
+UGUU couldn't find b'glDeleteProgram': b'That operation is not supported'
+UGUU couldn't find b'glDeleteQueries': b'That operation is not supported'
+UGUU couldn't find b'glDeleteRenderbuffers': b'That operation is not supported'
+UGUU couldn't find b'glDeleteShader': b'That operation is not supported'
+UGUU couldn't find b'glDeleteVertexArrays': b'That operation is not supported'
+UGUU couldn't find b'glDetachShader': b'That operation is not supported'
+UGUU couldn't find b'glDisableVertexAttribArray': b'That operation is not supported'
+UGUU couldn't find b'glDrawBuffers': b'That operation is not supported'
+UGUU couldn't find b'glDrawRangeElements': b'That operation is not supported'
+UGUU couldn't find b'glEnableVertexAttribArray': b'That operation is not supported'
+UGUU couldn't find b'glEndQuery': b'That operation is not supported'
+UGUU couldn't find b'glEndTransformFeedback': b'That operation is not supported'
+UGUU couldn't find b'glFlushMappedBufferRange': b'That operation is not supported'
+UGUU couldn't find b'glFramebufferRenderbuffer': b'That operation is not supported'
+UGUU couldn't find b'glFramebufferTexture2D': b'That operation is not supported'
+UGUU couldn't find b'glFramebufferTextureLayer': b'That operation is not supported'
+UGUU couldn't find b'glGenBuffers': b'That operation is not supported'
+UGUU couldn't find b'glGenFramebuffers': b'That operation is not supported'
+UGUU couldn't find b'glGenQueries': b'That operation is not supported'
+UGUU couldn't find b'glGenRenderbuffers': b'That operation is not supported'
+UGUU couldn't find b'glGenVertexArrays': b'That operation is not supported'
+UGUU couldn't find b'glGenerateMipmap': b'That operation is not supported'
+UGUU couldn't find b'glGetActiveAttrib': b'That operation is not supported'
+UGUU couldn't find b'glGetActiveUniform': b'That operation is not supported'
+UGUU couldn't find b'glGetAttachedShaders': b'That operation is not supported'
+UGUU couldn't find b'glGetAttribLocation': b'That operation is not supported'
+UGUU couldn't find b'glGetBufferParameteriv': b'That operation is not supported'
+UGUU couldn't find b'glGetBufferPointerv': b'That operation is not supported'
+UGUU couldn't find b'glGetFragDataLocation': b'That operation is not supported'
+UGUU couldn't find b'glGetFramebufferAttachmentParameteriv': b'That operation is not supported'
+UGUU couldn't find b'glGetIntegeri_v': b'That operation is not supported'
+UGUU couldn't find b'glGetProgramInfoLog': b'That operation is not supported'
+UGUU couldn't find b'glGetProgramiv': b'That operation is not supported'
+UGUU couldn't find b'glGetQueryObjectuiv': b'That operation is not supported'
+UGUU couldn't find b'glGetQueryiv': b'That operation is not supported'
+UGUU couldn't find b'glGetRenderbufferParameteriv': b'That operation is not supported'
+UGUU couldn't find b'glGetShaderInfoLog': b'That operation is not supported'
+UGUU couldn't find b'glGetShaderSource': b'That operation is not supported'
+UGUU couldn't find b'glGetShaderiv': b'That operation is not supported'
+UGUU couldn't find b'glGetStringi': b'That operation is not supported'
+UGUU couldn't find b'glGetTransformFeedbackVarying': b'That operation is not supported'
+UGUU couldn't find b'glGetUniformLocation': b'That operation is not supported'
+UGUU couldn't find b'glGetUniformfv': b'That operation is not supported'
+UGUU couldn't find b'glGetUniformiv': b'That operation is not supported'
+UGUU couldn't find b'glGetUniformuiv': b'That operation is not supported'
+UGUU couldn't find b'glGetVertexAttribIiv': b'That operation is not supported'
+UGUU couldn't find b'glGetVertexAttribIuiv': b'That operation is not supported'
+UGUU couldn't find b'glGetVertexAttribPointerv': b'That operation is not supported'
+UGUU couldn't find b'glGetVertexAttribfv': b'That operation is not supported'
+UGUU couldn't find b'glGetVertexAttribiv': b'That operation is not supported'
+UGUU couldn't find b'glIsBuffer': b'That operation is not supported'
+UGUU couldn't find b'glIsFramebuffer': b'That operation is not supported'
+UGUU couldn't find b'glIsProgram': b'That operation is not supported'
+UGUU couldn't find b'glIsQuery': b'That operation is not supported'
+UGUU couldn't find b'glIsRenderbuffer': b'That operation is not supported'
+UGUU couldn't find b'glIsShader': b'That operation is not supported'
+UGUU couldn't find b'glIsVertexArray': b'That operation is not supported'
+UGUU couldn't find b'glLinkProgram': b'That operation is not supported'
+UGUU couldn't find b'glMapBufferRange': b'That operation is not supported'
+UGUU couldn't find b'glRenderbufferStorage': b'That operation is not supported'
+UGUU couldn't find b'glRenderbufferStorageMultisample': b'That operation is not supported'
+UGUU couldn't find b'glSampleCoverage': b'That operation is not supported'
+UGUU couldn't find b'glShaderSource': b'That operation is not supported'
+UGUU couldn't find b'glStencilFuncSeparate': b'That operation is not supported'
+UGUU couldn't find b'glStencilMaskSeparate': b'That operation is not supported'
+UGUU couldn't find b'glStencilOpSeparate': b'That operation is not supported'
+UGUU couldn't find b'glTexImage3D': b'That operation is not supported'
+UGUU couldn't find b'glTexSubImage3D': b'That operation is not supported'
+UGUU couldn't find b'glTransformFeedbackVaryings': b'That operation is not supported'
+UGUU couldn't find b'glUniform1f': b'That operation is not supported'
+UGUU couldn't find b'glUniform1fv': b'That operation is not supported'
+UGUU couldn't find b'glUniform1i': b'That operation is not supported'
+UGUU couldn't find b'glUniform1iv': b'That operation is not supported'
+UGUU couldn't find b'glUniform1ui': b'That operation is not supported'
+UGUU couldn't find b'glUniform1uiv': b'That operation is not supported'
+UGUU couldn't find b'glUniform2f': b'That operation is not supported'
+UGUU couldn't find b'glUniform2fv': b'That operation is not supported'
+UGUU couldn't find b'glUniform2i': b'That operation is not supported'
+UGUU couldn't find b'glUniform2iv': b'That operation is not supported'
+UGUU couldn't find b'glUniform2ui': b'That operation is not supported'
+UGUU couldn't find b'glUniform2uiv': b'That operation is not supported'
+UGUU couldn't find b'glUniform3f': b'That operation is not supported'
+UGUU couldn't find b'glUniform3fv': b'That operation is not supported'
+UGUU couldn't find b'glUniform3i': b'That operation is not supported'
+UGUU couldn't find b'glUniform3iv': b'That operation is not supported'
+UGUU couldn't find b'glUniform3ui': b'That operation is not supported'
+UGUU couldn't find b'glUniform3uiv': b'That operation is not supported'
+UGUU couldn't find b'glUniform4f': b'That operation is not supported'
+UGUU couldn't find b'glUniform4fv': b'That operation is not supported'
+UGUU couldn't find b'glUniform4i': b'That operation is not supported'
+UGUU couldn't find b'glUniform4iv': b'That operation is not supported'
+UGUU couldn't find b'glUniform4ui': b'That operation is not supported'
+UGUU couldn't find b'glUniform4uiv': b'That operation is not supported'
+UGUU couldn't find b'glUniformMatrix2fv': b'That operation is not supported'
+UGUU couldn't find b'glUniformMatrix2x3fv': b'That operation is not supported'
+UGUU couldn't find b'glUniformMatrix2x4fv': b'That operation is not supported'
+UGUU couldn't find b'glUniformMatrix3fv': b'That operation is not supported'
+UGUU couldn't find b'glUniformMatrix3x2fv': b'That operation is not supported'
+UGUU couldn't find b'glUniformMatrix3x4fv': b'That operation is not supported'
+UGUU couldn't find b'glUniformMatrix4fv': b'That operation is not supported'
+UGUU couldn't find b'glUniformMatrix4x2fv': b'That operation is not supported'
+UGUU couldn't find b'glUniformMatrix4x3fv': b'That operation is not supported'
+UGUU couldn't find b'glUnmapBuffer': b'That operation is not supported'
+UGUU couldn't find b'glUseProgram': b'That operation is not supported'
+UGUU couldn't find b'glValidateProgram': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttrib1f': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttrib1fv': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttrib2f': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttrib2fv': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttrib3f': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttrib3fv': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttrib4f': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttrib4fv': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttribI4i': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttribI4iv': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttribI4ui': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttribI4uiv': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttribIPointer': b'That operation is not supported'
+UGUU couldn't find b'glVertexAttribPointer': b'That operation is not supported'
+The following gl functions are missing:
+- glActiveTexture
+- glAttachShader
+- glBindFramebuffer
+- glBindRenderbuffer
+- glBlendEquation
+- glBlendEquationSeparate
+- glBlendFuncSeparate
+- glCompileShader
+- glCreateProgram
+- glCreateShader
+- glDeleteFramebuffers
+- glDeleteRenderbuffers
+- glDeleteShader
+- glDisableVertexAttribArray
+- glEnableVertexAttribArray
+- glFramebufferRenderbuffer
+- glFramebufferTexture2D
+- glGenFramebuffers
+- glGenRenderbuffers
+- glGenerateMipmap
+- glGetAttribLocation
+- glGetProgramInfoLog
+- glGetProgramiv
+- glGetShaderInfoLog
+- glGetShaderiv
+- glGetUniformLocation
+- glLinkProgram
+- glRenderbufferStorage
+- glShaderSource
+- glUniform1f
+- glUniform1i
+- glUniform2f
+- glUniform3f
+- glUniform4f
+- glUniformMatrix4fv
+- glUseProgram
+- glVertexAttribPointer
+
+Initializing angle2 renderer:
+primary display bounds: (0, 0, 1920, 997)
+swap interval: 1 frames
+Windowed mode.
+Vendor: 'Google Inc.'
+Renderer: 'ANGLE (Microsoft Basic Render Driver Direct3D11 vs_5_0 ps_5_0)'
+Version: 'OpenGL ES 3.0.0 (ANGLE 2.1.0.a4b21cf26074)'
+Display Info: <Info({'bitsize': 32, 'bytesize': 4, 'masks': (16711680, 65280, 255, 0), 'shifts': (16, 8, 0, 0), 'losses': (0, 0, 0, 8), 'current_w': 1920, 'current_h': 997, 'refresh_rate': 64, 'hw': False, 'wm': True, 'video_mem': 268435456, 'blit_hw': False, 'blit_hw_CC': False, 'blit_hw_A': False, 'blit_sw': False, 'blit_sw_CC': False, 'blit_sw_A': False})>
+Screen sizes: virtual=(1920, 1080) physical=(1920, 918) drawable=(1920, 918)
 Maximum texture size: 4096x4096
-Screen sizes: virtual=(1920, 1080) physical=(2560, 1316) drawable=(2560, 1316)
+Screen sizes: virtual=(1920, 1080) physical=(1920, 918) drawable=(1920, 918)
 Maximum texture size: 4096x4096

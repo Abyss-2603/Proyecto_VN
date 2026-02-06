@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 2022: 'zoom' is not a keyword argument or valid child of the imagebutton statement.
-    zoom 0.2
-        ^
+File "game/screens.rpy", line 1973: 'mouse' is not a keyword argument or valid child of the text statement.
+    mouse False
+         ^
 
-Ren'Py Version: Ren'Py 8.5.0.25111603
-Fri Feb  6 14:17:54 2026
+Ren'Py Version: Ren'Py 8.5.2.26010301
+Fri Feb  6 18:02:09 2026

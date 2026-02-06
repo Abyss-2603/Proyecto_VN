@@ -1897,41 +1897,62 @@ screen confirmacion_inicio():
                     hover_yoffset 4
 
 ################################################################################
-## PANTALLA DE REGISTRO - CORREGIDA
+## PANTALLA DE REGISTRO - MÉTODO "METAMORFOSIS" (INFALIBLE)
 ################################################################################
 
-## 1. EL TRANSFORMADOR
-transform forzar_tamano_icono:
-    xysize (50, 50) 
-    fit "contain"   
-    xalign 0.98     
-    yalign 0.5    
+# --- 1. FUNCIÓN DE SEGURIDAD (Variables) ---
+init python:
+    def check_vars_safe():
+        if not hasattr(store, 'pc_usuario'): store.pc_usuario = ""
+        if not hasattr(store, 'pc_email'): store.pc_email = ""
+        if not hasattr(store, 'pc_pass'): store.pc_pass = ""
+        if not hasattr(store, 'pc_pass_confirm'): store.pc_pass_confirm = ""
 
-style input_texto_pc:
-    font "gui/fonts/VT323.ttf" 
+# --- 2. ESTILOS ---
+style texto_input_activo:
+    font "gui/fonts/VT323.ttf"
     size 35
-    color "#555555" 
+    color "#555555"
     xalign 0.0
     yalign 0.5
+    adjust_spacing False
 
 style texto_placeholder:
     font "gui/fonts/VT323.ttf"
     size 35
-    color "#aaaaaa"
+    color "#aaaaaa" # Gris claro
     xalign 0.0
     yalign 0.5
 
-## 2. EL ESTILO DE LA CAJA
-style caja_blanca:
-    background Solid("#ffffff") 
+style texto_valor_fijo:
+    font "gui/fonts/VT323.ttf"
+    size 35
+    color "#555555" # Gris oscuro
+    xalign 0.0
+    yalign 0.5
+
+style caja_blanca_base:
+    background Solid("#ffffff")
     xsize 600
     ysize 60
-    padding (20, 0) 
+    padding (15, 0)
     xalign 0.5
 
+transform icono_nota:
+    xysize (40, 40)
+    fit "contain"
+    xalign 0.98
+    yalign 0.5
+
+# --- 3. PANTALLA ---
 screen registro_pc():
     modal True
     tag menu 
+
+    # Controla quién tiene el turno para escribir.
+    default foco_actual = "None"
+
+    on "show" action Function(check_vars_safe)
 
     add "images/inicio_sesion/imagen_login_fondo.png":
         xysize(1920, 1080)
@@ -1939,12 +1960,11 @@ screen registro_pc():
     vbox:
         xalign 0.5
         yalign 0.45
-        spacing 20
+        spacing 25
 
-        # Avatar
         add "images/inicio_sesion/imagen_login_perfil.png":
             xalign 0.5
-            xysize (150, 150)
+            xysize (130, 130)
             fit "contain"
         
         text "Registro de Usuario":
@@ -1955,61 +1975,92 @@ screen registro_pc():
 
         null height 10
 
-        # --- CAMPO 1: USUARIO ---
-        frame:
-            style "caja_blanca"
-            
-            fixed:
-                yalign 0.5
+        # =========================================================
+        # CAJA 1: USUARIO
+        # =========================================================
+        if foco_actual == "usuario":
+            # ESTADO ACTIVO
+            frame:
+                style "caja_blanca_base"
+                input value VariableInputValue("pc_usuario") style "texto_input_activo" length 15 xfill True yfill True
+        else:
+            # ESTADO INACTIVO
+            button:
+                style "caja_blanca_base"
+                action SetScreenVariable("foco_actual", "usuario")
+                
                 if pc_usuario == "":
                     text "Nombre de Usuario" style "texto_placeholder"
+                else:
+                    text "[pc_usuario]" style "texto_valor_fijo"
+
+        # =========================================================
+        # CAJA 2: EMAIL
+        # =========================================================
+        if foco_actual == "email":
+            # ACTIVO
+            frame:
+                style "caja_blanca_base"
+                fixed:
+                    yalign 0.5
+                    input value VariableInputValue("pc_email") style "texto_input_activo" length 40 xsize 520 yfill True
+                    add "images/inicio_sesion/nota_login.png" at icono_nota
+        else:
+            # INACTIVO (BOTÓN)
+            button:
+                style "caja_blanca_base"
+                action SetScreenVariable("foco_actual", "email")
                 
-                input value VariableInputValue("pc_usuario") length 15 style "input_texto_pc" xfill True ysize 60
+                fixed:
+                    yalign 0.5
+                    if pc_email == "":
+                        text "Correo Electrónico" style "texto_placeholder"
+                    else:
+                        text "[pc_email]" style "texto_valor_fijo"
+                    
+                    add "images/inicio_sesion/nota_login.png" at icono_nota
 
-        # --- CAMPO 2: EMAIL ---
-        frame:
-            style "caja_blanca"
-
-            fixed:
-                yalign 0.5
+        # =========================================================
+        # CAJA 3: CONTRASEÑA
+        # =========================================================
+        if foco_actual == "pass":
+            frame:
+                style "caja_blanca_base"
+                input value VariableInputValue("pc_pass") style "texto_input_activo" length 20 mask "*" xfill True yfill True
+        else:
+            button:
+                style "caja_blanca_base"
+                action SetScreenVariable("foco_actual", "pass")
                 
-                if pc_email == "":
-                    text "Correo Electrónico" style "texto_placeholder"
-
-                input value VariableInputValue("pc_email") length 40 style "input_texto_pc" xsize 510 ysize 60
-
-                add "images/inicio_sesion/nota_login.png" at forzar_tamano_icono  
-
-        # --- CAMPO 3: CONTRASEÑA ---
-        frame:
-            style "caja_blanca"
-
-            fixed:
-                yalign 0.5
                 if pc_pass == "":
                     text "Contraseña" style "texto_placeholder"
+                else:
+                    text ("*" * len(pc_pass)) style "texto_valor_fijo"
+
+        # =========================================================
+        # CAJA 4: CONFIRMAR
+        # =========================================================
+        if foco_actual == "confirm":
+            frame:
+                style "caja_blanca_base"
+                input value VariableInputValue("pc_pass_confirm") style "texto_input_activo" length 20 mask "*" xfill True yfill True
+        else:
+            button:
+                style "caja_blanca_base"
+                action SetScreenVariable("foco_actual", "confirm")
                 
-                input value VariableInputValue("pc_pass") length 20 mask "*" style "input_texto_pc" xfill True ysize 60
-
-        # --- CAMPO 4: CONFIRMAR CONTRASEÑA ---
-        frame:
-            style "caja_blanca"
-
-            fixed:
-                yalign 0.5
                 if pc_pass_confirm == "":
                     text "Confirmar Contraseña" style "texto_placeholder"
-                
-                input value VariableInputValue("pc_pass_confirm") length 20 mask "*" style "input_texto_pc" xfill True ysize 60
+                else:
+                    text ("*" * len(pc_pass_confirm)) style "texto_valor_fijo"
 
         null height 30
 
-        # --- BOTÓN COMPLETAR ---
+        # BOTÓN COMPLETAR
         imagebutton:
             idle Transform("images/inicio_sesion/boton_completar_registro.png", zoom=2)
             hover Transform("images/inicio_sesion/boton_completar_registro_activo.png", zoom=2)
             xalign 0.5
-            
             action If(
                 pc_usuario != "" and pc_pass != "" and pc_pass == pc_pass_confirm,
                 true=[
