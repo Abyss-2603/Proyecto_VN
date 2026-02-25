@@ -2,8 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 2080: Indentation mismatch.
-    if foco_actual == "pass":
+File "game/screens.rpy", line 2204: 'hover' is not a keyword argument or valid child of the text statement.
+    hover "#000000"
+         ^
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Fri Feb  6 19:46:17 2026
+Wed Feb 25 17:43:14 2026

@@ -1897,7 +1897,7 @@ screen confirmacion_inicio():
                     hover_yoffset 4
 
 ################################################################################
-## PANTALLA DE REGISTRO - MÉTODO "METAMORFOSIS" (INFALIBLE)
+## PANTALLA DE REGISTRO
 ################################################################################
 
 # --- 1. FUNCIÓN DE SEGURIDAD (Variables) ---
@@ -1969,7 +1969,7 @@ transform icono_externo:
     yalign 0.5
 
 transform estilo_bocadillo_externo:
-    zoom 0.5
+    zoom 0.6
     anchor (0.0, 1.0)
     xpos 640
     ypos 10
@@ -2110,7 +2110,111 @@ screen registro_pc():
                 pc_usuario != "" and pc_pass != "" and pc_pass == pc_pass_confirm,
                 true=[
                     Function(conectar_registro, pc_usuario, pc_email, pc_pass),
-                    If(registro_msg == "¡Éxito! Cuenta creada.", Return())
+                    If(registro_msg == "¡Éxito! Cuenta creada.", 
+                        true=[
+                            SetVariable("pc_pass", ""),
+                            SetVariable("pc_pass_confirm", ""),
+
+                            Hide("registro_pc"),
+                            Show("inicio_sesion_pc")
+                        ]
+                    )
+                ],
+                false=Notify("Revisa los datos.")
+            )
+
+################################################################################
+## PANTALLA DE INICIO DE SESIÓN
+################################################################################
+
+# --- 4. PANTALLA ---
+screen inicio_sesion_pc():
+    modal True
+    tag menu 
+
+    # Controla quién tiene el turno para escribir.
+    default foco_actual = "None"
+
+    default mostrar_aviso = False
+
+    on "show" action Function(check_vars_safe)
+
+    add "images/inicio_sesion/imagen_login_fondo.png":
+        xysize(1920, 1080)
+
+    vbox:
+        xalign 0.5
+        yalign 0.35
+        spacing 25
+
+        add "images/inicio_sesion/imagen_login_perfil.png":
+            xalign 0.5
+            xysize (350, 350)
+            fit "contain"
+        
+        text "Inicio de Sesión":
+            font "gui/fonts/VT323.ttf"
+            size 50
+            xalign 0.5
+            color "#ffffff"
+
+        null height 10
+
+        # =========================================================
+        # CAJA 1: USUARIO
+        # =========================================================
+        if foco_actual == "usuario":
+            # ESTADO ACTIVO
+            frame:
+                style "caja_blanca_base"
+                input value VariableInputValue("pc_usuario") style "texto_input_activo" length 15 xfill True yfill True
+        else:
+            # ESTADO INACTIVO
+            button:
+                style "caja_blanca_base"
+                action SetScreenVariable("foco_actual", "usuario")
+                
+                if pc_usuario == "":
+                    text "Nombre de Usuario" style "texto_placeholder"
+                else:
+                    text "[pc_usuario]" style "texto_valor_fijo"
+
+        # =========================================================
+        # CAJA 2: CONTRASEÑA
+        # =========================================================
+        if foco_actual == "pass":
+            frame:
+                style "caja_blanca_base"
+                input value VariableInputValue("pc_pass") style "texto_input_activo" length 20 mask "*" xfill True yfill True
+        else:
+            button:
+                style "caja_blanca_base"
+                action SetScreenVariable("foco_actual", "pass")
+                
+                if pc_pass == "":
+                    text "Contraseña" style "texto_placeholder"
+                else:
+                    text ("*" * len(pc_pass)) style "texto_valor_fijo"
+
+        textbutton "¿Has olvidado la contraseña?":
+            text_font "gui/fonts/VT323.ttf"
+            text_size 24
+            text_color "#ffffff"
+            text_hover_color "#000000" 
+            xalign 0.5
+            
+            action Notify("Función no implementada")
+
+        # BOTÓN COMPLETAR
+        imagebutton:
+            idle Transform("images/inicio_sesion/boton_iniciar_sesion.png", zoom=2)
+            hover Transform("images/inicio_sesion/boton_iniciar_sesion_activo.png", zoom=2)
+            xalign 0.5
+            action If(
+                pc_usuario != "" and pc_pass != "",
+                true=[
+                    Function(conectar_inicio_sesion, pc_usuario, pc_pass),
+                    If(inicio_sesion_msg == "¡Éxito! Sesión iniciada.", Return())
                 ],
                 false=Notify("Revisa los datos.")
             )

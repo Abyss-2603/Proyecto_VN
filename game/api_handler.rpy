@@ -5,7 +5,6 @@ init python:
 
     API_URL = "https://api-proyecto-sandy.vercel.app" 
     
-    # Variable para mensajes de error/éxito
     registro_msg = "" 
 
     def conectar_registro(username, email, password):
@@ -21,8 +20,8 @@ init python:
             with urllib.request.urlopen(req) as response:
                 if response.getcode() in [200, 201]:
                     registro_msg = "¡Éxito! Cuenta creada."
-                    renpy.store.persistent.nombre_jugador = username #Guardar usuario
-                    renpy.store.pc_email = email # Guardar email
+                    renpy.store.persistent.nombre_jugador = username
+                    renpy.store.pc_email = email 
                     return True
                     
         except urllib.error.HTTPError:

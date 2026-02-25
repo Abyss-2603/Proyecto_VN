@@ -34,8 +34,6 @@ label start:
         if not hasattr(store, 'pc_pass'): store.pc_pass = ""
         if not hasattr(store, 'pc_pass_confirm'): store.pc_pass_confirm = ""
     call screen registro_pc 
-    
-    scene bg habitacion
-    "Registro completado. Bienvenido, [pc_usuario]."
+
     
     # Aquí sigue el juego normal...
