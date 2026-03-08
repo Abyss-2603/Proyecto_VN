@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 2204: 'hover' is not a keyword argument or valid child of the text statement.
-    hover "#000000"
-         ^
+File "game/screens.rpy", line 359: add expects a non-empty block.
+    add "fondo_video_menu":
+                            ^
 
-Ren'Py Version: Ren'Py 8.5.2.26010301
-Wed Feb 25 17:43:14 2026
+Ren'Py Version: Ren'Py 8.5.0.25111603
+Sun Mar  8 22:45:49 2026

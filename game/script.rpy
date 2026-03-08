@@ -8,6 +8,9 @@ label splashscreen:
 
     return
 
+# -- VARIABLES del Menú
+image fondo_video_menu = Movie(play="images/menus/menu_animado.webm", loop=True)
+
 # --- VARIABLES de Inicio de Sesión y Registro ---
 default pc_usuario = ""
 default pc_email = ""

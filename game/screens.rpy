@@ -356,8 +356,9 @@ screen main_menu():
     tag menu
 
     ## 1. EL FONDO
-    add "images/menus/fondo_menu.png": 
-        xysize(1920, 1080) #Se fuerza el tamaño de la imagen
+    add "fondo_video_menu":
+        xysize (1920, 1080)
+        fit "cover"
 
     ## 2. EL TÍTULO
     text "Proyecto WASD":
@@ -461,8 +462,9 @@ screen gallery():
     tag menu
 
     ## 1. Fondo
-    add "images/menus/fondo_menu.png":
-        xysize(1920, 1080)
+    add "fondo_video_menu":
+        xysize (1920, 1080)
+        fit "cover"
 
     ## 2. Título
     text "Galería de Imágenes":
