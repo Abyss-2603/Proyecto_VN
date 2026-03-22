@@ -16,6 +16,7 @@ init python:
 define config.check_conflicting_properties = True
 
 
+
 ################################################################################
 ## Variables de configuración de la interfaz.
 ################################################################################

@@ -2129,7 +2129,6 @@ screen registro_pc():
 ## PANTALLA DE INICIO DE SESIÓN
 ################################################################################
 
-# --- 4. PANTALLA ---
 screen inicio_sesion_pc():
     modal True
     tag menu 
@@ -2220,3 +2219,4 @@ screen inicio_sesion_pc():
                 ],
                 false=Notify("Revisa los datos.")
             )
+            

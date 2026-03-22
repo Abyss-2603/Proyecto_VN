@@ -38,5 +38,5 @@ label start:
         if not hasattr(store, 'pc_pass_confirm'): store.pc_pass_confirm = ""
     call screen registro_pc 
 
-    
+
     # Aquí sigue el juego normal...
