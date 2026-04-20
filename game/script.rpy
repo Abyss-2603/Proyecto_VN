@@ -27,6 +27,19 @@ image imagenBloqueada:
     on idle:
         "images/menus/boton_block.png"
 
+label ejecutar_borrado_cuenta:
+    python:
+        exito = borrar_cuenta_api(persistent.user_id)
+        
+        if exito:
+            persistent.user_id = None
+            persistent.nombre_jugador = None
+            renpy.store.capitulo_actual = "prologo"
+            renpy.store.stress_level = 0
+            renpy.store.decisiones_tomadas = {}
+            
+    # Reinicio del juego a la fuerza (vuelve al splashscreen)
+    $ renpy.full_restart()
 
 label start:
     # Llamada pantalla registro
