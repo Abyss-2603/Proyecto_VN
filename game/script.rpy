@@ -1,23 +1,6 @@
-﻿# Coloca el código de tu juego en este archivo.
-
-# Pantalla inicial de aviso legal
-label splashscreen:
-    
-    call screen aviso_legal
-    pause 0.4
-
-    return
-
+﻿
 # -- VARIABLES del Menú
 image fondo_video_menu = Movie(play="images/menus/menu_animado.webm", loop=True)
-
-# --- VARIABLES de Inicio de Sesión y Registro ---
-default pc_usuario = ""
-default pc_email = ""
-default pc_pass = ""
-default pc_pass_confirm = ""
-
-default registro_completado = False
 
 #Galería con imagen de block
 image imagenBloqueada:
@@ -26,6 +9,36 @@ image imagenBloqueada:
         "images/menus/boton_block_seleccionado.png"
     on idle:
         "images/menus/boton_block.png"
+
+# --- Variables de Usuario ---
+default persistent.user_id = None
+default persistent.nombre_jugador = None
+
+# --- Variables de los Formularios ---
+default pc_usuario = ""
+default pc_email = ""
+default pc_pass = ""
+default pc_pass_confirm = ""
+default pc_codigo = ""
+default pc_nueva_pass = ""
+default pc_nueva_pass_confirm = ""
+
+# --- Variables de Mensajes y Control ---
+default registro_completado = False
+default login_msg = ""
+default registro_msg = ""
+default recuperacion_msg = ""
+default fase_recuperacion = 1
+
+# Pantalla inicial de aviso legal
+label splashscreen:
+    call screen aviso_legal
+    pause 0.4
+
+    if not persistent.user_id:
+        call screen inicio_sesion_pc
+
+    return
 
 label ejecutar_borrado_cuenta:
     python:
@@ -41,15 +54,10 @@ label ejecutar_borrado_cuenta:
     # Reinicio del juego a la fuerza (vuelve al splashscreen)
     $ renpy.full_restart()
 
+
 label start:
-    # Llamada pantalla registro
-    # Iniciar Variables de registro
-    python:
-        if not hasattr(store, 'pc_usuario'): store.pc_usuario = ""
-        if not hasattr(store, 'pc_email'): store.pc_email = ""
-        if not hasattr(store, 'pc_pass'): store.pc_pass = ""
-        if not hasattr(store, 'pc_pass_confirm'): store.pc_pass_confirm = ""
-    call screen registro_pc 
+    # El jugador ha confirmado empezar la partida    
+
 
 
     # Aquí sigue el juego normal...

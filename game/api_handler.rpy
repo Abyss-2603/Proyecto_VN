@@ -11,7 +11,6 @@ init python:
     def conectar_registro(username, email, password):
         global registro_msg
         url = API_URL + "/api/register"
-        
         datos = {"username": username, "email": email, "password": password}
         
         try:
@@ -24,7 +23,7 @@ init python:
                     renpy.store.persistent.nombre_jugador = username
                     renpy.store.pc_email = email 
                     return True
-
+            
         except urllib.error.HTTPError as e:
             try:
                 error_body = e.read().decode('utf-8')
@@ -86,6 +85,54 @@ init python:
             login_msg = "Error de conexión: Revisa tu internet."
             return False
 
+    # --- Función para solicitar código de recuperación ---
+    def solicitar_codigo_api(email):
+        global recuperacion_msg
+        url = API_URL + "/api/forgot-password"
+        datos = {"email": email}
+        
+        try:
+            json_data = json.dumps(datos).encode('utf-8')
+            req = urllib.request.Request(url, data=json_data, headers={'Content-Type': 'application/json'})
+            
+            with urllib.request.urlopen(req, timeout=10) as response:
+                if response.getcode() == 200:
+                    renpy.store.recuperacion_msg = "Código enviado. Revisa tu bandeja."
+                    renpy.store.fase_recuperacion = 2 
+                    return True
+        except:
+            renpy.store.recuperacion_msg = "Error: El correo no está registrado."
+            return False
+
+    # --- FUNCIÓN PARA CONFIRMAR NUEVA CONTRASEÑA ---
+    def confirmar_nueva_password_api(email, codigo, nueva_pass):
+        global recuperacion_msg
+        url = API_URL + "/api/reset-confirm"
+        datos = {
+            "email": email,
+            "code": codigo,
+            "new_password": nueva_pass
+        }
+        
+        if response.getcode() == 200:
+            renpy.store.recuperacion_msg = "¡Contraseña actualizada correctamente!"
+            return True
+
+        try:
+            json_data = json.dumps(datos).encode('utf-8')
+            req = urllib.request.Request(url, data=json_data, headers={'Content-Type': 'application/json'})
+            
+            with urllib.request.urlopen(req, timeout=10) as response:
+                if response.getcode() == 200:
+                    renpy.store.recuperacion_msg = "¡Contraseña actualizada!"
+                    return True
+        except urllib.error.HTTPError as e:
+            try:
+                error_data = json.loads(e.read().decode('utf-8'))
+                renpy.store.recuperacion_msg = error_data.get('detail', "Error al cambiar.")
+            except:
+                renpy.store.recuperacion_msg = "Error: Datos incorrectos."
+            return False
 
     # --- FUNCIÓN PARA GUARDAR PROGRESO ---
     def guardar_progreso(capitulo, estres, nuevas_decisiones):

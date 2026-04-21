@@ -4,7 +4,6 @@
 
 init offset = -1
 
-
 ################################################################################
 ## Estilos
 ################################################################################
@@ -83,7 +82,6 @@ transform miniatura_galeria:
 ################################################################################
 ## Pantallas internas del juego
 ################################################################################
-
 
 ## Pantalla de diálogo #########################################################
 ##
@@ -404,8 +402,7 @@ style menu_texto:
     xalign 0.5                 
     text_align 0.5             
 
-## --- PANTALLA DE AVISO (antes del menú) ---
-
+## --- PANTALLA DE AVISO ---
 screen aviso_legal():
 
     modal True
@@ -426,14 +423,12 @@ screen aviso_legal():
             spacing 40
             xalign 0.5
 
-            ## TÍTULO "Aviso"
             text "Aviso":
                 font "gui/fonts/Jacquard24.ttf"
                 size 110
                 color "#ffffff"
                 xalign 0.5
 
-            ## EL TEXTO LEGAL
             text ("Este juego recopilará y almacenará algunos de los datos "
                 "introducidos por el jugador con el fin de mejorar la experiencia de juego.\n\n"
                 "Al continuar, aceptas que los datos introducidos (como dirección de "
@@ -447,7 +442,6 @@ screen aviso_legal():
                 layout "subtitle"
                 xalign 0.5
 
-            ## BOTÓN ACEPTAR
             imagebutton:
                 idle Transform("images/menus/boton_aceptar_blanco.png", zoom=0.2)
                 hover Transform ("images/menus/boton_aceptar_rojo.png", zoom=0.2)
@@ -1898,9 +1892,7 @@ screen confirmacion_inicio():
                     at tamaño_boton_aviso
                     hover_yoffset 4
 
-################################################################################
 ## PANTALLA DE REGISTRO
-################################################################################
 
 # --- 1. FUNCIÓN DE SEGURIDAD (Variables) ---
 init python:
@@ -1981,7 +1973,7 @@ transform estilo_bocadillo_externo:
     on hide:
         easeout 0.2 alpha 0.0 yoffset 10
 
-# --- 3. PANTALLA ---
+# --- PANTALLA DE REGISTRO ---
 screen registro_pc():
     modal True
     tag menu 
@@ -2103,6 +2095,12 @@ screen registro_pc():
 
         null height 30
 
+        # Botón para ir a Login
+        textbutton "¿Ya tienes cuenta? Inicia Sesión":
+            action [Hide("registro_pc"), Show("inicio_sesion_pc")]
+            xalign 0.5 ypos 0.8
+
+
         # BOTÓN COMPLETAR
         imagebutton:
             idle Transform("images/inicio_sesion/boton_completar_registro.png", zoom=2)
@@ -2125,10 +2123,7 @@ screen registro_pc():
                 false=Notify("Revisa los datos.")
             )
 
-################################################################################
-## PANTALLA DE INICIO DE SESIÓN
-################################################################################
-
+# --- PANTALLA DE INICIO DE SESIÓN ---
 screen inicio_sesion_pc():
     modal True
     tag menu 
@@ -2206,6 +2201,11 @@ screen inicio_sesion_pc():
             
             action Notify("Función no implementada")
 
+        # Botón para ir a Registro
+        textbutton "¿No tienes cuenta? Regístrate":
+            action [Hide("inicio_sesion_pc"), Show("registro_pc")]
+            xalign 0.5 ypos 0.8 # Ajusta la posición a tu gusto
+
         # BOTÓN COMPLETAR
         imagebutton:
             idle Transform("images/inicio_sesion/boton_iniciar_sesion.png", zoom=2)
@@ -2220,3 +2220,164 @@ screen inicio_sesion_pc():
                 false=Notify("Revisa los datos.")
             )
             
+# --- PANTALLA DE RECUPERACIÓN DE CONTRASEÑA ---
+screen recuperacion():
+    modal True
+    tag menu
+    default foco_actual = "None"
+
+    # Fondo
+    add "images/inicio_sesion/imagen_login_fondo.png":
+        xysize(1920, 1080)
+
+    vbox:
+        xalign 0.5
+        yalign 0.35
+        spacing 25
+
+        # Icono de perfil
+        add "images/inicio_sesion/imagen_login_perfil.png":
+            xalign 0.5
+            xysize (300, 300)
+            fit "contain"
+        
+        text "Recuperar Contraseña":
+            font "gui/fonts/VT323.ttf"
+            size 50
+            xalign 0.5
+            color "#ffffff"
+
+        # =========================================================
+        # PANTALLA 1: EMAIL Y CÓDIGO
+        # =========================================================
+        if fase_recuperacion == 1:
+            vbox:
+                spacing 10
+                xalign 0.5
+                
+                text "Introduce tu correo electrónico" style "texto_placeholder" size 25 xalign 0.0
+
+                # CAJA DE EMAIL CON BOTÓN INTEGRADO
+                hbox:
+                    spacing 10
+                    xsize 600
+                    fixed:
+                        xsize 450 ysize 60
+                        if foco_actual == "email":
+                            frame:
+                                background Solid("#ffffff")
+                                xfill True yfill True
+                                padding (15, 0)
+                                input value VariableInputValue("pc_email") style "texto_input_activo" length 40 yalign 0.5
+                        else:
+                            button:
+                                background Solid("#ffffff")
+                                xfill True yfill True
+                                action SetScreenVariable("foco_actual", "email")
+                                if pc_email == "":
+                                    text "Correo Electrónico" style "texto_placeholder" yalign 0.5 xpos 15
+                                else:
+                                    text "[pc_email]" style "texto_valor_fijo" yalign 0.5 xpos 15
+                    # BOTÓN DE VERIFICAR
+                    textbutton "Verificar":
+                        ysize 60
+                        text_font "gui/fonts/VT323.ttf"
+                        text_size 28
+                        background Solid("#222") 
+                        hover_background Solid("#ff0000")
+                        padding (15, 10)
+                        yalign 0.5
+
+                        # Llama a la API para enviar el código
+                        action If(pc_email != "", Function(solicitar_codigo_api, pc_email), Notify("Escribe un email"))
+
+                null height 10
+                text "Introduce el código de recuperación enviado" style "texto_placeholder" size 25 xalign 0.0
+                
+                # CAJA DE CÓDIGO
+                button:
+                    style "caja_blanca_base"
+                    action SetScreenVariable("foco_actual", "codigo")
+                    if foco_actual == "codigo":
+                        input value VariableInputValue("pc_codigo") style "texto_input_activo" length 6 xfill True yfill True
+                    else:
+                        if pc_codigo == "":
+                            text "Código de recuperación" style "texto_placeholder"
+                        else:
+                            text "[pc_codigo]" style "texto_valor_fijo"
+
+            null height 20
+
+            # BOTONES INFERIORES (Regresar y Continuar)
+            hbox:
+                xalign 0.5
+                spacing 150
+                textbutton "Regresar":
+                    text_size 35
+                    action [SetVariable("fase_recuperacion", 1), Show("inicio_sesion_pc")]
+                
+                textbutton "Continuar":
+                    text_size 35
+                    action If(pc_codigo != "", SetVariable("fase_recuperacion", 2), Notify("Introduce el código"))
+
+        # =========================================================
+        # PANTALLA 2: NUEVAS CLAVES
+        # =========================================================
+        else:
+            vbox:
+                spacing 15
+                xalign 0.5
+                text "Introduce tu nueva contraseña" style "texto_placeholder" size 25 xalign 0.0
+
+                # NUEVA PASS
+                button:
+                    style "caja_blanca_base"
+                    action SetScreenVariable("foco_actual", "nueva_pass")
+                    if foco_actual == "nueva_pass":
+                        input value VariableInputValue("pc_nueva_pass") style "texto_input_activo" length 20 mask "*" xfill True yfill True
+                    else:
+                        if pc_nueva_pass == "":
+                            text "Contraseña" style "texto_placeholder"
+                        else:
+                            text ("*" * len(pc_nueva_pass)) style "texto_valor_fijo"
+
+                # CONFIRMAR PASS
+                button:
+                    style "caja_blanca_base"
+                    action SetScreenVariable("foco_actual", "confirm_pass")
+                    if foco_actual == "confirm_pass":
+                        input value VariableInputValue("pc_confirm_pass") style "texto_input_activo" length 20 mask "*" xfill True yfill True
+                    else:
+                        if pc_confirm_pass == "":
+                            text "Confirmar Contraseña" style "texto_placeholder"
+                        else:
+                            text ("*" * len(pc_confirm_pass)) style "texto_valor_fijo"
+
+                null height 20
+
+                # BOTÓN CAMBIAR
+                textbutton "Cambiar Contraseña":
+                    xalign 0.5
+                    text_font "gui/fonts/VT323.ttf"
+                    text_size 40
+                    text_hover_color "#ff0000"
+                    action If(
+                        pc_nueva_pass != "" and pc_nueva_pass == pc_confirm_pass,
+                        true=[Function(confirmar_nueva_password_api, pc_email, pc_codigo, pc_nueva_pass), 
+                            SetVariable("fase_recuperacion", 1), 
+                            Show("inicio_sesion_pc")], 
+                        false=Notify("Las contraseñas no coinciden")
+                    )
+
+                textbutton "Regresar al Inicio de Sesión":
+                    xalign 0.5
+                    text_size 25
+                    action [SetVariable("fase_recuperacion", 1), Show("inicio_sesion_pc")]
+
+    # --- MENSAJE FLOTANTE DE ÉXITO ---
+    if recuperacion_msg == "¡Contraseña actualizada!":
+        frame:
+            align (0.5, 0.2)
+            background Solid("#002244cc")
+            padding (40, 20)
+            text "Contraseña cambiada correctamente" color "#fff" font "gui/fonts/VT323.ttf" size 30
