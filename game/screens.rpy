@@ -2097,8 +2097,12 @@ screen registro_pc():
 
         # Botón para ir a Login
         textbutton "¿Ya tienes cuenta? Inicia Sesión":
+            text_font "gui/fonts/VT323.ttf"
+            text_size 24
+            text_color "#ffffff"
+            text_hover_color "#000000" 
+            xalign 0.5
             action [Hide("registro_pc"), Show("inicio_sesion_pc")]
-            xalign 0.5 ypos 0.8
 
 
         # BOTÓN COMPLETAR
@@ -2198,13 +2202,16 @@ screen inicio_sesion_pc():
             text_color "#ffffff"
             text_hover_color "#000000" 
             xalign 0.5
-            
-            action Notify("Función no implementada")
+            action [Hide("inicio_sesion_pc"), Show("recuperacion")]
 
         # Botón para ir a Registro
         textbutton "¿No tienes cuenta? Regístrate":
+            text_font "gui/fonts/VT323.ttf"
+            text_size 24
+            text_color "#ffffff"
+            text_hover_color "#000000" 
+            xalign 0.5
             action [Hide("inicio_sesion_pc"), Show("registro_pc")]
-            xalign 0.5 ypos 0.8 # Ajusta la posición a tu gusto
 
         # BOTÓN COMPLETAR
         imagebutton:
@@ -2214,8 +2221,8 @@ screen inicio_sesion_pc():
             action If(
                 pc_usuario != "" and pc_pass != "",
                 true=[
-                    Function(conectar_inicio_sesion, pc_usuario, pc_pass),
-                    If(inicio_sesion_msg == "¡Éxito! Sesión iniciada.", Return())
+                    Function(conectar_login, pc_usuario, pc_pass),
+                    If(login_msg == "¡Éxito! Sesión iniciada.", Return())
                 ],
                 false=Notify("Revisa los datos.")
             )
@@ -2313,12 +2320,21 @@ screen recuperacion():
                 xalign 0.5
                 spacing 150
                 textbutton "Regresar":
+                    text_font "gui/fonts/VT323.ttf"
                     text_size 35
+                    text_color "#ffffff"
+                    text_hover_color "#000000" 
+                    xalign 0.5
                     action [SetVariable("fase_recuperacion", 1), Show("inicio_sesion_pc")]
                 
                 textbutton "Continuar":
+                    text_font "gui/fonts/VT323.ttf"
                     text_size 35
+                    text_color "#ffffff"
+                    text_hover_color "#000000" 
+                    xalign 0.5
                     action If(pc_codigo != "", SetVariable("fase_recuperacion", 2), Notify("Introduce el código"))
+
 
         # =========================================================
         # PANTALLA 2: NUEVAS CLAVES
