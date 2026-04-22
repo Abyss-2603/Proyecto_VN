@@ -21,7 +21,7 @@ default pc_pass = ""
 default pc_pass_confirm = ""
 default pc_codigo = ""
 default pc_nueva_pass = ""
-default pc_nueva_pass_confirm = ""
+default pc_confirm_pass = ""
 
 # --- Variables de Mensajes y Control ---
 default registro_completado = False
@@ -33,12 +33,20 @@ default fase_recuperacion = 1
 # Pantalla inicial de aviso legal
 label splashscreen:
     call screen aviso_legal
-    pause 0.4
+    pause 0.2
 
     if not persistent.user_id:
-        call screen inicio_sesion_pc
+        scene black with fade     
+        play sound "Musica/Efectos/pc_enciende_1.mp3" 
+        pause 8.0
+        play music "Musica/Efectos/pc_enciende_2.ogg" loop
+        call screen inicio_sesion_pc with Dissolve(1.5)
 
+        stop music fadeout 1.5
     return
+
+# PONER MUSICA DE FONDO DESPUES DEL MENU DE LOGIN (EN options.rpy)
+
 
 label ejecutar_borrado_cuenta:
     python:

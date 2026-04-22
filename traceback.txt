@@ -1,32 +1,36 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 36, in script
-    call screen registro_pc
-  File "game/screens.rpy", line 1955, in execute
-    screen registro_pc():
-  File "game/screens.rpy", line 1955, in execute
-    screen registro_pc():
-  File "game/screens.rpy", line 1967, in execute
+  File "game/script.rpy", line 43, in script
+    call screen inicio_sesion_pc with Dissolve(1.5)
+  File "game/screens.rpy", line 2231, in execute
+    screen recuperacion():
+  File "game/screens.rpy", line 2231, in execute
+    screen recuperacion():
+  File "game/screens.rpy", line 2240, in execute
     vbox:
-  File "game/screens.rpy", line 2007, in execute
-    if foco_actual == "email":
-  File "game/screens.rpy", line 2017, in execute
+  File "game/screens.rpy", line 2260, in execute
+    if fase_recuperacion == 1:
+  File "game/screens.rpy", line 2343, in execute
+    vbox:
+  File "game/screens.rpy", line 2361, in execute
     button:
-  File "game/screens.rpy", line 2021, in execute
-    fixed:
-  File "game/screens.rpy", line 2033, in execute
-    if mostrar_aviso:
-  File "game/screens.rpy", line 2033, in <module>
-    if mostrar_aviso:
-       ^^^^^^^^^^^^^ 
-NameError: name 'mostrar_aviso' is not defined
+  File "game/screens.rpy", line 2364, in execute
+    if foco_actual == "confirm_pass":
+  File "game/screens.rpy", line 2367, in execute
+    if pc_confirm_pass == "":
+  File "game/screens.rpy", line 2367, in <module>
+    if pc_confirm_pass == "":
+       ^^^^^^^^^^^^^^^       
+NameError: name 'pc_confirm_pass' is not defined
 
 -- Full Traceback ------------------------------------------------------------
 
 Traceback (most recent call last):
-  File "game/script.rpy", line 36, in script
-    call screen registro_pc
+  File "renpy/common/00start.rpy", line 259, in script call
+    call _splashscreen from _call_splashscreen_1
+  File "game/script.rpy", line 43, in script
+    call screen inicio_sesion_pc with Dissolve(1.5)
   File "renpy/ast.py", line 2241, in execute
     self.call("execute")
     ~~~~~~~~~^^^^^^^^^^^
@@ -79,32 +83,34 @@ Traceback (most recent call last):
   File "renpy/display/screen.py", line 715, in update
     self.screen.function(**self.scope)
     ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
-  File "game/screens.rpy", line 1955, in execute
-    screen registro_pc():
-  File "game/screens.rpy", line 1955, in execute
-    screen registro_pc():
-  File "game/screens.rpy", line 1967, in execute
+  File "game/screens.rpy", line 2231, in execute
+    screen recuperacion():
+  File "game/screens.rpy", line 2231, in execute
+    screen recuperacion():
+  File "game/screens.rpy", line 2240, in execute
     vbox:
-  File "game/screens.rpy", line 2007, in execute
-    if foco_actual == "email":
-  File "game/screens.rpy", line 2017, in execute
+  File "game/screens.rpy", line 2260, in execute
+    if fase_recuperacion == 1:
+  File "game/screens.rpy", line 2343, in execute
+    vbox:
+  File "game/screens.rpy", line 2361, in execute
     button:
-  File "game/screens.rpy", line 2021, in execute
-    fixed:
-  File "game/screens.rpy", line 2033, in execute
-    if mostrar_aviso:
+  File "game/screens.rpy", line 2364, in execute
+    if foco_actual == "confirm_pass":
+  File "game/screens.rpy", line 2367, in execute
+    if pc_confirm_pass == "":
   File "renpy/python.py", line 1305, in py_eval
     return py_eval_bytecode(code, globals, locals)
            ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
   File "renpy/python.py", line 1298, in py_eval_bytecode
     return eval(bytecode, globals, locals)
            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "game/screens.rpy", line 2033, in <module>
-    if mostrar_aviso:
-       ^^^^^^^^^^^^^ 
-NameError: name 'mostrar_aviso' is not defined
+  File "game/screens.rpy", line 2367, in <module>
+    if pc_confirm_pass == "":
+       ^^^^^^^^^^^^^^^       
+NameError: name 'pc_confirm_pass' is not defined
 
-Windows-10-10.0.19045-SP0 AMD64
+Windows-11-10.0.26200-SP0 AMD64
 Ren'Py 8.5.2.26010301
 Proyecto_VN 1.0
-Fri Feb  6 19:35:42 2026
+Wed Apr 22 17:07:44 2026

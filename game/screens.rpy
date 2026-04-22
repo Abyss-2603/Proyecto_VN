@@ -373,8 +373,8 @@ screen main_menu():
         yalign 0.6
         spacing 20
         
-        textbutton "Nueva Partida" action ShowMenu("confirmacion_inicio") text_style "menu_texto" style "menu_caja"
-        textbutton "Cargar Partida" action ShowMenu("load") text_style "menu_texto" style "menu_caja"
+        textbutton "Continuar " action ShowMenu("confirmacion_inicio") text_style "menu_texto" style "menu_caja"
+        textbutton "Borrar " action ShowMenu("load") text_style "menu_texto" style "menu_caja"
         textbutton "Galería" action ShowMenu("gallery") text_style "menu_texto" style "menu_caja"
         textbutton "Opciones" action ShowMenu("preferences") text_style "menu_texto" style "menu_caja"
         textbutton "Salir" action Quit(confirm=not main_menu) text_style "menu_texto" style "menu_caja"
