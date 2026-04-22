@@ -14,6 +14,8 @@ image imagenBloqueada:
 default persistent.user_id = None
 default persistent.nombre_jugador = None
 
+default current_chapter = "prologo"
+
 # --- Variables de los Formularios ---
 default pc_usuario = ""
 default pc_email = ""
@@ -49,19 +51,30 @@ label splashscreen:
 
 
 label ejecutar_borrado_cuenta:
+    scene black with fade
+    pause 1.0
     python:
         exito = borrar_cuenta_api(persistent.user_id)
-        
         if exito:
             persistent.user_id = None
             persistent.nombre_jugador = None
+
+            renpy.save_persistent()
+
+            pc_email = ""
+            pc_usuario = ""
+            pc_pass = ""
             renpy.store.capitulo_actual = "prologo"
             renpy.store.stress_level = 0
             renpy.store.decisiones_tomadas = {}
-            
-    # Reinicio del juego a la fuerza (vuelve al splashscreen)
-    $ renpy.full_restart()
 
+    if exito:
+        "Tu existencia ha sido purgada de los servidores."
+        "El ciclo se ha roto."
+    else:
+        "Hubo un error al intentar borrar tus datos. Tus lazos aún persisten."
+
+    $ renpy.full_restart()
 
 label start:
     # El jugador ha confirmado empezar la partida    

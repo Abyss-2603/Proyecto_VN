@@ -60,8 +60,6 @@ init python:
                     renpy.store.capitulo_actual = progreso.get("capitulo", "prologo")
                     renpy.store.stress_level = progreso.get("estres", 0)
                     renpy.store.decisiones_tomadas = progreso.get("decisiones", {})
-                    renpy.notify("¡Acceso concedido! Cargando estado...")
-                    renpy.end_interaction(True)
 
                     login_exitoso = True
         except urllib.error.HTTPError as e:
@@ -162,6 +160,9 @@ init python:
         try:
             req = urllib.request.Request(url, method='DELETE', headers=get_headers())
             with urllib.request.urlopen(req, timeout=10) as response:
-                if response.getcode() in [200, 201, 204]: return True
-        except: pass
+                if response.getcode() in [200, 201, 204]: 
+                    return True
+        except Exception as e:
+            renpy.notify(f"Error de conexión: {str(e)}")
+
         return False

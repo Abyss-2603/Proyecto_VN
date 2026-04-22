@@ -373,12 +373,69 @@ screen main_menu():
         yalign 0.6
         spacing 20
         
-        textbutton "Continuar " action ShowMenu("confirmacion_inicio") text_style "menu_texto" style "menu_caja"
-        textbutton "Borrar " action ShowMenu("load") text_style "menu_texto" style "menu_caja"
+        if current_chapter == "prologo" or current_chapter == "":
+            textbutton "Iniciar Sincro" action ShowMenu("confirmacion_inicio") text_style "menu_texto" style "menu_caja"
+        else:
+            textbutton "Iniciar Sincro" action Start() text_style "menu_texto" style "menu_caja"
+
+        textbutton "Eliminar Sincro" action ShowMenu("confirmacion_borrar_cuenta") text_style "menu_texto" style "menu_caja"
         textbutton "Galería" action ShowMenu("gallery") text_style "menu_texto" style "menu_caja"
         textbutton "Opciones" action ShowMenu("preferences") text_style "menu_texto" style "menu_caja"
         textbutton "Salir" action Quit(confirm=not main_menu) text_style "menu_texto" style "menu_caja"
 
+# PANTALLA DE ADVERTENCIA PARA BORRAR CUENTA 
+screen confirmacion_borrar_cuenta():
+    tag menu
+    modal True 
+
+    ## 1. Fondo
+    add "images/menus/menu_animado.webm":
+        xysize(1920, 1080)
+
+    ## 2. EL CONTENEDOR TRANSPARENTE
+    frame:
+        background Solid("#110000dd")
+        xalign 0.5
+        yalign 0.5
+        xsize 1100
+        padding (60, 60)
+
+        ## 3. CONTENIDO
+        vbox:
+            xalign 0.5
+            spacing 20
+
+            text "ADVERTENCIA CRÍTICA" xalign 0.5 font "gui/fonts/Micro5.ttf" size 80 color "#ff0000" outlines [(2, "#000000", 0, 0)]
+            text "Estás a punto de romper el ciclo." xalign 0.5 font "gui/fonts/Micro5.ttf" size 50 color "#ffffff" outlines [(2, "#000000", 0, 0)]
+            text "Esto borrará tu usuario y todo tu progreso de los\nservidores de forma PERMANENTE." xalign 0.5 text_align 0.5 font "gui/fonts/Micro5.ttf" size 50 color "#aaaaaa" outlines [(2, "#000000", 0, 0)]
+            
+            null height 30
+            
+            text "¿Ejecutar autodestrucción?" xalign 0.5 font "gui/fonts/Micro5.ttf" size 60 color "#ff0000" outlines [(2, "#000000", 0, 0)] 
+
+            null height 20
+
+            # --- LOS BOTONES ---
+            hbox:
+                xalign 0.5
+                spacing 150 
+
+                # BOTÓN CANCELAR
+                textbutton "CANCELAR":
+                    text_font "gui/fonts/Micro5.ttf"
+                    text_size 60
+                    text_color "#ffffff"
+                    text_hover_color "#555555"
+                    action Return() # vuelve al menu 
+                    
+                # BOTÓN ELIMINAR
+                textbutton "ELIMINAR SINCRO":
+                    text_font "gui/fonts/Micro5.ttf"
+                    text_size 60
+                    text_color "#ff0000"
+                    text_hover_color "#ffffff"
+
+                    action Start("ejecutar_borrado_cuenta")
 
 ## ESTILOS PERSONALIZADOS PARA MENÚ
 ## 1. ESTILO PARA LA CAJA
@@ -2220,10 +2277,7 @@ screen inicio_sesion_pc():
             xalign 0.5
             action If(
                 pc_usuario != "" and pc_pass != "",
-                true=[
-                    Function(conectar_login, pc_usuario, pc_pass),
-                    If(login_msg == "¡Éxito! Sesión iniciada.", Return())
-                ],
+                true=Function(conectar_login, pc_usuario, pc_pass),
                 false=Notify("Revisa los datos.")
             )
             
@@ -2376,6 +2430,7 @@ screen recuperacion():
                     xalign 0.5
                     text_font "gui/fonts/VT323.ttf"
                     text_size 40
+                    text_color "#ffffff"
                     text_hover_color "#ff0000"
                     action If(
                         pc_nueva_pass != "" and pc_nueva_pass == pc_confirm_pass,
@@ -2387,7 +2442,10 @@ screen recuperacion():
 
                 textbutton "Regresar al Inicio de Sesión":
                     xalign 0.5
+                    text_font "gui/fonts/VT323.ttf"
                     text_size 25
+                    text_color "#aaaaaa"
+                    text_hover_color "#ffffff"
                     action [SetVariable("fase_recuperacion", 1), Show("inicio_sesion_pc")]
 
     # --- MENSAJE FLOTANTE DE ÉXITO ---
