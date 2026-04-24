@@ -2029,6 +2029,22 @@ transform estilo_bocadillo_externo:
     on hide:
         easeout 0.2 alpha 0.0 yoffset 10
 
+# --- aviso cargando ---
+screen cargando_servidor():
+    zorder 100
+    modal True
+    
+    frame:
+        align (0.5, 0.5)
+        background Solid("#000000cc")
+        padding (50, 30)
+        
+        vbox:
+            spacing 15
+            xalign 0.5
+            text "Conectando con el servidor..." font "gui/fonts/VT323.ttf" size 40 color "#fff"
+            text "Por favor, espera." font "gui/fonts/VT323.ttf" size 25 color "#aaa" xalign 0.5
+
 # --- PANTALLA DE REGISTRO ---
 screen registro_pc():
     modal True
@@ -2182,29 +2198,17 @@ screen registro_pc():
             action [SetVariable("pc_pass", ""), 
                     SetVariable("pc_pass_confirm", ""), 
                     SetVariable("ver_password", False),
-                    Hide("registro_pc"),
-                    Show("inicio_sesion_pc")]
-
+                    Jump("menu_login_loop")]
 
         # BOTÓN COMPLETAR
         imagebutton:
             idle Transform("images/inicio_sesion/boton_completar_registro.png", zoom=2)
             hover Transform("images/inicio_sesion/boton_completar_registro_activo.png", zoom=2)
             xalign 0.5
+            
             action If(
-                pc_usuario != "" and pc_pass != "" and pc_pass == pc_pass_confirm,
-                true=[
-                    Function(conectar_registro, pc_usuario, pc_email, pc_pass),
-                    If(registro_msg == "¡Éxito! Cuenta creada.", 
-                        true=[
-                            SetVariable("pc_pass", ""),
-                            SetVariable("pc_pass_confirm", ""),
-
-                            Hide("registro_pc"),
-                            Show("inicio_sesion_pc")
-                        ]
-                    )
-                ],
+                pc_usuario != "" and pc_email != "" and pc_pass != "" and pc_pass == pc_pass_confirm,
+                true=Jump("procesar_registro"),
                 false=Notify("Revisa los datos.")
             )
 
@@ -2260,7 +2264,7 @@ screen inicio_sesion_pc():
                 else:
                     text "[pc_usuario]" style "texto_valor_fijo"
 
-# =========================================================
+        # =========================================================
         # CAJA 2: CONTRASEÑA 
         # =========================================================
         fixed:
@@ -2297,8 +2301,8 @@ screen inicio_sesion_pc():
             xalign 0.5
             action [SetVariable("pc_pass", ""), 
                     SetVariable("ver_password", False),
-                    Hide("inicio_sesion_pc"), 
-                    Show("recuperacion")]
+                    Jump("menu_recuperacion_loop")]
+
         # Botón para ir a Registro
         textbutton "¿No tienes cuenta? Regístrate":
             text_font "gui/fonts/VT323.ttf"
@@ -2308,8 +2312,7 @@ screen inicio_sesion_pc():
             xalign 0.5
             action [SetVariable("pc_pass", ""), 
                     SetVariable("ver_password", False),
-                    Hide("inicio_sesion_pc"), 
-                    Show("registro_pc")]
+                    Jump("menu_registro_loop")]
 
         # BOTÓN COMPLETAR
         imagebutton:
@@ -2318,10 +2321,10 @@ screen inicio_sesion_pc():
             xalign 0.5
             action If(
                 pc_usuario != "" and pc_pass != "",
-                true=Function(conectar_login, pc_usuario, pc_pass),
+                true=Jump("procesar_login"),
                 false=Notify("Revisa los datos.")
             )
-            
+                    
 # --- PANTALLA DE RECUPERACIÓN DE CONTRASEÑA ---
 screen recuperacion():
     modal True
@@ -2391,7 +2394,7 @@ screen recuperacion():
                         yalign 0.5
 
                         # Llama a la API para enviar el código
-                        action If(pc_email != "", Function(solicitar_codigo_api, pc_email), Notify("Escribe un email"))
+                        action If(pc_email != "", Jump("procesar_solicitar_codigo"), Notify("Escribe un email"))
 
                 null height 10
                 text "Introduce el código de recuperación enviado" style "texto_placeholder" size 25 xalign 0.0
@@ -2424,7 +2427,7 @@ screen recuperacion():
                             SetVariable("pc_confirm_pass", ""),
                             SetVariable("ver_password", False),
                             SetVariable("fase_recuperacion", 1), 
-                            Show("inicio_sesion_pc")]
+                            Jump("menu_login_loop")]
                 
                 textbutton "Continuar":
                     text_font "gui/fonts/VT323.ttf"
@@ -2444,7 +2447,7 @@ screen recuperacion():
                 xalign 0.5
                 text "Introduce tu nueva contraseña" style "texto_placeholder" size 25 xalign 0.0
 
-# =========================================================
+                # =========================================================
                 # NUEVA PASS
                 # =========================================================
                 fixed:
@@ -2499,7 +2502,7 @@ screen recuperacion():
                             xysize(50, 50)
                         mouse "pc_select" 
                         action ToggleVariable("ver_password")
-                        
+
                 null height 20
 
                 # BOTÓN CAMBIAR
@@ -2511,7 +2514,7 @@ screen recuperacion():
                     text_hover_color "#ff0000"
                     action If(
                         pc_nueva_pass != "" and pc_nueva_pass == pc_confirm_pass,
-                        true=Function(confirmar_nueva_password_api, pc_email, pc_codigo, pc_nueva_pass), 
+                        true=Jump("procesar_cambio_pass"), 
                         false=Notify("Las contraseñas no coinciden")
                     )
 
@@ -2525,8 +2528,7 @@ screen recuperacion():
                             SetVariable("pc_confirm_pass", ""),
                             SetVariable("ver_password", False),
                             SetVariable("fase_recuperacion", 1), 
-                            Hide("recuperacion"),
-                            Show("inicio_sesion_pc")]
+                            Jump("menu_login_loop")]
 
     # --- MENSAJE FLOTANTE DE ÉXITO ---
     if recuperacion_msg == "¡Contraseña actualizada!":

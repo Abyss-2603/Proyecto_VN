@@ -39,17 +39,15 @@ label splashscreen:
     pause 0.2
 
     if not persistent.user_id:
-        scene black with fade     
+        scene black with fade    
         play sound "Musica/Efectos/pc_enciende_1.mp3" 
         pause 8.0
         play music "Musica/Efectos/pc_enciende_2.ogg" loop
-        call screen inicio_sesion_pc with Dissolve(1.5)
+        
+        jump menu_login_loop
 
-        stop music fadeout 1.5
+    stop music fadeout 1.5
     return
-
-# PONER MUSICA DE FONDO DESPUES DEL MENU DE LOGIN (EN options.rpy)
-
 
 label ejecutar_borrado_cuenta:
     scene black with fade
@@ -75,7 +73,84 @@ label ejecutar_borrado_cuenta:
         "Hubo un error al intentar borrar tus datos. Tus lazos aún persisten."
     $ Quit(confirm=False)()
 
+# ==========================================
+# RUTAS DE PANTALLAS SEGURAS
+# ==========================================
+label menu_login_loop:
+    call screen inicio_sesion_pc
+    return
+
+label menu_registro_loop:
+    call screen registro_pc
+    return
+
+label menu_recuperacion_loop:
+    call screen recuperacion
+    return
+
+# ==========================================
+# SALAS DE ESPERA (Cartel de Carga)
+# ==========================================
+label procesar_login:
+    show screen cargando_servidor
+    with None # <--- Obliga a Ren'Py a dibujar el cartel AL INSTANTE
+    $ renpy.pause(0.1, hard=True)
+
+    python:
+        conectar_login(pc_usuario, pc_pass)
+        
+    hide screen cargando_servidor
+    with None # <--- Obliga a borrarlo al instante
+
+    if persistent.user_id:
+        jump start
+    else:
+        jump menu_login_loop
+
+label procesar_registro:
+    show screen cargando_servidor
+    with None 
+    $ renpy.pause(0.1, hard=True)
+
+    python:
+        conectar_registro(pc_usuario, pc_email, pc_pass)
+        
+    hide screen cargando_servidor
+    with None
+
+    if pc_pass == "":
+        jump menu_login_loop
+    else:
+        jump menu_registro_loop
+
+label procesar_solicitar_codigo:
+    show screen cargando_servidor
+    with None 
+    $ renpy.pause(0.1, hard=True)
+
+    python:
+        solicitar_codigo_api(pc_email)
+        
+    hide screen cargando_servidor
+    with None
+    jump menu_recuperacion_loop
+
+label procesar_cambio_pass:
+    show screen cargando_servidor
+    with None 
+    $ renpy.pause(0.1, hard=True)
+
+    python:
+        confirmar_nueva_password_api(pc_email, pc_codigo, pc_nueva_pass)
+        
+    hide screen cargando_servidor
+    with None
     
+    if fase_recuperacion == 1:
+        jump menu_login_loop
+    else:
+        jump menu_recuperacion_loop
+
 label start:
     # El jugador ha confirmado empezar la partida    
 

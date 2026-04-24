@@ -30,8 +30,6 @@ init python:
                     renpy.notify("¡Éxito! Cuenta creada. Por favor, inicia sesión.")
                     renpy.store.pc_pass = ""
                     renpy.store.pc_pass_confirm = ""
-                    renpy.hide_screen("registro_pc")
-                    renpy.show_screen("inicio_sesion_pc")
         except urllib.error.HTTPError as e:
             try:
                 error_body = e.read().decode('utf-8')
@@ -70,10 +68,11 @@ init python:
                 renpy.notify("Usuario o contraseña incorrectos.")
         except Exception as e:
             renpy.notify(f"Fallo técnico: {str(e)}")
+            
         if login_exitoso:
             renpy.notify("¡Acceso concedido! Cargando estado...")
-            renpy.end_interaction(True)
             
+
     # --- FUNCIÓN: PEDIR CÓDIGO AL CORREO ---
     def solicitar_codigo_api(email):
         url = API_URL + "/api/forgot-password"
@@ -92,7 +91,7 @@ init python:
                 renpy.notify("Error: Correo no registrado.")
         except Exception as e:
             renpy.notify(f"Fallo técnico: {str(e)}")
-
+            
     # --- FUNCIÓN: VERIFICAR CÓDIGO ---
     def verificar_codigo_api(email, codigo):
         url = API_URL + "/api/verify-code"
@@ -127,8 +126,7 @@ init python:
                     renpy.store.pc_codigo = ""
                     renpy.store.pc_nueva_pass = ""
                     renpy.store.pc_confirm_pass = ""
-                    renpy.hide_screen("recuperacion")
-                    renpy.show_screen("inicio_sesion_pc")
+                    renpy.store.ver_password = False
         except urllib.error.HTTPError as e:
             try:
                 error_data = json.loads(e.read().decode('utf-8'))
@@ -137,7 +135,7 @@ init python:
                 renpy.notify("Error: Datos incorrectos.")
         except Exception as e:
             renpy.notify(f"Fallo técnico: {str(e)}")
-
+    
     # --- GUARDAR PROGRESO ---
     def guardar_progreso(capitulo, estres, nuevas_decisiones):
         if not hasattr(persistent, 'user_id') or not persistent.user_id:
