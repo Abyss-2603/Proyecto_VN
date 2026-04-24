@@ -205,7 +205,7 @@ init python:
     config.mouse['default'] = [("images/cursores/cursor_normal_bien.png",0,0)]
 
     config.mouse['pc_normal'] = [("images/cursores/cursor_pc_normal.png",0,0)]
-    config.mouse['pc_select'] = [("images/cursores/cursor_pc_select.png",16,16)]
+    config.mouse['pc_select'] = [("images/cursores/cursor_pc_selector.png",16,16)]
  
     config.mouse['cursor_normal'] = [("images/cursores/cursor_normal_bien.png",0,0)]
     config.mouse['cursor_select'] = [("images/cursores/cursor_selector_bien.png",16,16)]

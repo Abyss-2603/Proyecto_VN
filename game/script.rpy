@@ -14,16 +14,17 @@ image imagenBloqueada:
 default persistent.user_id = None
 default persistent.nombre_jugador = None
 
-default current_chapter = "prologo"
+default capitulo_actual = "prologo"
 
 # --- Variables de los Formularios ---
 default pc_usuario = ""
 default pc_email = ""
 default pc_pass = ""
-default pc_pass_confirm = ""
+default pc_pass_confirm = "" # para resto de pantallas del login
 default pc_codigo = ""
 default pc_nueva_pass = ""
-default pc_confirm_pass = ""
+default pc_confirm_pass = "" # para la parte de recuperar contraseña y cambiarla 
+default ver_password = False
 
 # --- Variables de Mensajes y Control ---
 default registro_completado = False
@@ -58,7 +59,6 @@ label ejecutar_borrado_cuenta:
         if exito:
             persistent.user_id = None
             persistent.nombre_jugador = None
-
             renpy.save_persistent()
 
             pc_email = ""
@@ -73,12 +73,18 @@ label ejecutar_borrado_cuenta:
         "El ciclo se ha roto."
     else:
         "Hubo un error al intentar borrar tus datos. Tus lazos aún persisten."
+    $ Quit(confirm=False)()
 
-    $ renpy.full_restart()
-
+    
 label start:
     # El jugador ha confirmado empezar la partida    
 
+    $ default_mouse = "pc_normal"
 
+    $ quick_menu = False
 
-    # Aquí sigue el juego normal...
+    call screen escritorio_pc
+
+    $ defaultmouse = "default"
+    "He apagado el ordenador. La pantalla se vuelve negra..."
+    return

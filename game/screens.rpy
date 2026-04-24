@@ -373,7 +373,7 @@ screen main_menu():
         yalign 0.6
         spacing 20
         
-        if current_chapter == "prologo" or current_chapter == "":
+        if capitulo_actual == "prologo" or capitulo_actual == "":
             textbutton "Iniciar Sincro" action ShowMenu("confirmacion_inicio") text_style "menu_texto" style "menu_caja"
         else:
             textbutton "Iniciar Sincro" action Start() text_style "menu_texto" style "menu_caja"
@@ -1950,8 +1950,7 @@ screen confirmacion_inicio():
                     hover_yoffset 4
 
 ## PANTALLA DE REGISTRO
-
-# --- 1. FUNCIÓN DE SEGURIDAD (Variables) ---
+# --- FUNCIÓN DE SEGURIDAD (Variables) ---
 init python:
     def check_vars_safe():
         if not hasattr(store, 'pc_usuario'): store.pc_usuario = ""
@@ -1959,7 +1958,7 @@ init python:
         if not hasattr(store, 'pc_pass'): store.pc_pass = ""
         if not hasattr(store, 'pc_pass_confirm'): store.pc_pass_confirm = ""
 
-# --- 2. ESTILOS ---
+# --- ESTILOS ---
 style texto_input_activo:
     font "gui/fonts/VT323.ttf"
     size 35
@@ -2083,12 +2082,11 @@ screen registro_pc():
                     text "[pc_usuario]" style "texto_valor_fijo"
 
         #==========================================================
-        # CAJA 2: EMAIL (CORREGIDA Y LIMPIA)
+        # CAJA 2: EMAIL
         # =========================================================
         fixed:
             xsize 600 ysize 60 xalign 0.5
 
-            # 1. LÓGICA DE LA CAJA (INPUT O BOTÓN)
             if foco_actual == "email":
                 frame:
                     style "caja_blanca_base"
@@ -2114,41 +2112,64 @@ screen registro_pc():
 
             if mostrar_aviso:
                 add "images/inicio_sesion/icono_advertencia.png" at estilo_bocadillo_externo
+        
+        # =========================================================
+        # CAJA 3: CONTRASEÑA 
+        # =========================================================
+        fixed:
+            xsize 600 ysize 60 xalign 0.5
 
-        # =========================================================
-        # CAJA 3: CONTRASEÑA
-        # =========================================================
-        if foco_actual == "pass":
-            frame:
-                style "caja_blanca_base"
-                input value VariableInputValue("pc_pass") style "texto_input_activo" length 20 mask "*" xfill True yfill True
-        else:
-            button:
-                style "caja_blanca_base"
-                action SetScreenVariable("foco_actual", "pass")
-                
-                if pc_pass == "":
-                    text "Contraseña" style "texto_placeholder"
-                else:
-                    text ("*" * len(pc_pass)) style "texto_valor_fijo"
+            if foco_actual == "pass":
+                frame:
+                    style "caja_blanca_base"
+                    input value VariableInputValue("pc_pass") style "texto_input_activo" length 20 mask (None if ver_password else "*") xfill True yfill True
+            else:
+                button:
+                    style "caja_blanca_base"
+                    action SetScreenVariable("foco_actual", "pass")
+                    if pc_pass == "":
+                        text "Contraseña" style "texto_placeholder"
+                    else:
+                        text (pc_pass if ver_password else "*" * len(pc_pass)) style "texto_valor_fijo"
+
+            # --- Boton ojo ---
+            imagebutton:
+                xpos 615 # Lo colocamos flotando a la derecha de la caja
+                yalign 0.5
+                idle ("images/inicio_sesion/ojo_abierto.png" if ver_password else "images/inicio_sesion/ojo_cerrado.png")
+                at transform:
+                    xysize(50, 50)
+                mouse "pc_select" 
+                action ToggleVariable("ver_password")
 
         # =========================================================
         # CAJA 4: CONFIRMAR
         # =========================================================
-        if foco_actual == "confirm":
-            frame:
-                style "caja_blanca_base"
-                input value VariableInputValue("pc_pass_confirm") style "texto_input_activo" length 20 mask "*" xfill True yfill True
-        else:
-            button:
-                style "caja_blanca_base"
-                action SetScreenVariable("foco_actual", "confirm")
-                
-                if pc_pass_confirm == "":
-                    text "Confirmar Contraseña" style "texto_placeholder"
-                else:
-                    text ("*" * len(pc_pass_confirm)) style "texto_valor_fijo"
+        fixed:
+            xsize 600 ysize 60 xalign 0.5
 
+            if foco_actual == "confirm":
+                frame:
+                    style "caja_blanca_base"
+                    input value VariableInputValue("pc_pass_confirm") style "texto_input_activo" length 20 mask (None if ver_password else "*") xfill True yfill True
+            else:
+                button:
+                    style "caja_blanca_base"
+                    action SetScreenVariable("foco_actual", "confirm")
+                    if pc_pass_confirm == "":
+                        text "Confirmar Contraseña" style "texto_placeholder"
+                    else:
+                        text (pc_pass_confirm if ver_password else "*" * len(pc_pass_confirm)) style "texto_valor_fijo"
+
+            # --- Boton ojo ---
+            imagebutton:
+                xpos 615 # Lo colocamos flotando a la derecha
+                yalign 0.5
+                idle ("images/inicio_sesion/ojo_abierto.png" if ver_password else "images/inicio_sesion/ojo_cerrado.png")
+                at transform:
+                    xysize(50, 50)
+                mouse "pc_select" 
+                action ToggleVariable("ver_password")
         null height 30
 
         # Botón para ir a Login
@@ -2158,7 +2179,11 @@ screen registro_pc():
             text_color "#ffffff"
             text_hover_color "#000000" 
             xalign 0.5
-            action [Hide("registro_pc"), Show("inicio_sesion_pc")]
+            action [SetVariable("pc_pass", ""), 
+                    SetVariable("pc_pass_confirm", ""), 
+                    SetVariable("ver_password", False),
+                    Hide("registro_pc"),
+                    Show("inicio_sesion_pc")]
 
 
         # BOTÓN COMPLETAR
@@ -2235,22 +2260,34 @@ screen inicio_sesion_pc():
                 else:
                     text "[pc_usuario]" style "texto_valor_fijo"
 
+# =========================================================
+        # CAJA 2: CONTRASEÑA 
         # =========================================================
-        # CAJA 2: CONTRASEÑA
-        # =========================================================
-        if foco_actual == "pass":
-            frame:
-                style "caja_blanca_base"
-                input value VariableInputValue("pc_pass") style "texto_input_activo" length 20 mask "*" xfill True yfill True
-        else:
-            button:
-                style "caja_blanca_base"
-                action SetScreenVariable("foco_actual", "pass")
-                
-                if pc_pass == "":
-                    text "Contraseña" style "texto_placeholder"
-                else:
-                    text ("*" * len(pc_pass)) style "texto_valor_fijo"
+        fixed:
+            xsize 600 ysize 60 xalign 0.5
+
+            if foco_actual == "pass":
+                frame:
+                    style "caja_blanca_base"
+                    input value VariableInputValue("pc_pass") style "texto_input_activo" length 20 mask (None if ver_password else "*") xfill True yfill True
+            else:
+                button:
+                    style "caja_blanca_base"
+                    action SetScreenVariable("foco_actual", "pass")
+                    if pc_pass == "":
+                        text "Contraseña" style "texto_placeholder"
+                    else:
+                        text (pc_pass if ver_password else "*" * len(pc_pass)) style "texto_valor_fijo"
+
+            # --- Boton ojo ---
+            imagebutton:
+                xpos 615
+                yalign 0.5
+                idle ("images/inicio_sesion/ojo_abierto.png" if ver_password else "images/inicio_sesion/ojo_cerrado.png")
+                at transform:
+                    xysize(50, 50)
+                mouse "pc_select" 
+                action ToggleVariable("ver_password")
 
         textbutton "¿Has olvidado la contraseña?":
             text_font "gui/fonts/VT323.ttf"
@@ -2258,8 +2295,10 @@ screen inicio_sesion_pc():
             text_color "#ffffff"
             text_hover_color "#000000" 
             xalign 0.5
-            action [Hide("inicio_sesion_pc"), Show("recuperacion")]
-
+            action [SetVariable("pc_pass", ""), 
+                    SetVariable("ver_password", False),
+                    Hide("inicio_sesion_pc"), 
+                    Show("recuperacion")]
         # Botón para ir a Registro
         textbutton "¿No tienes cuenta? Regístrate":
             text_font "gui/fonts/VT323.ttf"
@@ -2267,7 +2306,10 @@ screen inicio_sesion_pc():
             text_color "#ffffff"
             text_hover_color "#000000" 
             xalign 0.5
-            action [Hide("inicio_sesion_pc"), Show("registro_pc")]
+            action [SetVariable("pc_pass", ""), 
+                    SetVariable("ver_password", False),
+                    Hide("inicio_sesion_pc"), 
+                    Show("registro_pc")]
 
         # BOTÓN COMPLETAR
         imagebutton:
@@ -2378,7 +2420,11 @@ screen recuperacion():
                     text_color "#ffffff"
                     text_hover_color "#000000" 
                     xalign 0.5
-                    action [SetVariable("fase_recuperacion", 1), Show("inicio_sesion_pc")]
+                    action [SetVariable("pc_nueva_pass", ""), 
+                            SetVariable("pc_confirm_pass", ""),
+                            SetVariable("ver_password", False),
+                            SetVariable("fase_recuperacion", 1), 
+                            Show("inicio_sesion_pc")]
                 
                 textbutton "Continuar":
                     text_font "gui/fonts/VT323.ttf"
@@ -2398,30 +2444,62 @@ screen recuperacion():
                 xalign 0.5
                 text "Introduce tu nueva contraseña" style "texto_placeholder" size 25 xalign 0.0
 
+# =========================================================
                 # NUEVA PASS
-                button:
-                    style "caja_blanca_base"
-                    action SetScreenVariable("foco_actual", "nueva_pass")
+                # =========================================================
+                fixed:
+                    xsize 600 ysize 60 xalign 0.5
+
                     if foco_actual == "nueva_pass":
-                        input value VariableInputValue("pc_nueva_pass") style "texto_input_activo" length 20 mask "*" xfill True yfill True
+                        frame:
+                            style "caja_blanca_base"
+                            input value VariableInputValue("pc_nueva_pass") style "texto_input_activo" length 20 mask (None if ver_password else "*") xfill True yfill True
                     else:
-                        if pc_nueva_pass == "":
-                            text "Contraseña" style "texto_placeholder"
-                        else:
-                            text ("*" * len(pc_nueva_pass)) style "texto_valor_fijo"
+                        button:
+                            style "caja_blanca_base"
+                            action SetScreenVariable("foco_actual", "nueva_pass")
+                            if pc_nueva_pass == "":
+                                text "Contraseña" style "texto_placeholder"
+                            else:
+                                text (pc_nueva_pass if ver_password else "*" * len(pc_nueva_pass)) style "texto_valor_fijo"
 
+                    imagebutton:
+                        xpos 615
+                        yalign 0.5
+                        idle ("images/inicio_sesion/ojo_abierto.png" if ver_password else "images/inicio_sesion/ojo_cerrado.png")
+                        at transform:
+                            xysize(50, 50)
+                        mouse "pc_select" 
+                        action ToggleVariable("ver_password")
+
+                # =========================================================
                 # CONFIRMAR PASS
-                button:
-                    style "caja_blanca_base"
-                    action SetScreenVariable("foco_actual", "confirm_pass")
-                    if foco_actual == "confirm_pass":
-                        input value VariableInputValue("pc_confirm_pass") style "texto_input_activo" length 20 mask "*" xfill True yfill True
-                    else:
-                        if pc_confirm_pass == "":
-                            text "Confirmar Contraseña" style "texto_placeholder"
-                        else:
-                            text ("*" * len(pc_confirm_pass)) style "texto_valor_fijo"
+                # =========================================================
+                fixed:
+                    xsize 600 ysize 60 xalign 0.5
 
+                    if foco_actual == "confirm_pass": 
+                        frame:
+                            style "caja_blanca_base"
+                            input value VariableInputValue("pc_confirm_pass") style "texto_input_activo" length 20 mask (None if ver_password else "*") xfill True yfill True
+                    else:
+                        button:
+                            style "caja_blanca_base"
+                            action SetScreenVariable("foco_actual", "confirm_pass") 
+                            if pc_confirm_pass == "":
+                                text "Confirmar Contraseña" style "texto_placeholder"
+                            else:
+                                text (pc_confirm_pass if ver_password else "*" * len(pc_confirm_pass)) style "texto_valor_fijo"
+
+                    imagebutton:
+                        xpos 615
+                        yalign 0.5
+                        idle ("images/inicio_sesion/ojo_abierto.png" if ver_password else "images/inicio_sesion/ojo_cerrado.png")
+                        at transform:
+                            xysize(50, 50)
+                        mouse "pc_select" 
+                        action ToggleVariable("ver_password")
+                        
                 null height 20
 
                 # BOTÓN CAMBIAR
@@ -2433,9 +2511,7 @@ screen recuperacion():
                     text_hover_color "#ff0000"
                     action If(
                         pc_nueva_pass != "" and pc_nueva_pass == pc_confirm_pass,
-                        true=[Function(confirmar_nueva_password_api, pc_email, pc_codigo, pc_nueva_pass), 
-                            SetVariable("fase_recuperacion", 1), 
-                            Show("inicio_sesion_pc")], 
+                        true=Function(confirmar_nueva_password_api, pc_email, pc_codigo, pc_nueva_pass), 
                         false=Notify("Las contraseñas no coinciden")
                     )
 
@@ -2445,7 +2521,12 @@ screen recuperacion():
                     text_size 25
                     text_color "#aaaaaa"
                     text_hover_color "#ffffff"
-                    action [SetVariable("fase_recuperacion", 1), Show("inicio_sesion_pc")]
+                    action [SetVariable("pc_nueva_pass", ""), 
+                            SetVariable("pc_confirm_pass", ""),
+                            SetVariable("ver_password", False),
+                            SetVariable("fase_recuperacion", 1), 
+                            Hide("recuperacion"),
+                            Show("inicio_sesion_pc")]
 
     # --- MENSAJE FLOTANTE DE ÉXITO ---
     if recuperacion_msg == "¡Contraseña actualizada!":
@@ -2454,7 +2535,6 @@ screen recuperacion():
             background Solid("#002244cc")
             padding (40, 20)
             text "Contraseña cambiada correctamente" color "#fff" font "gui/fonts/VT323.ttf" size 30
-
 
 
 # --- PANTALLA DE ESCRITORIO PC ---
@@ -2476,8 +2556,8 @@ screen escritorio_pc():
             xalign 0.5 
             
             imagebutton:
-                idle "images/pc/icono_nota.png" 
-                hover Transform("images/pc/icono_nota.png", matrixcolor=BrightnessMatrix(0.2)) 
+                idle "images/escritorioPC/icono_nota.png" 
+                hover Transform("images/escritorioPC/icono_nota.png", matrixcolor=BrightnessMatrix(0.2)) 
                 mouse "pc_select"
                 action Jump("abrir_nota")
                 xalign 0.5
@@ -2495,8 +2575,8 @@ screen escritorio_pc():
             xalign 0.5
             
             imagebutton:
-                idle "images/pc/icono_chat.png"
-                hover Transform("images/pc/icono_chat.png", matrixcolor=BrightnessMatrix(0.2))
+                idle "images/escritorioPC/icono_chat.png"
+                hover Transform("images/escritorioPC/icono_chat.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
                 action Jump("abrir_chat")
                 xalign 0.5
@@ -2514,10 +2594,10 @@ screen escritorio_pc():
             xalign 0.5
 
             imagebutton:
-                idle "images/pc/icono_ajustes.png"
-                hover Transform("images/pc/icono_ajustes.png", matrixcolor=BrightnessMatrix(0.2))
+                idle "images/escritorioPC/icono_ajustes.png"
+                hover Transform("images/escritorioPC/icono_ajustes.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
-                action Jump("abrir_ajustes")
+                action ShowMenu("preferences")
                 xalign 0.5
 
             text "Ajustes":
@@ -2533,13 +2613,13 @@ screen escritorio_pc():
             xalign 0.5
 
             imagebutton:
-                idle "images/pc/icono_carpeta.png"
-                hover Transform("images/pc/icono_carpeta.png", matrixcolor=BrightnessMatrix(0.2))
+                idle "images/escritorioPC/icono_carpeta.png"
+                hover Transform("images/escritorioPC/icono_carpeta.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
                 action Jump("abrir_ajustes")
                 xalign 0.5
 
-            text "Ajustes":
+            text "Carpeta1":
                 font "gui/fonts/VT323.ttf"
                 size 25
                 color "#ffffff"
@@ -2553,13 +2633,13 @@ screen escritorio_pc():
             xalign 0.5
 
             imagebutton:
-                idle "images/pc/icono_galeria.png"
-                hover Transform("images/pc/icono_galeria.png", matrixcolor=BrightnessMatrix(0.2))
+                idle "images/escritorioPC/icono_galeria.png"
+                hover Transform("images/escritorioPC/icono_galeria.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
                 action Jump("abrir_galeria")
                 xalign 0.5
 
-            text "Ajustes":
+            text "Galería":
                 font "gui/fonts/VT323.ttf"
                 size 25
                 color "#ffffff"
@@ -2573,13 +2653,13 @@ screen escritorio_pc():
             xalign 0.5
 
             imagebutton:
-                idle "images/pc/icono_musica.png"
-                hover Transform("images/pc/icono_musica.png", matrixcolor=BrightnessMatrix(0.2))
+                idle "images/escritorioPC/icono_musica.png"
+                hover Transform("images/escritorioPC/icono_musica.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
                 action Jump("abrir_reproductor")
                 xalign 0.5
 
-            text "Ajustes":
+            text "Música":
                 font "gui/fonts/VT323.ttf"
                 size 25
                 color "#ffffff"
@@ -2593,13 +2673,13 @@ screen escritorio_pc():
             xalign 0.5
 
             imagebutton:
-                idle "images/pc/icono_webcam.png"
-                hover Transform("images/pc/icono_webcam.png", matrixcolor=BrightnessMatrix(0.2))
+                idle "images/escritorioPC/icono_webcam.png"
+                hover Transform("images/escritorioPC/icono_webcam.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
                 action Jump("abrir_webcam")
                 xalign 0.5
 
-            text "Ajustes":
+            text "Webcam":
                 font "gui/fonts/VT323.ttf"
                 size 25
                 color "#ffffff"
@@ -2609,26 +2689,31 @@ screen escritorio_pc():
 
     # BARRA DE TAREAS 
     frame:
-        background "images/pc/barra_tareas.png"
+        background Transform("images/escritorioPC/barra_tareas.png", xysize=(1920, 80))
         xsize 1920
-        ysize 65       
+        xfill True    
+        ysize 80       
         yalign 1.0     
-        padding (10, 0)
+        padding (20, 0)
 
         imagebutton:
-            idle "images/pc/boton_apagar.png"
-            hover Transform("images/pc/boton_apagar.png", matrixcolor=BrightnessMatrix(0.2))
-            mouse "pc_mano"
+            idle Transform("images/escritorioPC/boton_apagar.png", xysize=(75, 75), nearest=True)
+            hover Transform("images/escritorioPC/boton_apagar.png", xysize=(75, 75), nearest=True, matrixcolor=BrightnessMatrix(0.2))            
+            
+            focus_mask True
+
+            mouse "pc_select"
             yalign 0.5 
             xalign 0.0 
-            action Return() # Esto cerrará el PC y volverá a la historia principal
+            action Return() # Esto apaga el PC 
 
-        # He puesto la fecha de tu imagen. Ideal para un juego retro.
-        text "01/10/2004 | 23:05":
-            font "gui/fonts/VT323.ttf"
-            size 28
-            color "#000000"
-            yalign 0.5
-            xalign 0.99
+        frame:
             background Solid("#d3d3d3") 
             padding (15, 5)
+            yalign 0.5 
+            xalign 1.0
+            
+            text "01/10/2004 | 23:05":
+                font "gui/fonts/VT323.ttf"
+                size 32
+                color "#000000"

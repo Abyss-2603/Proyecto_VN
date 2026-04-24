@@ -2,9 +2,8 @@
 errors listed below, and try again.
 
 
-File "game/api_handler.rpy", line 64: invalid syntax
-    except urllib.error.HTTPError as e:
-        ^^^^^^
+File "game/screens.rpy", line 2483: Indentation mismatch.
+    else:
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Wed Apr 22 15:48:05 2026
+Fri Apr 24 11:55:33 2026
