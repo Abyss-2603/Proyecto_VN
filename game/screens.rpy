@@ -2090,12 +2090,11 @@ screen registro_pc():
 
             # 1. LÓGICA DE LA CAJA (INPUT O BOTÓN)
             if foco_actual == "email":
-                # Si estamos escribiendo -> INPUT
                 frame:
                     style "caja_blanca_base"
                     input value VariableInputValue("pc_email") style "texto_input_activo" length 40 xsize 600 yfill True
             else:
-                # Si no estamos escribiendo -> BOTÓN
+               
                 button:
                     style "caja_blanca_base"
                     action SetScreenVariable("foco_actual", "email")
@@ -2455,3 +2454,181 @@ screen recuperacion():
             background Solid("#002244cc")
             padding (40, 20)
             text "Contraseña cambiada correctamente" color "#fff" font "gui/fonts/VT323.ttf" size 30
+
+
+
+# --- PANTALLA DE ESCRITORIO PC ---
+
+screen escritorio_pc():
+    modal True 
+
+    add "images/escritorioPC/fondo_escritorio.png":
+        xysize (1920, 1080)
+
+    hbox:
+        xpos 40    
+        yalign 0.88  
+        spacing 50   
+
+        # --- Icono Nota_1 ---
+        vbox:
+            spacing 5    
+            xalign 0.5 
+            
+            imagebutton:
+                idle "images/pc/icono_nota.png" 
+                hover Transform("images/pc/icono_nota.png", matrixcolor=BrightnessMatrix(0.2)) 
+                mouse "pc_select"
+                action Jump("abrir_nota")
+                xalign 0.5
+                
+            text "Nota_1":
+                font "gui/fonts/VT323.ttf" 
+                size 25
+                color "#ffffff"
+                outlines [(2, "#000000", 0, 0)] 
+                xalign 0.5
+
+        # --- Icono Chat ---
+        vbox:
+            spacing 5
+            xalign 0.5
+            
+            imagebutton:
+                idle "images/pc/icono_chat.png"
+                hover Transform("images/pc/icono_chat.png", matrixcolor=BrightnessMatrix(0.2))
+                mouse "pc_select"
+                action Jump("abrir_chat")
+                xalign 0.5
+                
+            text "Chat":
+                font "gui/fonts/VT323.ttf"
+                size 25
+                color "#ffffff"
+                outlines [(2, "#000000", 0, 0)]
+                xalign 0.5
+
+        # --- Icono Ajustes ---
+        vbox:
+            spacing 5
+            xalign 0.5
+
+            imagebutton:
+                idle "images/pc/icono_ajustes.png"
+                hover Transform("images/pc/icono_ajustes.png", matrixcolor=BrightnessMatrix(0.2))
+                mouse "pc_select"
+                action Jump("abrir_ajustes")
+                xalign 0.5
+
+            text "Ajustes":
+                font "gui/fonts/VT323.ttf"
+                size 25
+                color "#ffffff"
+                outlines [(2, "#000000", 0, 0)]
+                xalign 0.5
+        
+        # --- Icono Carpeta ---
+        vbox:
+            spacing 5
+            xalign 0.5
+
+            imagebutton:
+                idle "images/pc/icono_carpeta.png"
+                hover Transform("images/pc/icono_carpeta.png", matrixcolor=BrightnessMatrix(0.2))
+                mouse "pc_select"
+                action Jump("abrir_ajustes")
+                xalign 0.5
+
+            text "Ajustes":
+                font "gui/fonts/VT323.ttf"
+                size 25
+                color "#ffffff"
+                outlines [(2, "#000000", 0, 0)]
+                xalign 0.5
+        
+        # --- Icono Galería ---
+
+        vbox:
+            spacing 5
+            xalign 0.5
+
+            imagebutton:
+                idle "images/pc/icono_galeria.png"
+                hover Transform("images/pc/icono_galeria.png", matrixcolor=BrightnessMatrix(0.2))
+                mouse "pc_select"
+                action Jump("abrir_galeria")
+                xalign 0.5
+
+            text "Ajustes":
+                font "gui/fonts/VT323.ttf"
+                size 25
+                color "#ffffff"
+                outlines [(2, "#000000", 0, 0)]
+                xalign 0.5
+
+        # --- Icono Música ---
+
+        vbox:
+            spacing 5
+            xalign 0.5
+
+            imagebutton:
+                idle "images/pc/icono_musica.png"
+                hover Transform("images/pc/icono_musica.png", matrixcolor=BrightnessMatrix(0.2))
+                mouse "pc_select"
+                action Jump("abrir_reproductor")
+                xalign 0.5
+
+            text "Ajustes":
+                font "gui/fonts/VT323.ttf"
+                size 25
+                color "#ffffff"
+                outlines [(2, "#000000", 0, 0)]
+                xalign 0.5
+
+        # --- Icono webcam ---
+
+        vbox:
+            spacing 5
+            xalign 0.5
+
+            imagebutton:
+                idle "images/pc/icono_webcam.png"
+                hover Transform("images/pc/icono_webcam.png", matrixcolor=BrightnessMatrix(0.2))
+                mouse "pc_select"
+                action Jump("abrir_webcam")
+                xalign 0.5
+
+            text "Ajustes":
+                font "gui/fonts/VT323.ttf"
+                size 25
+                color "#ffffff"
+                outlines [(2, "#000000", 0, 0)]
+                xalign 0.5
+
+
+    # BARRA DE TAREAS 
+    frame:
+        background "images/pc/barra_tareas.png"
+        xsize 1920
+        ysize 65       
+        yalign 1.0     
+        padding (10, 0)
+
+        imagebutton:
+            idle "images/pc/boton_apagar.png"
+            hover Transform("images/pc/boton_apagar.png", matrixcolor=BrightnessMatrix(0.2))
+            mouse "pc_mano"
+            yalign 0.5 
+            xalign 0.0 
+            action Return() # Esto cerrará el PC y volverá a la historia principal
+
+        # He puesto la fecha de tu imagen. Ideal para un juego retro.
+        text "01/10/2004 | 23:05":
+            font "gui/fonts/VT323.ttf"
+            size 28
+            color "#000000"
+            yalign 0.5
+            xalign 0.99
+            background Solid("#d3d3d3") 
+            padding (15, 5)
