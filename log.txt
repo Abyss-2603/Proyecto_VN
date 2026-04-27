@@ -1,34 +1,34 @@
-2026-04-24 12:05:57 UTC
+2026-04-27 12:45:08 UTC
 Windows-11-10.0.26200-SP0
 Ren'Py 8.5.2.26010301
 
-Early init took 27 ms
-Loading error handling took 16 ms
-Loading script took 256 ms
-Loading save slot metadata took 15 ms
-Loading persistent took 1 ms
-Running init code took 25 ms
+Early init took 28 ms
+Loading error handling took 15 ms
+Loading script took 283 ms
+Loading save slot metadata took 14 ms
+Loading persistent took 0 ms
+Running init code took 27 ms
 Loading analysis data took 2 ms
-Analyze and compile ATL took 0 ms
-Reloading save slot metadata took 6 ms
+Analyze and compile ATL took 3 ms
+Reloading save slot metadata took 5 ms
 Backing up script files to 'C:\\Users\\provecaex43\\AppData\\Roaming/RenPy/backups\\Proyecto_VN':
-Dump and make backups took 25 ms
+Dump and make backups took 24 ms
 Cleaning cache took 0 ms
 Making clean stores took 0 ms
 Initial gc took 30 ms
 DPI scale factor: 1.000000
 nvdrs: Loaded, about to disable thread optimizations.
 nvdrs: Disabled thread optimizations.
-Creating interface object took 157 ms
+Creating interface object took 163 ms
 Init translation took 0 ms
 Cleaning stores took 0 ms
 Load screen analysis took 1 ms
-Analyze screens took 6 ms
-Save screen analysis took 9 ms
+Analyze screens took 7 ms
+Save screen analysis took 10 ms
 Save pyanalysis took 4 ms
-Save bytecode took 17 ms
-Running _start took 0 ms
-Interface start took 140 ms
+Save bytecode took 16 ms
+Running _start took 1 ms
+Interface start took 147 ms
 
 Initializing gl2 renderer:
 primary display bounds: (0, 0, 1920, 1080)
@@ -42,5 +42,3 @@ Screen sizes: virtual=(1920, 1080) physical=(1920, 1009) drawable=(1920, 1009)
 Maximum texture size: 4096x4096
 Screen sizes: virtual=(1920, 1080) physical=(1920, 1009) drawable=(1920, 1009)
 Maximum texture size: 4096x4096
-Resize event: <Event(65533-VIDEORESIZE h=1009, mod=0, size=(1920, 1009), w=1920)>
-Resize event: <Event(65533-VIDEORESIZE h=1009, mod=4096, size=(1920, 1009), w=1920)>

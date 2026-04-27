@@ -30,6 +30,8 @@ init python:
                     renpy.notify("¡Éxito! Cuenta creada. Por favor, inicia sesión.")
                     renpy.store.pc_pass = ""
                     renpy.store.pc_pass_confirm = ""
+                    renpy.hide_screen("registro_pc")
+                    renpy.show_screen("inicio_sesion_pc")
         except urllib.error.HTTPError as e:
             try:
                 error_body = e.read().decode('utf-8')
@@ -68,11 +70,10 @@ init python:
                 renpy.notify("Usuario o contraseña incorrectos.")
         except Exception as e:
             renpy.notify(f"Fallo técnico: {str(e)}")
-            
         if login_exitoso:
             renpy.notify("¡Acceso concedido! Cargando estado...")
+            renpy.end_interaction(True)
             
-
     # --- FUNCIÓN: PEDIR CÓDIGO AL CORREO ---
     def solicitar_codigo_api(email):
         url = API_URL + "/api/forgot-password"
@@ -91,7 +92,7 @@ init python:
                 renpy.notify("Error: Correo no registrado.")
         except Exception as e:
             renpy.notify(f"Fallo técnico: {str(e)}")
-            
+
     # --- FUNCIÓN: VERIFICAR CÓDIGO ---
     def verificar_codigo_api(email, codigo):
         url = API_URL + "/api/verify-code"
@@ -126,7 +127,8 @@ init python:
                     renpy.store.pc_codigo = ""
                     renpy.store.pc_nueva_pass = ""
                     renpy.store.pc_confirm_pass = ""
-                    renpy.store.ver_password = False
+                    renpy.hide_screen("recuperacion")
+                    renpy.show_screen("inicio_sesion_pc")
         except urllib.error.HTTPError as e:
             try:
                 error_data = json.loads(e.read().decode('utf-8'))
@@ -135,7 +137,7 @@ init python:
                 renpy.notify("Error: Datos incorrectos.")
         except Exception as e:
             renpy.notify(f"Fallo técnico: {str(e)}")
-    
+
     # --- GUARDAR PROGRESO ---
     def guardar_progreso(capitulo, estres, nuevas_decisiones):
         if not hasattr(persistent, 'user_id') or not persistent.user_id:
@@ -164,3 +166,36 @@ init python:
             renpy.notify(f"Error de conexión: {str(e)}")
 
         return False
+
+    apps_pc = {
+        "nota": {"abierta": False, "minimizada": False, "titulo": "Nota_1.txt"},
+        "chat": {"abierta": False, "minimizada": False, "titulo": "Chat_Seguro.exe"},
+        "ajustes": {"abierta": False, "minimizada": False, "titulo": "Panel de Control"},
+        "carpeta": {"abierta": False, "minimizada": False, "titulo": "Archivos Ocultos"},
+        "galeria": {"abierta": False, "minimizada": False, "titulo": "Visor de Imágenes"},
+        "musica": {"abierta": False, "minimizada": False, "titulo": "Reproductor"},
+        "webcam": {"abierta": False, "minimizada": False, "titulo": "Webcam_Feed"}
+    }
+
+    # --- Lógica de ventanas del escritorio ---
+    # El orden en el que aparecerán en la barra de tareas
+    orden_apps = ["nota", "chat", "ajustes", "carpeta", "galeria", "musica", "webcam"]
+
+    # --- FUNCIONES DEL SISTEMA OPERATIVO ---
+    def abrir_app(app_id):
+        apps_pc[app_id]["abierta"] = True
+        apps_pc[app_id]["minimizada"] = False
+        renpy.show_screen("ventana_" + app_id) # Invoca la pantalla correspondiente
+        renpy.restart_interaction()
+
+    def cerrar_app(app_id):
+        apps_pc[app_id]["abierta"] = False
+        apps_pc[app_id]["minimizada"] = False
+        renpy.hide_screen("ventana_" + app_id) # Destruye la pantalla
+        renpy.restart_interaction()
+
+    def toggle_minimizar(app_id):
+        # Si está abierta, invierte su estado de minimizado (True a False, o False a True)
+        if apps_pc[app_id]["abierta"]:
+            apps_pc[app_id]["minimizada"] = not apps_pc[app_id]["minimizada"]
+            renpy.restart_interaction()

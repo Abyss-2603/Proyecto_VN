@@ -4,6 +4,13 @@
 
 init offset = -1
 
+# Definicion de interfaces del chat
+init:
+    # Bajamos los márgenes a 5 para evitar que la imagen colapse si es pequeña
+    image frame_yo = Frame("images/escritorioPC/frame_chat1.png", 5, 5, 5, 5)
+    image frame_amiga = Frame("images/escritorioPC/frame_chat2.png", 5, 5, 5, 5)
+    image frame_eleccion = Frame("images/escritorioPC/frame_decisiones_chat.png", 5, 5, 5, 5)
+
 ################################################################################
 ## Estilos
 ################################################################################
@@ -306,9 +313,9 @@ screen navigation():
 
             textbutton _("Historial") action ShowMenu("history")
 
-            textbutton _("Guardar") action ShowMenu("save")
+            # textbutton _("Guardar") action ShowMenu("save")
 
-        textbutton _("Cargar") action ShowMenu("load")
+        # textbutton _("Cargar") action ShowMenu("load")
 
         textbutton _("Opciones") action ShowMenu("preferences")
 
@@ -343,6 +350,9 @@ style navigation_button:
 
 style navigation_button_text:
     properties gui.text_properties("navigation_button")
+    idle_color "#444444"   
+    hover_color "#000000" 
+    font "gui/fonts/VT323.ttf"
 
 
 ## Pantalla del menú principal #################################################
@@ -389,7 +399,7 @@ screen confirmacion_borrar_cuenta():
     modal True 
 
     ## 1. Fondo
-    add "images/menus/menu_animado.webm":
+    add "images/menus/fondo_menu.png":
         xysize(1920, 1080)
 
     ## 2. EL CONTENEDOR TRANSPARENTE
@@ -681,11 +691,6 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
     style_prefix "game_menu"
 
-    if main_menu:
-        add gui.main_menu_background
-    else:
-        add gui.game_menu_background
-
     frame:
         style "game_menu_outer_frame"
 
@@ -765,7 +770,7 @@ style game_menu_outer_frame:
     bottom_padding 45
     top_padding 180
 
-    background "gui/overlay/game_menu.png"
+    background Solid("#d6d6d6")
 
 style game_menu_navigation_frame:
     xsize 420
@@ -861,97 +866,32 @@ screen load():
 
     use file_slots(_("Cargar"))
 
-
+# En vez de los slots de guardado
 screen file_slots(title):
-
-    default page_name_value = FilePageNameInputValue(pattern=_("Página {}"), auto=_("Grabación automática"), quick=_("Grabación rápida"))
-
     use game_menu(title):
-
         fixed:
-
-            ## Esto asegura que 'input' recibe el evento 'enter' antes que otros
-            ## botones.
-            order_reverse True
-
-            ## El nombre de la pagina, se puede editar haciendo clic en el
-            ## botón.
-            button:
-                style "page_label"
-
-                key_events True
-                xalign 0.5
-                action page_name_value.Toggle()
-
-                input:
-                    style "page_label_text"
-                    value page_name_value
-
-            ## La cuadrícula de huecos de guardado.
-            grid gui.file_slot_cols gui.file_slot_rows:
-                style_prefix "slot"
-
-                xalign 0.5
-                yalign 0.5
-
-                spacing gui.slot_spacing
-
-                for i in range(gui.file_slot_cols * gui.file_slot_rows):
-
-                    $ slot = i + 1
-
-                    button:
-                        action FileAction(slot)
-
-                        has vbox
-
-                        add FileScreenshot(slot) xalign 0.5
-
-                        text FileTime(slot, format=_("{#file_time}%A, %d de %B %Y, %H:%M"), empty=_("vacío")):
-                            style "slot_time_text"
-
-                        text FileSaveName(slot):
-                            style "slot_name_text"
-
-                        key "save_delete" action FileDelete(slot)
-
-            ## Botones de acceso a otras páginas
             vbox:
-                style_prefix "page"
+                xpos 500  
+                ypos 150
+                spacing 30
+                
+                text "ESTADO DE LA SINCRONIZACIÓN":
+                    font "gui/fonts/Micro5.ttf" 
+                    size 80 
+                    color "#333333" # Más oscuro para que resalte
+                
+                vbox:
+                    spacing 10
+                    text "Estado de la Partida: [capitulo_actual]":
+                        font "gui/fonts/VT323.ttf" 
+                        size 45 
+                        color "#555555"
+                    
+                    text "Progreso guardado automáticamente.":
+                        font "gui/fonts/VT323.ttf" 
+                        size 28 
+                        color "#777777"
 
-                xalign 0.5
-                yalign 1.0
-
-                hbox:
-                    xalign 0.5
-
-                    spacing gui.page_spacing
-
-                    textbutton _("<") action FilePagePrevious()
-                    key "save_page_prev" action FilePagePrevious()
-
-                    if config.has_autosave:
-                        textbutton _("{#auto_page}A") action FilePage("auto")
-
-                    if config.has_quicksave:
-                        textbutton _("{#quick_page}R") action FilePage("quick")
-
-                    ## range(1, 10) da los números del 1 al 9.
-                    for page in range(1, 10):
-                        textbutton "[page]" action FilePage(page)
-
-                    textbutton _(">") action FilePageNext()
-                    key "save_page_next" action FilePageNext()
-
-                if config.has_sync:
-                    if CurrentScreenName() == "save":
-                        textbutton _("Subir Sync"):
-                            action UploadSync()
-                            xalign 0.5
-                    else:
-                        textbutton _("Descargar Sync"):
-                            action DownloadSync()
-                            xalign 0.5
 
 
 style page_label is gui_label
@@ -1822,16 +1762,18 @@ style main_menu_frame:
     background "gui/phone/overlay/main_menu.png"
 
 style game_menu_outer_frame:
-    variant "small"
-    background "gui/phone/overlay/game_menu.png"
+    padding (0, 0)     
+    margin (0, 0)       
+    background Solid("#d6d6d6")
 
 style game_menu_navigation_frame:
     variant "small"
     xsize 510
 
 style game_menu_content_frame:
-    variant "small"
-    top_margin 0
+    left_margin 60
+    right_margin 60    
+    top_margin 100
 
 style game_menu_viewport:
     variant "small"
@@ -2029,11 +1971,20 @@ transform estilo_bocadillo_externo:
     on hide:
         easeout 0.2 alpha 0.0 yoffset 10
 
-# --- aviso cargando ---
-screen cargando_servidor():
+# --- PANTALLA DE CARGA ---
+screen cargando_servidor(tarea=""):
     zorder 100
     modal True
     
+    if tarea == "registro":
+        timer 0.1 action [Function(conectar_registro, pc_usuario, pc_email, pc_pass), Hide("cargando_servidor")]
+    elif tarea == "login":
+        timer 0.1 action [Function(conectar_login, pc_usuario, pc_pass), Hide("cargando_servidor")]
+    elif tarea == "codigo":
+        timer 0.1 action [Function(solicitar_codigo_api, pc_email), Hide("cargando_servidor")]
+    elif tarea == "cambiar_pass":
+        timer 0.1 action [Function(confirmar_nueva_password_api, pc_email, pc_codigo, pc_nueva_pass), Hide("cargando_servidor")]
+
     frame:
         align (0.5, 0.5)
         background Solid("#000000cc")
@@ -2198,17 +2149,18 @@ screen registro_pc():
             action [SetVariable("pc_pass", ""), 
                     SetVariable("pc_pass_confirm", ""), 
                     SetVariable("ver_password", False),
-                    Jump("menu_login_loop")]
+                    Hide("registro_pc"),
+                    Show("inicio_sesion_pc")]
+
 
         # BOTÓN COMPLETAR
         imagebutton:
             idle Transform("images/inicio_sesion/boton_completar_registro.png", zoom=2)
             hover Transform("images/inicio_sesion/boton_completar_registro_activo.png", zoom=2)
             xalign 0.5
-            
             action If(
                 pc_usuario != "" and pc_email != "" and pc_pass != "" and pc_pass == pc_pass_confirm,
-                true=Jump("procesar_registro"),
+                true=Show("cargando_servidor", tarea="registro"),
                 false=Notify("Revisa los datos.")
             )
 
@@ -2301,8 +2253,8 @@ screen inicio_sesion_pc():
             xalign 0.5
             action [SetVariable("pc_pass", ""), 
                     SetVariable("ver_password", False),
-                    Jump("menu_recuperacion_loop")]
-
+                    Hide("inicio_sesion_pc"), 
+                    Show("recuperacion")]
         # Botón para ir a Registro
         textbutton "¿No tienes cuenta? Regístrate":
             text_font "gui/fonts/VT323.ttf"
@@ -2312,7 +2264,8 @@ screen inicio_sesion_pc():
             xalign 0.5
             action [SetVariable("pc_pass", ""), 
                     SetVariable("ver_password", False),
-                    Jump("menu_registro_loop")]
+                    Hide("inicio_sesion_pc"), 
+                    Show("registro_pc")]
 
         # BOTÓN COMPLETAR
         imagebutton:
@@ -2321,10 +2274,10 @@ screen inicio_sesion_pc():
             xalign 0.5
             action If(
                 pc_usuario != "" and pc_pass != "",
-                true=Jump("procesar_login"),
+                true=Show("cargando_servidor", tarea="login"),
                 false=Notify("Revisa los datos.")
             )
-                    
+            
 # --- PANTALLA DE RECUPERACIÓN DE CONTRASEÑA ---
 screen recuperacion():
     modal True
@@ -2393,9 +2346,8 @@ screen recuperacion():
                         padding (15, 10)
                         yalign 0.5
 
-                        # Llama a la API para enviar el código
-                        action If(pc_email != "", Jump("procesar_solicitar_codigo"), Notify("Escribe un email"))
-
+                        # Llama a la API para enviar el código llama a la API para enviar el código
+                        action If(pc_email != "", Show("cargando_servidor", tarea="codigo"), Notify("Escribe un email"))
                 null height 10
                 text "Introduce el código de recuperación enviado" style "texto_placeholder" size 25 xalign 0.0
                 
@@ -2427,7 +2379,7 @@ screen recuperacion():
                             SetVariable("pc_confirm_pass", ""),
                             SetVariable("ver_password", False),
                             SetVariable("fase_recuperacion", 1), 
-                            Jump("menu_login_loop")]
+                            Show("inicio_sesion_pc")]
                 
                 textbutton "Continuar":
                     text_font "gui/fonts/VT323.ttf"
@@ -2502,7 +2454,7 @@ screen recuperacion():
                             xysize(50, 50)
                         mouse "pc_select" 
                         action ToggleVariable("ver_password")
-
+                        
                 null height 20
 
                 # BOTÓN CAMBIAR
@@ -2514,7 +2466,7 @@ screen recuperacion():
                     text_hover_color "#ff0000"
                     action If(
                         pc_nueva_pass != "" and pc_nueva_pass == pc_confirm_pass,
-                        true=Jump("procesar_cambio_pass"), 
+                        true=Show("cargando_servidor", tarea="cambiar_pass"), 
                         false=Notify("Las contraseñas no coinciden")
                     )
 
@@ -2528,7 +2480,8 @@ screen recuperacion():
                             SetVariable("pc_confirm_pass", ""),
                             SetVariable("ver_password", False),
                             SetVariable("fase_recuperacion", 1), 
-                            Jump("menu_login_loop")]
+                            Hide("recuperacion"),
+                            Show("inicio_sesion_pc")]
 
     # --- MENSAJE FLOTANTE DE ÉXITO ---
     if recuperacion_msg == "¡Contraseña actualizada!":
@@ -2547,23 +2500,21 @@ screen escritorio_pc():
     add "images/escritorioPC/fondo_escritorio.png":
         xysize (1920, 1080)
 
+    # ICONOS DEL ESCRITORIO
     hbox:
         xpos 40    
         yalign 0.88  
         spacing 50   
 
-        # --- Icono Nota_1 ---
         vbox:
             spacing 5    
             xalign 0.5 
-            
             imagebutton:
                 idle "images/escritorioPC/icono_nota.png" 
                 hover Transform("images/escritorioPC/icono_nota.png", matrixcolor=BrightnessMatrix(0.2)) 
                 mouse "pc_select"
-                action Jump("abrir_nota")
+                action Function(abrir_app, "nota") # <--- AHORA ABRE LA VENTANA
                 xalign 0.5
-                
             text "Nota_1":
                 font "gui/fonts/VT323.ttf" 
                 size 25
@@ -2571,18 +2522,15 @@ screen escritorio_pc():
                 outlines [(2, "#000000", 0, 0)] 
                 xalign 0.5
 
-        # --- Icono Chat ---
         vbox:
             spacing 5
             xalign 0.5
-            
             imagebutton:
                 idle "images/escritorioPC/icono_chat.png"
                 hover Transform("images/escritorioPC/icono_chat.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
-                action Jump("abrir_chat")
+                action Function(abrir_app, "chat")
                 xalign 0.5
-                
             text "Chat":
                 font "gui/fonts/VT323.ttf"
                 size 25
@@ -2590,18 +2538,16 @@ screen escritorio_pc():
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
 
-        # --- Icono Ajustes ---
+        # (Aplica el action Function(abrir_app, "el_nombre_que_toque") al resto de tus iconos...)
         vbox:
             spacing 5
             xalign 0.5
-
             imagebutton:
                 idle "images/escritorioPC/icono_ajustes.png"
                 hover Transform("images/escritorioPC/icono_ajustes.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
-                action ShowMenu("preferences")
+                action Function(abrir_app, "ajustes")
                 xalign 0.5
-
             text "Ajustes":
                 font "gui/fonts/VT323.ttf"
                 size 25
@@ -2609,18 +2555,15 @@ screen escritorio_pc():
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
         
-        # --- Icono Carpeta ---
         vbox:
             spacing 5
             xalign 0.5
-
             imagebutton:
                 idle "images/escritorioPC/icono_carpeta.png"
                 hover Transform("images/escritorioPC/icono_carpeta.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
-                action Jump("abrir_ajustes")
+                action Function(abrir_app, "carpeta")
                 xalign 0.5
-
             text "Carpeta1":
                 font "gui/fonts/VT323.ttf"
                 size 25
@@ -2628,19 +2571,15 @@ screen escritorio_pc():
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
         
-        # --- Icono Galería ---
-
         vbox:
             spacing 5
             xalign 0.5
-
             imagebutton:
                 idle "images/escritorioPC/icono_galeria.png"
                 hover Transform("images/escritorioPC/icono_galeria.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
-                action Jump("abrir_galeria")
+                action Function(abrir_app, "galeria")
                 xalign 0.5
-
             text "Galería":
                 font "gui/fonts/VT323.ttf"
                 size 25
@@ -2648,19 +2587,15 @@ screen escritorio_pc():
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
 
-        # --- Icono Música ---
-
         vbox:
             spacing 5
             xalign 0.5
-
             imagebutton:
                 idle "images/escritorioPC/icono_musica.png"
                 hover Transform("images/escritorioPC/icono_musica.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
-                action Jump("abrir_reproductor")
+                action Function(abrir_app, "musica")
                 xalign 0.5
-
             text "Música":
                 font "gui/fonts/VT323.ttf"
                 size 25
@@ -2668,19 +2603,15 @@ screen escritorio_pc():
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
 
-        # --- Icono webcam ---
-
         vbox:
             spacing 5
             xalign 0.5
-
             imagebutton:
                 idle "images/escritorioPC/icono_webcam.png"
                 hover Transform("images/escritorioPC/icono_webcam.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
-                action Jump("abrir_webcam")
+                action Function(abrir_app, "webcam")
                 xalign 0.5
-
             text "Webcam":
                 font "gui/fonts/VT323.ttf"
                 size 25
@@ -2688,8 +2619,9 @@ screen escritorio_pc():
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
 
-
-    # BARRA DE TAREAS 
+    # ==========================================
+    # BARRA DE TAREAS Y APLICACIONES ABIERTAS
+    # ==========================================
     frame:
         background Transform("images/escritorioPC/barra_tareas.png", xysize=(1920, 80))
         xsize 1920
@@ -2701,14 +2633,28 @@ screen escritorio_pc():
         imagebutton:
             idle Transform("images/escritorioPC/boton_apagar.png", xysize=(75, 75), nearest=True)
             hover Transform("images/escritorioPC/boton_apagar.png", xysize=(75, 75), nearest=True, matrixcolor=BrightnessMatrix(0.2))            
-            
             focus_mask True
-
             mouse "pc_select"
             yalign 0.5 
             xalign 0.0 
-            action Return() # Esto apaga el PC 
+            action Return() 
 
+        # --- AQUÍ DIBUJAMOS LAS VENTANAS MINIMIZADAS ---
+        hbox:
+            xpos 100 # Lo separamos del botón de apagar
+            yalign 0.5
+            spacing 10
+
+            for app_id in orden_apps:
+                if apps_pc[app_id]["abierta"]:
+                    button:
+                        # Si está minimizada sale oscura, si está en pantalla sale brillante
+                        background (Solid("#333333") if apps_pc[app_id]["minimizada"] else Solid("#0055aaff"))
+                        padding (15, 10)
+                        action Function(toggle_minimizar, app_id)
+                        text apps_pc[app_id]["titulo"] font "gui/fonts/VT323.ttf" size 25 color "#fff"
+
+        # RELOJ
         frame:
             background Solid("#d3d3d3") 
             padding (15, 5)
@@ -2719,3 +2665,131 @@ screen escritorio_pc():
                 font "gui/fonts/VT323.ttf"
                 size 32
                 color "#000000"
+
+# --- VENTANA DE NOTA 1 ---
+screen ventana_nota():
+    zorder 10
+    
+    if not apps_pc["nota"]["minimizada"]:
+        
+        drag:
+            drag_name "nota_drag"
+            xpos 400 ypos 200
+            drag_handle (0, 0, 1.0, 40)
+            
+            frame:
+                background Solid("#222222") 
+                padding (2, 2)
+                
+                vbox:
+                    # BARRA SUPERIOR AZUL
+                    frame:
+                        xsize 500
+                        ysize 40
+                        background Solid("#0000aa")
+                        padding (10, 0)
+                        
+                        hbox:
+                            xfill True
+                            yalign 0.5
+                            
+                            text apps_pc["nota"]["titulo"] font "gui/fonts/VT323.ttf" size 25 color "#fff" yalign 0.5
+                            
+                            # BOTONES MINIMIZAR Y CERRAR
+                            hbox:
+                                xalign 1.0
+                                yalign 0.5
+                                spacing 5
+                                textbutton "_":
+                                    text_font "gui/fonts/VT323.ttf" text_size 25 text_color "#fff" background Solid("#888")
+                                    action Function(toggle_minimizar, "nota")
+                                textbutton "X":
+                                    text_font "gui/fonts/VT323.ttf" text_size 25 text_color "#fff" background Solid("#cc0000")
+                                    action Function(cerrar_app, "nota")
+
+                    # ÁREA DE CONTENIDO 
+                    frame:
+                        background Solid("#ffffff")
+                        xysize (500, 300)
+                        padding (20, 20)
+                        
+                        text "NO CONFÍES EN EL SISTEMA.\n\nTodo lo que escribas queda registrado." color "#000" font "gui/fonts/VT323.ttf" size 25
+
+# ---VENTANA DE CHAT ---
+screen ventana_chat():
+    zorder 10
+    if not apps_pc["chat"]["minimizada"]:
+        drag:
+            drag_name "chat_drag"
+            xpos 350 ypos 100 
+            drag_handle (0, 0, 1.0, 30)
+            
+            fixed:
+                xysize (650, 600) 
+                
+                add "images/escritorioPC/ventana_chat.png"
+
+                # BOTONES
+                imagebutton:
+                    idle Solid("#00000000") 
+                    hover Solid("#ffffff33") 
+                    xysize (25, 25) 
+                    xpos 580
+                    ypos 10 
+                    action Function(toggle_minimizar, "chat")
+                    
+                imagebutton:
+                    idle Solid("#00000000") 
+                    hover Solid("#ff000055") 
+                    xysize (25, 25) 
+                    xpos 615 
+                    ypos 10 
+                    action Function(cerrar_app, "chat")
+
+                # EL CHAT 
+                vbox:
+                    xpos 40  
+                    ypos 60 
+                    xysize (570, 500) 
+                    spacing 15
+                    
+                    viewport id "chat_vp":
+                        ysize 350 
+                        mousewheel True
+                        draggable True
+                        yinitial 1.0
+                        
+                        vbox:
+                            xfill True
+                            spacing 20
+                            for remitente, msg in historial_mensajes:
+                                if remitente == "Yo":
+                                    frame:
+                                        background "frame_yo"
+                                        padding (20, 15, 20, 15)
+                                        xalign 1.0
+                                        xmaximum 400 
+                                        text "[msg]" color "#fff" font "gui/fonts/VT323.ttf" size 26 # <--- Letra más grande
+                                else:
+                                    frame:
+                                        background "frame_amiga"
+                                        padding (20, 15, 20, 15)
+                                        xalign 0.0
+                                        xmaximum 400 
+                                        text "[msg]" color "#fff" font "gui/fonts/VT323.ttf" size 26 # <--- Letra más grande
+
+                    add Solid("#ffffff22") xsize 570 ysize 2
+                    
+                    # ÁREA DE ELECCIONES
+                    vbox:
+                        xfill True
+                        spacing 8
+                        for texto_opcion, destino in respuestas_disponibles:
+                            button:
+                                background "frame_eleccion" 
+                                xfill True
+                                ysize 60
+                                padding (15, 8)
+                                action Function(enviar_respuesta_chat, texto_opcion, destino)
+                                
+                                text "> [texto_opcion]" color "#ccc" hover_color "#fff" font "gui/fonts/VT323.ttf" size 22 xalign 0.5 yalign 0.5
