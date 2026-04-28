@@ -6,11 +6,9 @@ init offset = -1
 
 # Definicion de interfaces del chat
 init:
-    # Bajamos los márgenes a 5 para evitar que la imagen colapse si es pequeña
-    image frame_yo = Frame("images/escritorioPC/frame_chat1.png", 5, 5, 5, 5)
-    image frame_amiga = Frame("images/escritorioPC/frame_chat2.png", 5, 5, 5, 5)
-    image frame_eleccion = Frame("images/escritorioPC/frame_decisiones_chat.png", 5, 5, 5, 5)
-
+    image frame_yo = Frame("images/escritorioPC/frame_chat1.png", 60, 80, 40, 60)
+    image frame_amiga = Frame("images/escritorioPC/frame_chat2.png", 60, 80, 40, 60)
+    image frame_eleccion = Frame("images/escritorioPC/frame_decisiones_chat.png", 30, 30, 30, 30)
 ################################################################################
 ## Estilos
 ################################################################################
@@ -767,10 +765,9 @@ style return_button is navigation_button
 style return_button_text is navigation_button_text
 
 style game_menu_outer_frame:
-    bottom_padding 45
-    top_padding 180
-
-    background Solid("#d6d6d6")
+    padding (0, 0)
+    margin (0, 0)
+    background Solid("#d6d6d6") 
 
 style game_menu_navigation_frame:
     xsize 420
@@ -778,8 +775,8 @@ style game_menu_navigation_frame:
 
 style game_menu_content_frame:
     left_margin 60
-    right_margin 30
-    top_margin 15
+    right_margin 60
+    top_margin 100
 
 style game_menu_viewport:
     xsize 1380
@@ -878,7 +875,7 @@ screen file_slots(title):
                 text "ESTADO DE LA SINCRONIZACIÓN":
                     font "gui/fonts/Micro5.ttf" 
                     size 80 
-                    color "#333333" # Más oscuro para que resalte
+                    color "#333333" 
                 
                 vbox:
                     spacing 10
@@ -2513,7 +2510,7 @@ screen escritorio_pc():
                 idle "images/escritorioPC/icono_nota.png" 
                 hover Transform("images/escritorioPC/icono_nota.png", matrixcolor=BrightnessMatrix(0.2)) 
                 mouse "pc_select"
-                action Function(abrir_app, "nota") # <--- AHORA ABRE LA VENTANA
+                action Function(abrir_app, "nota")
                 xalign 0.5
             text "Nota_1":
                 font "gui/fonts/VT323.ttf" 
@@ -2538,7 +2535,6 @@ screen escritorio_pc():
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
 
-        # (Aplica el action Function(abrir_app, "el_nombre_que_toque") al resto de tus iconos...)
         vbox:
             spacing 5
             xalign 0.5
@@ -2546,7 +2542,7 @@ screen escritorio_pc():
                 idle "images/escritorioPC/icono_ajustes.png"
                 hover Transform("images/escritorioPC/icono_ajustes.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
-                action Function(abrir_app, "ajustes")
+                action ShowMenu("preferences")
                 xalign 0.5
             text "Ajustes":
                 font "gui/fonts/VT323.ttf"
@@ -2721,40 +2717,71 @@ screen ventana_chat():
     if not apps_pc["chat"]["minimizada"]:
         drag:
             drag_name "chat_drag"
-            xpos 350 ypos 100 
-            drag_handle (0, 0, 1.0, 30)
+            xpos 350 ypos 50 
+            drag_handle (0, 0, 1.0, 70)
             
             fixed:
-                xysize (650, 600) 
+                xysize (900, 800) 
                 
-                add "images/escritorioPC/ventana_chat.png"
+                add Transform("images/escritorioPC/ventana_chat.png", xysize=(900, 800), nearest=True)
 
                 # BOTONES
                 imagebutton:
                     idle Solid("#00000000") 
                     hover Solid("#ffffff33") 
-                    xysize (25, 25) 
-                    xpos 580
-                    ypos 10 
+                    xysize (40, 40) 
+                    xpos 780
+                    ypos 20
                     action Function(toggle_minimizar, "chat")
                     
                 imagebutton:
                     idle Solid("#00000000") 
                     hover Solid("#ff000055") 
-                    xysize (25, 25) 
-                    xpos 615 
-                    ypos 10 
+                    xysize (40, 40)  
+                    xpos 830 
+                    ypos 20
                     action Function(cerrar_app, "chat")
 
-                # EL CHAT 
+                # caja para la chica
+                hbox:
+                    xpos 42 
+                    ypos 95
+                    spacing 8
+                    
+                    imagebutton:
+                        idle Transform("images/escritorioPC/icono_chica.png", xysize=(35, 35), fit="contain")
+                        hover Transform("images/escritorioPC/icono_chica.png", xysize=(35, 35), fit="contain", matrixcolor=BrightnessMatrix(0.1))
+                        action Show("zoom_perfil", img="images/escritorioPC/icono_chica.png")
+                        xalign 0.5
+                    
+                    text "Roxy26": 
+                        font "gui/fonts/VT323.ttf"
+                        size 28
+                        color "#ffffff"
+                        xalign 0.5
+                        yoffset 10
+                
+                # caja para el nombre del usuario
+                hbox:
+                    xpos 105  
+                    ypos 750
+                    yanchor 0.5
+                    
+                    text (persistent.nombre_jugador or pc_usuario or "Usuario"): 
+                        font "gui/fonts/VT323.ttf"
+                        size 32
+                        color "#ffffff"
+                        outlines [(1, "#000000", 0, 0)]
+                        yanchor 0.5
+
+                # --- Chat ---
                 vbox:
-                    xpos 40  
-                    ypos 60 
-                    xysize (570, 500) 
-                    spacing 15
+                    xpos 250 
+                    ypos 100
+                    xysize (560, 620) 
                     
                     viewport id "chat_vp":
-                        ysize 350 
+                        ysize 480
                         mousewheel True
                         draggable True
                         yinitial 1.0
@@ -2765,31 +2792,136 @@ screen ventana_chat():
                             for remitente, msg in historial_mensajes:
                                 if remitente == "Yo":
                                     frame:
-                                        background "frame_yo"
-                                        padding (20, 15, 20, 15)
+                                        background Frame("images/escritorioPC/frame_chat1.png", 60, 60, 60, 60)
+                                        padding (40, 40, 60, 45) 
                                         xalign 1.0
-                                        xmaximum 400 
-                                        text "[msg]" color "#fff" font "gui/fonts/VT323.ttf" size 26 # <--- Letra más grande
+                                        xmaximum 540 
+                                        text "[msg]":
+                                            color "#fff" 
+                                            font "gui/fonts/VT323.ttf" 
+                                            size 30 
+                                            xalign 0.5
                                 else:
                                     frame:
-                                        background "frame_amiga"
-                                        padding (20, 15, 20, 15)
+                                        background Frame("images/escritorioPC/frame_chat2.png", 60, 60, 60, 60)
+                                        padding (40, 40, 60, 45)
                                         xalign 0.0
-                                        xmaximum 400 
-                                        text "[msg]" color "#fff" font "gui/fonts/VT323.ttf" size 26 # <--- Letra más grande
-
-                    add Solid("#ffffff22") xsize 570 ysize 2
+                                        xmaximum 540 
+                                        text "[msg]":
+                                            color "#fff" 
+                                            font "gui/fonts/VT323.ttf" 
+                                            size 30 
+                                            xalign 0.5
+                # --- ELECCIONES ---
+                vbox:
+                    xpos 250
+                    ypos 695    # Este número es el "suelo" de tus botones
+                    yanchor 1.0 # Hace que los botones crezcan hacia ARRIBA
+                    xsize 560
+                    spacing 8
                     
-                    # ÁREA DE ELECCIONES
-                    vbox:
-                        xfill True
-                        spacing 8
-                        for texto_opcion, destino in respuestas_disponibles:
-                            button:
-                                background "frame_eleccion" 
-                                xfill True
-                                ysize 60
-                                padding (15, 8)
-                                action Function(enviar_respuesta_chat, texto_opcion, destino)
-                                
-                                text "> [texto_opcion]" color "#ccc" hover_color "#fff" font "gui/fonts/VT323.ttf" size 22 xalign 0.5 yalign 0.5
+                    for texto_opcion, destino in respuestas_disponibles:
+                        button:
+                            background Frame("images/escritorioPC/frame_decisiones_chat.png", 30, 30, 30, 30) 
+                            xsize 520
+                            xalign 0.5 
+                            padding (20, 12)
+                            action Function(enviar_respuesta_chat, texto_opcion, destino)
+                            
+                            text "> [texto_opcion]" color "#ccc" hover_color "#fff" font "gui/fonts/VT323.ttf" size 22 xalign 0.5 yalign 0.5
+
+# Pantalla para ver imagen de perfil en grande
+screen zoom_perfil(img):
+    modal True 
+    zorder 100 
+
+    add Solid("#000000aa")
+    
+    add [img]:
+        align (0.5, 0.5)
+        at transform:
+            zoom 0.5 # Ajusta el tamaño del zoom aquí
+    
+    button:
+        action Hide("zoom_perfil")
+        xfill True
+        yfill True
+        background None               
+
+# --- VENTANA DE MÚSICA ---
+screen ventana_musica():
+    zorder 10
+    
+    if not apps_pc["musica"]["minimizada"]:
+        
+        drag:
+            drag_name "musica_drag"
+            xpos 400 ypos 200
+            drag_handle (0, 0, 1.0, 50) 
+            
+            fixed:
+                xysize (800, 600) 
+                
+                add Transform("images/escritorioPC/frame_reproductor.jpg", xysize=(800, 600), fit="fill")
+                
+                # BOTONES Minimizar y Cerrar
+                imagebutton:
+                    idle Solid("#00000000") 
+                    hover Solid("#ffffff33") 
+                    xysize (32, 28) 
+                    xpos 710
+                    ypos 13
+                    action Function(toggle_minimizar, "musica")
+                    
+                imagebutton:
+                    idle Solid("#00000000") 
+                    hover Solid("#ff000055") 
+                    xysize (32, 28)  
+                    xpos 750 
+                    ypos 13
+                    action Function(cerrar_app, "musica")
+
+                # TEXTOS DINÁMICOS
+                # Aquí irán las variables de la canción que esté sonando
+                text "[cancion_actual]" font "gui/fonts/VT323.ttf" size 35 color "#000000" xpos 200 ypos 100
+                text "[artista_actual]" font "gui/fonts/VT323.ttf" size 35 color "#000000" xpos 200 ypos 250
+                
+
+                # BOTONES DE CONTROL (Play, Stop, Pausa, etc.)
+                hbox:
+                    xalign 0.5 
+                    ypos 500 
+                    spacing 45
+                    
+                    # Botón Atrás
+                    imagebutton:
+                        idle Transform("images/escritorioPC/icono_back.png", xysize=(60, 60))
+                        hover Transform("images/escritorioPC/icono_back.png", xysize=(60, 60), matrixcolor=BrightnessMatrix(0.2))
+                        action Function(anterior_cancion)
+                        
+                    # Botón Stop
+                    imagebutton:
+                        idle Transform("images/escritorioPC/icono_parar.png", xysize=(60, 60))
+                        hover Transform("images/escritorioPC/icono_parar.png", xysize=(60, 60), matrixcolor=BrightnessMatrix(0.2))
+                        action [Stop("music"), SetVariable("cancion_actual", ""), SetVariable("artista_actual", ""), SetVariable("musica_pausada", False)]
+                    
+                    # Botón Pausa
+                    imagebutton:
+                        idle Transform("images/escritorioPC/icono_pausa.png", xysize=(60, 60))
+                        hover Transform("images/escritorioPC/icono_pausa.png", xysize=(60, 60), matrixcolor=BrightnessMatrix(0.2))
+                        # Si está sonando, la pausa. Si está pausada, la reanuda.
+                        action [ToggleVariable("musica_pausada"), 
+                                If(musica_pausada, true=PauseAudio("music", value=True), false=PauseAudio("music", value=False))]
+
+                    # Botón Play 
+                    imagebutton:
+                        idle Transform("images/escritorioPC/icono_play.png", xysize=(60, 60))
+                        hover Transform("images/escritorioPC/icono_play.png", xysize=(60, 60), matrixcolor=BrightnessMatrix(0.2))
+                        action Function(reproducir_pista)
+                    
+                    # Botón Siguiente
+                    imagebutton:
+                        idle Transform("images/escritorioPC/icono_next.png", xysize=(60, 60))
+                        hover Transform("images/escritorioPC/icono_next.png", xysize=(60, 60), matrixcolor=BrightnessMatrix(0.2))
+                        action Function(siguiente_cancion)
+                    

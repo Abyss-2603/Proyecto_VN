@@ -169,12 +169,12 @@ init python:
 
     apps_pc = {
         "nota": {"abierta": False, "minimizada": False, "titulo": "Nota_1.txt"},
-        "chat": {"abierta": False, "minimizada": False, "titulo": "Chat_Seguro.exe"},
+        "chat": {"abierta": False, "minimizada": False, "titulo": "Chat.exe"},
         "ajustes": {"abierta": False, "minimizada": False, "titulo": "Panel de Control"},
         "carpeta": {"abierta": False, "minimizada": False, "titulo": "Archivos Ocultos"},
         "galeria": {"abierta": False, "minimizada": False, "titulo": "Visor de Imágenes"},
         "musica": {"abierta": False, "minimizada": False, "titulo": "Reproductor"},
-        "webcam": {"abierta": False, "minimizada": False, "titulo": "Webcam_Feed"}
+        "webcam": {"abierta": False, "minimizada": False, "titulo": "Webcam"}
     }
 
     # --- Lógica de ventanas del escritorio ---

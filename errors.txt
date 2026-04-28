@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 2800: expected statement.
-    imagebutton idle Solid("#00000000") hover Solid("#ffffff33") xysize (20, 20) xpos 415 ypos 10 action Function(toggle_minimizar, "chat")
-                          ^
+File "game/screens.rpy", line 2895: 'padding' is not a keyword argument or valid child of the hbox statement.
+    padding (20, 0, 20, 0)
+           ^
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Mon Apr 27 13:58:29 2026
+Tue Apr 28 14:11:25 2026

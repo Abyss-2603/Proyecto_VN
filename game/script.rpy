@@ -77,6 +77,45 @@ label ejecutar_borrado_cuenta:
         "Hubo un error al intentar borrar tus datos. Tus lazos aún persisten."
     $ Quit(confirm=False)()
 
+# --- VARIABLES DEL REPRODUCTOR DE MÚSICA ---
+default indice_cancion = 0 # para saber qué cancion se está escuchando
+default cancion_actual = ""
+default artista_actual = ""
+default musica_pausada = False
+
+init python:
+
+    lista_canciones = [
+        {"titulo": "Lofi Chill Vibes", "autor": "DJ Relax", "ruta": "Musica/Efectos/cancion1.ogg"},
+        {"titulo": "Synthwave City", "autor": "Neon M", "ruta": "Musica/Efectos/cancion2.ogg"},
+        {"titulo": "Acústica Relax", "autor": "Guitar Girl", "ruta": "Musica/Efectos/cancion3.ogg"}
+    ]
+
+    def reproducir_pista():
+        global indice_cancion, cancion_actual, artista_actual, musica_pausada
+        
+        pista = lista_canciones[indice_cancion]
+        
+        renpy.store.cancion_actual = pista["titulo"]
+        renpy.store.artista_actual = pista["autor"]
+        renpy.store.musica_pausada = False
+        
+        renpy.music.play(pista["ruta"], channel="music", loop=True)
+        renpy.restart_interaction()
+
+    # FUNCIÓN PARA PASAR A LA SIGUIENTE CANCIÓN
+    def siguiente_cancion():
+        global indice_cancion
+        indice_cancion = (indice_cancion + 1) % len(lista_canciones)
+        reproducir_pista()
+
+    # FUNCIÓN PARA VOLVER A LA CANCIÓN ANTERIOR
+    def anterior_cancion():
+        global indice_cancion
+        indice_cancion = (indice_cancion - 1) % len(lista_canciones)
+        reproducir_pista()
+
+
 # --- Variables para chat y mensajes ---
 default mensajes_nuevos = False
 
@@ -102,6 +141,8 @@ init python:
         renpy.end_interaction(None)
         #sigue con la historia
         renpy.jump(etiqueta_destino)
+
+
 
 label start:
     # El jugador ha confirmado empezar la partida    

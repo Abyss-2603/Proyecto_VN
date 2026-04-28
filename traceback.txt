@@ -1,17 +1,17 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 133, in script
+  File "game/script.rpy", line 137, in script
     call screen escritorio_pc
   File "game/api_handler.rpy", line 188, in abrir_app
     renpy.show_screen("ventana_" + app_id) # Invoca la pantalla correspondiente
     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^                                     
-renpy.display.screen.ScreenNotFound: Screen 'ventana_ajustes' is not known.
+renpy.display.screen.ScreenNotFound: Screen 'ventana_galeria' is not known.
 
 -- Full Traceback ------------------------------------------------------------
 
 Traceback (most recent call last):
-  File "game/script.rpy", line 133, in script
+  File "game/script.rpy", line 137, in script
     call screen escritorio_pc
   File "renpy/ast.py", line 2241, in execute
     self.call("execute")
@@ -82,9 +82,9 @@ Traceback (most recent call last):
     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^                                     
   File "renpy/display/screen.py", line 1355, in show_screen
     raise ScreenNotFound(name[0])
-renpy.display.screen.ScreenNotFound: Screen 'ventana_ajustes' is not known.
+renpy.display.screen.ScreenNotFound: Screen 'ventana_galeria' is not known.
 
 Windows-11-10.0.26200-SP0 AMD64
 Ren'Py 8.5.2.26010301
 Proyecto_VN 1.0
-Mon Apr 27 13:48:58 2026
+Tue Apr 28 12:26:37 2026

@@ -79,7 +79,7 @@ define gui.interface_text_size = 50
 define gui.label_text_size = 36
 
 ## El tamaño del texto en las notificaciones.
-define gui.notify_text_size = 24
+define gui.notify_text_size = 40
 
 ## El tamaño del título del juego.
 define gui.title_text_size = 75
