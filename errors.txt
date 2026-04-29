@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 2895: 'padding' is not a keyword argument or valid child of the hbox statement.
-    padding (20, 0, 20, 0)
-           ^
+File "game/screens.rpy", line 2812: 'right_margin' is not a keyword argument or valid child of the vbox statement.
+    right_margin 25
+                ^
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Tue Apr 28 14:11:25 2026
+Wed Apr 29 14:34:57 2026

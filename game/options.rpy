@@ -227,7 +227,9 @@ init python:
 # define build.itch_project = "renpytom/test-project"
 
 
-
-
 #Transición al salir de la pantalla de aviso
 define config.end_splash_transition = Dissolve(2.0)
+
+# Quitar el retroceso del scroll
+init python:
+    config.rollback_enabled = False

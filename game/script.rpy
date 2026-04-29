@@ -18,6 +18,7 @@ default persistent.user_id = None
 default persistent.nombre_jugador = None
 
 default capitulo_actual = "prologo"
+default decisiones_tomadas = {}
 
 # --- Variables de los Formularios ---
 default pc_usuario = ""
@@ -67,7 +68,6 @@ label ejecutar_borrado_cuenta:
             pc_usuario = ""
             pc_pass = ""
             renpy.store.capitulo_actual = "prologo"
-            renpy.store.stress_level = 0
             renpy.store.decisiones_tomadas = {}
 
     if exito:
@@ -88,7 +88,9 @@ init python:
     lista_canciones = [
         {"titulo": "Lofi Chill Vibes", "autor": "DJ Relax", "ruta": "Musica/Efectos/cancion1.ogg"},
         {"titulo": "Synthwave City", "autor": "Neon M", "ruta": "Musica/Efectos/cancion2.ogg"},
-        {"titulo": "Acústica Relax", "autor": "Guitar Girl", "ruta": "Musica/Efectos/cancion3.ogg"}
+        {"titulo": "Acústica Relax", "autor": "Guitar Girl", "ruta": "Musica/Efectos/cancion3.ogg"},
+        {"titulo": "Canción del PC", "autor": "¿Quién sabe?", "ruta": "Musica/Efectos/pc_enciende_1.ogg"},
+        {"titulo": "Canción del PC2", "autor": "¿Quién sabe?", "ruta": "Musica/Efectos/pc_enciende_2.ogg"}
     ]
 
     def reproducir_pista():
@@ -121,7 +123,7 @@ default mensajes_nuevos = False
 
 # El chat empieza con mensajes de ella
 default historial_mensajes = [
-    ("Amiga", "¡Por fin te conectas! ¿Estás dentro del ordenador?")
+    ("Rocío", "¡Por fin te conectas! ¿Estás dentro del ordenador?")
 ]
 
 # Las opciones que el jugador podrá elegir al abrir el chat
@@ -132,24 +134,37 @@ default respuestas_disponibles = [
 
 # Lógica de chat
 init python:
+
+    def recibir_mensaje(remitente, texto):
+        store.historial_mensajes.append((remitente, texto))
+        
+        if not store.apps_pc["chat"]["abierta"] or store.apps_pc["chat"]["minimizada"]:
+            store.mensajes_nuevos = True
+            renpy.sound.play("Musica/Efectos/notificacion.ogg")
+            renpy.notify("Nuevo mensaje de: " + remitente)
+
     def enviar_respuesta_chat(texto_elegido, etiqueta_destino):
         # Añadir mensajes según elección
         store.historial_mensajes.append(("Yo", texto_elegido))
-        #Ocultar botones
+        # Ocultar botones
         store.respuestas_disponibles = []
         # Finalizar pantalla para que la historia avance
         renpy.end_interaction(None)
-        #sigue con la historia
+
         renpy.jump(etiqueta_destino)
 
-
+# Lista de rutas de las imagenes de galeria
+default lista_fotos = [
+    "images/escritorioPC/fondo_escritorio.png",
+    "images/escritorioPC/icono_chica.png"
+]
 
 label start:
     # El jugador ha confirmado empezar la partida    
     $ default_mouse = "pc_normal"
     $ quick_menu = False
 
-    #Introducción, prota hablando
+    # Introducción, prota hablando
     scene black with fade
     "Por fin en casa, ya estaba cansado de las clases de hoy."
     "Menos mal que mañana ya terminan los exámenes, al fin descansaré y me pondré a jugar toda la semana."
@@ -162,6 +177,7 @@ label start:
 
     pause 2.0
 
+    # Usamos el sonido y la notificación iniciales a mano para arrancar el juego
     play sound "Musica/Efectos/notificacion.ogg"
     $ mensajes_nuevos = True
     $ renpy.notify("Nuevo mensaje de: Roxy26")
@@ -175,7 +191,7 @@ label start:
     jump bucle_pc
 
 label bucle_pc:
-    call screen escritorio_pc
+    call screen escritorio_pc 
     $ default_mouse = "pc_normal"
     
     scene black with fade
@@ -183,16 +199,22 @@ label bucle_pc:
     return
 
 label chat_nodo_1:
-    pause 1.5
-    $ historial_mensajes.append(("Rocío", "Jajaja ya sabes cuánto me aburro. Ha sido verte conectado y quería molestarte un poco."))
+    show screen escritorio_pc #añadir en cada nodo 
+    
+    $ renpy.pause(1.5, hard=True)
+    $ recibir_mensaje("Rocío", "Jajaja ya sabes cuánto me aburro. Ha sido verte conectado y quería molestarte un poco.")
+    
+    $ renpy.pause(1.0, hard=True)
     $ historial_mensajes.append(("Yo", "Hmmmmm muy graciosa."))
     
-    pause 1.0
-    $ historial_mensajes.append(("Rocío", "Oye, quería preguntarte por los exámenes. ¿Cómo los llevas? No pude preguntarte esta mañana."))
+    $ renpy.pause(1.0, hard=True)
+    $ recibir_mensaje("Rocío", "Oye, quería preguntarte por los exámenes. ¿Cómo los llevas? No pude preguntarte esta mañana.")
+    
+    $ renpy.pause(1.0, hard=True)
     $ historial_mensajes.append(("Yo", "¿Los exámenes? Bueno, creo que están aprobados, quería quitármelos de encima lo antes posible para tener libertad al fin."))
     
-    pause 1.5
-    $ historial_mensajes.append(("Rocío", "Ya, te entiendo perfectamente. Yo estoy que me subo por las paredes con el de historia..."))
+    $ renpy.pause(1.5, hard=True)
+    $ recibir_mensaje("Rocío", "Ya, te entiendo perfectamente. Yo estoy que me subo por las paredes con el de historia...")
 
     # NUEVAS RESPUESTAS 
     $ respuestas_disponibles = [

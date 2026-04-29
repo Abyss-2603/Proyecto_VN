@@ -58,7 +58,6 @@ init python:
                     renpy.store.pc_email = respuesta.get("email")
                     progreso = respuesta.get("progreso", {})
                     renpy.store.capitulo_actual = progreso.get("capitulo", "prologo")
-                    renpy.store.stress_level = progreso.get("estres", 0)
                     renpy.store.decisiones_tomadas = progreso.get("decisiones", {})
 
                     login_exitoso = True
@@ -139,11 +138,11 @@ init python:
             renpy.notify(f"Fallo técnico: {str(e)}")
 
     # --- GUARDAR PROGRESO ---
-    def guardar_progreso(capitulo, estres, nuevas_decisiones):
+    def guardar_progreso(capitulo, nuevas_decisiones):
         if not hasattr(persistent, 'user_id') or not persistent.user_id:
             return False 
         url = API_URL + "/api/save-progress"
-        datos = {"user_id": persistent.user_id, "chapter": capitulo, "stress": estres, "decisions": nuevas_decisiones}
+        datos = {"user_id": persistent.user_id, "chapter": capitulo, "decisions": nuevas_decisiones}
         try:
             json_data = json.dumps(datos).encode('utf-8')
             req = urllib.request.Request(url, data=json_data, headers=get_headers())

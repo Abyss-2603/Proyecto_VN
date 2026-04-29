@@ -303,15 +303,13 @@ screen navigation():
 
         spacing gui.navigation_spacing
 
-        if main_menu:
 
-            textbutton _("Comenzar") action Start()
+        # textbutton _("Comenzar") action Start()
 
-        else:
 
-            textbutton _("Historial") action ShowMenu("history")
+        textbutton _("Historial") action ShowMenu("history")
 
-            # textbutton _("Guardar") action ShowMenu("save")
+        # textbutton _("Guardar") action ShowMenu("save")
 
         # textbutton _("Cargar") action ShowMenu("load")
 
@@ -2522,19 +2520,25 @@ screen escritorio_pc():
         vbox:
             spacing 5
             xalign 0.5
-            imagebutton:
-                idle "images/escritorioPC/icono_chat.png"
-                hover Transform("images/escritorioPC/icono_chat.png", matrixcolor=BrightnessMatrix(0.2))
-                mouse "pc_select"
-                action Function(abrir_app, "chat")
+            fixed:
+                fit_first True 
                 xalign 0.5
+                
+                imagebutton:
+                    idle "images/escritorioPC/icono_chat.png"
+                    hover Transform("images/escritorioPC/icono_chat.png", matrixcolor=BrightnessMatrix(0.2))
+                    mouse "pc_select"
+                    action [Function(abrir_app, "chat"), SetVariable("mensajes_nuevos", False)]
+                    
+                if mensajes_nuevos: 
+                    text "!" font "gui/fonts/VT323.ttf" size 45 color "#ff0000" outlines [(2, "#000000", 0, 0)] xalign 1.0 yalign 0.0 xoffset 15 yoffset -10
+
             text "Chat":
                 font "gui/fonts/VT323.ttf"
                 size 25
                 color "#ffffff"
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
-
         vbox:
             spacing 5
             xalign 0.5
@@ -2545,22 +2549,6 @@ screen escritorio_pc():
                 action ShowMenu("preferences")
                 xalign 0.5
             text "Ajustes":
-                font "gui/fonts/VT323.ttf"
-                size 25
-                color "#ffffff"
-                outlines [(2, "#000000", 0, 0)]
-                xalign 0.5
-        
-        vbox:
-            spacing 5
-            xalign 0.5
-            imagebutton:
-                idle "images/escritorioPC/icono_carpeta.png"
-                hover Transform("images/escritorioPC/icono_carpeta.png", matrixcolor=BrightnessMatrix(0.2))
-                mouse "pc_select"
-                action Function(abrir_app, "carpeta")
-                xalign 0.5
-            text "Carpeta1":
                 font "gui/fonts/VT323.ttf"
                 size 25
                 color "#ffffff"
@@ -2608,7 +2596,7 @@ screen escritorio_pc():
                 mouse "pc_select"
                 action Function(abrir_app, "webcam")
                 xalign 0.5
-            text "Webcam":
+            text "WebCam":
                 font "gui/fonts/VT323.ttf"
                 size 25
                 color "#ffffff"
@@ -2711,6 +2699,21 @@ screen ventana_nota():
                         
                         text "NO CONFÍES EN EL SISTEMA.\n\nTodo lo que escribas queda registrado." color "#000" font "gui/fonts/VT323.ttf" size 25
 
+# --- BARRA DE SCROLL DEL CHAT ---
+style chat_vscrollbar:
+    xsize 12  
+    
+    right_margin 15 
+    
+    base_bar Solid("#00000000") 
+    
+    thumb Solid("#5c5c8a") 
+    
+    hover_thumb Solid("#8a8ab5") 
+    
+    unscrollable "hide"
+
+
 # ---VENTANA DE CHAT ---
 screen ventana_chat():
     zorder 10
@@ -2778,45 +2781,73 @@ screen ventana_chat():
                 vbox:
                     xpos 250 
                     ypos 100
-                    xysize (560, 620) 
+                    xysize (600, 620)
                     
-                    viewport id "chat_vp":
+                    frame:
                         ysize 480
-                        mousewheel True
-                        draggable True
-                        yinitial 1.0
-                        
-                        vbox:
-                            xfill True
-                            spacing 20
-                            for remitente, msg in historial_mensajes:
-                                if remitente == "Yo":
-                                    frame:
-                                        background Frame("images/escritorioPC/frame_chat1.png", 60, 60, 60, 60)
-                                        padding (40, 40, 60, 45) 
-                                        xalign 1.0
-                                        xmaximum 540 
-                                        text "[msg]":
-                                            color "#fff" 
-                                            font "gui/fonts/VT323.ttf" 
-                                            size 30 
-                                            xalign 0.5
-                                else:
-                                    frame:
-                                        background Frame("images/escritorioPC/frame_chat2.png", 60, 60, 60, 60)
-                                        padding (40, 40, 60, 45)
-                                        xalign 0.0
-                                        xmaximum 540 
-                                        text "[msg]":
-                                            color "#fff" 
-                                            font "gui/fonts/VT323.ttf" 
-                                            size 30 
-                                            xalign 0.5
+                        xfill True
+                        background Frame("images/escritorioPC/frame_envuelve_chat.png", 15, 15, 15, 15)
+                        padding (20, 20)
+
+                        style_prefix "chat"
+
+                        viewport id "chat_vp":
+                            mousewheel True
+                            draggable True
+                            yinitial 1.0
+                            scrollbars "vertical"
+
+                            vbox:
+                                xsize 520 
+                                spacing 20
+                                for remitente, msg in historial_mensajes:
+                                    if remitente == "Yo":
+                                        frame:
+                                            background Frame("images/escritorioPC/frame_chat1.png", 60, 60, 60, 60)
+                                            padding (40, 15, 30, 45) 
+                                            xalign 1.0
+                                            xmaximum 500 
+                                            
+                                            # MAGIA: Comprobamos si el mensaje es una imagen
+                                            if msg.startswith("IMG:"):
+                                                $ ruta_img = msg.replace("IMG:", "").strip()
+                                                imagebutton:
+                                                    idle Transform(ruta_img, xysize=(200, 150), fit="cover") 
+                                                    hover Transform(ruta_img, xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
+                                                    action Show("zoom_galeria", img=ruta_img)
+                                                    xalign 0.5
+                                            else:
+                                                text "[msg]":
+                                                    color "#fff" 
+                                                    font "gui/fonts/VT323.ttf" 
+                                                    size 30 
+                                                    xalign 0.5
+                                    else:
+                                        frame:
+                                            background Frame("images/escritorioPC/frame_chat2.png", 60, 60, 60, 60)
+                                            padding (40, 15, 30, 45)
+                                            xalign 0.0
+                                            xmaximum 500
+                                            
+                                            # MAGIA: Lo mismo para los mensajes de Rocío
+                                            if msg.startswith("IMG:"):
+                                                $ ruta_img = msg.replace("IMG:", "").strip()
+                                                imagebutton:
+                                                    idle Transform(ruta_img, xysize=(200, 150), fit="cover") 
+                                                    hover Transform(ruta_img, xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
+                                                    action Show("zoom_galeria", img=ruta_img)
+                                                    xalign 0.5
+                                            else:
+                                                text "[msg]":
+                                                    color "#fff" 
+                                                    font "gui/fonts/VT323.ttf" 
+                                                    size 30 
+                                                    xalign 0.5
                 # --- ELECCIONES ---
                 vbox:
                     xpos 250
-                    ypos 695    # Este número es el "suelo" de tus botones
-                    yanchor 1.0 # Hace que los botones crezcan hacia ARRIBA
+                    ypos 695    
+                    yanchor 1.0
                     xsize 560
                     spacing 8
                     
@@ -2886,7 +2917,6 @@ screen ventana_musica():
                 text "[cancion_actual]" font "gui/fonts/VT323.ttf" size 35 color "#000000" xpos 200 ypos 100
                 text "[artista_actual]" font "gui/fonts/VT323.ttf" size 35 color "#000000" xpos 200 ypos 250
                 
-
                 # BOTONES DE CONTROL (Play, Stop, Pausa, etc.)
                 hbox:
                     xalign 0.5 
@@ -2924,4 +2954,142 @@ screen ventana_musica():
                         idle Transform("images/escritorioPC/icono_next.png", xysize=(60, 60))
                         hover Transform("images/escritorioPC/icono_next.png", xysize=(60, 60), matrixcolor=BrightnessMatrix(0.2))
                         action Function(siguiente_cancion)
+
+# zoom para imagenes de galeria
+screen zoom_galeria(img):
+    modal True 
+    zorder 100 
+
+    add Solid("#000000aa")
+    
+    add [img]:
+        align (0.5, 0.5)
+        at transform:
+            zoom 0.5
+    
+    button:
+        action Hide("zoom_galeria") 
+        xfill True
+        yfill True
+        background None     
+
+# Ventana de Galería
+screen ventana_galeria():
+    zorder 10
+
+    if not apps_pc["galeria"]["minimizada"]:
+        
+        drag:
+            drag_name "galeria_drag"
+            xpos 400 ypos 200
+            drag_handle (0, 0, 1.0, 50) 
+            
+            fixed:
+                xysize (800, 600) 
+                
+                add Transform("images/escritorioPC/ventana_galeria.png", xysize=(800, 600), nearest=True)
+                
+                hbox:
+                    xpos 20 ypos 18
+                    spacing 10
+                    add Transform("images/escritorioPC/icono_galeria.png", xysize=(30, 30), nearest=True)
+                    text "Galería de Imágenes":
+                        font "gui/fonts/VT323.ttf"
+                        size 26
+                        color "#ffffff"
+                        outlines [(1, "#000000", 0, 0)]
+
+                # BOTONES Minimizar y Cerrar
+                imagebutton:
+                    idle Solid("#00000000") 
+                    hover Solid("#ffffff33") 
+                    xysize (50, 50) 
+                    xpos 693
+                    ypos 10
+                    action Function(toggle_minimizar, "galeria")
                     
+                imagebutton:
+                    idle Solid("#00000000") 
+                    hover Solid("#ff000055") 
+                    xysize (50, 50)  
+                    xpos 745
+                    ypos 10
+                    action Function(cerrar_app, "galeria")
+                
+                frame:
+                    background None
+                    xpos 40 ypos 90 
+                    xysize (720, 470)
+                    
+                    style_prefix "chat" 
+
+                    viewport id "gal_vp":
+                        mousewheel True
+                        draggable True
+                        scrollbars "vertical"
+                        
+                        vpgrid:
+                            cols 3       
+                            spacing 25   
+                            xfill True
+
+                            for foto in lista_fotos:
+                                frame:
+                                    background Solid("#000")
+                                    padding (2, 2)
+                                    
+                                    imagebutton:
+                                        idle Transform(foto, xysize=(200, 150), fit="cover") 
+                                        hover Transform(foto, xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
+                                        
+                                        action Show("zoom_galeria", img=foto) 
+
+# ventana de Webcam
+screen ventana_webcam():
+    zorder 10
+    
+    # He corregido la posición de esta línea, que estaba demasiado a la derecha
+    if not apps_pc["webcam"]["minimizada"]:
+        
+        drag:
+            drag_name "webcam_drag"
+            xpos 400 ypos 200
+            drag_handle (0, 0, 1.0, 50) 
+            
+            fixed:
+                xysize (800, 600) 
+                
+                # marco de la ventana
+                add Transform("images/escritorioPC/ventana_webcam.png", xysize=(800, 600), nearest=True)
+                
+                add Transform("images/escritorioPC/webcam_no_disponible.png", xysize=(788, 533), fit="fill"):
+                    xpos 7
+                    ypos 60
+                
+                hbox:
+                    xpos 20 ypos 18
+                    spacing 10
+                    add Transform("images/escritorioPC/icono_webcam.png", xysize=(30, 30), nearest=True)
+                    text "WebCam":
+                        font "gui/fonts/VT323.ttf"
+                        size 26
+                        color "#ffffff"
+                        outlines [(1, "#000000", 0, 0)]
+        
+                # BOTONES Minimizar y Cerrar
+                imagebutton:
+                    idle Solid("#00000000") 
+                    hover Solid("#ffffff33") 
+                    xysize (50, 50) 
+                    xpos 693
+                    ypos 10
+                    action Function(toggle_minimizar, "webcam")
+                    
+                imagebutton:
+                    idle Solid("#00000000") 
+                    hover Solid("#ff000055") 
+                    xysize (50, 50)  
+                    xpos 745
+                    ypos 10
+                    action Function(cerrar_app, "webcam")
+                
