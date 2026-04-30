@@ -2531,7 +2531,12 @@ screen escritorio_pc():
                     action [Function(abrir_app, "chat"), SetVariable("mensajes_nuevos", False)]
                     
                 if mensajes_nuevos: 
-                    text "!" font "gui/fonts/VT323.ttf" size 45 color "#ff0000" outlines [(2, "#000000", 0, 0)] xalign 1.0 yalign 0.0 xoffset 15 yoffset -10
+                    image "images/escritorioPC/circulo.png" at transform:
+                        xysize(25, 25)
+                        xalign 0.65
+                        yalign 0.0
+                        xoffset 15
+                        yoffset 3
 
             text "Chat":
                 font "gui/fonts/VT323.ttf"
@@ -2603,9 +2608,8 @@ screen escritorio_pc():
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
 
-    # ==========================================
+
     # BARRA DE TAREAS Y APLICACIONES ABIERTAS
-    # ==========================================
     frame:
         background Transform("images/escritorioPC/barra_tareas.png", xysize=(1920, 80))
         xsize 1920
@@ -2623,16 +2627,15 @@ screen escritorio_pc():
             xalign 0.0 
             action Return() 
 
-        # --- AQUÍ DIBUJAMOS LAS VENTANAS MINIMIZADAS ---
+        # --- VENTANAS MINIMIZADAS ---
         hbox:
-            xpos 100 # Lo separamos del botón de apagar
+            xpos 100 
             yalign 0.5
             spacing 10
 
             for app_id in orden_apps:
                 if apps_pc[app_id]["abierta"]:
                     button:
-                        # Si está minimizada sale oscura, si está en pantalla sale brillante
                         background (Solid("#333333") if apps_pc[app_id]["minimizada"] else Solid("#0055aaff"))
                         padding (15, 10)
                         action Function(toggle_minimizar, app_id)
@@ -2649,6 +2652,7 @@ screen escritorio_pc():
                 font "gui/fonts/VT323.ttf"
                 size 32
                 color "#000000"
+
 
 # --- VENTANA DE NOTA 1 ---
 screen ventana_nota():
@@ -2683,12 +2687,30 @@ screen ventana_nota():
                             hbox:
                                 xalign 1.0
                                 yalign 0.5
-                                spacing 5
-                                textbutton "_":
-                                    text_font "gui/fonts/VT323.ttf" text_size 25 text_color "#fff" background Solid("#888")
+                                spacing 4
+                                
+                                # BOTÓN MINIMIZAR
+                                textbutton "-":
+                                    xysize (34, 34) 
+                                    text_font "gui/fonts/VT323.ttf" 
+                                    text_size 30 
+                                    text_color "#fff" 
+                                    text_xalign 0.5 
+                                    text_yalign 0.3
+                                    background Solid("#888888")
+                                    hover_background Solid("#aaaaaa") 
                                     action Function(toggle_minimizar, "nota")
+                                    
+                                # BOTÓN CERRAR
                                 textbutton "X":
-                                    text_font "gui/fonts/VT323.ttf" text_size 25 text_color "#fff" background Solid("#cc0000")
+                                    xysize (34, 34) 
+                                    text_font "gui/fonts/VT323.ttf" 
+                                    text_size 30 
+                                    text_color "#fff" 
+                                    text_xalign 0.5 
+                                    text_yalign 0.5 
+                                    background Solid("#cc0000")
+                                    hover_background Solid("#ff3333") 
                                     action Function(cerrar_app, "nota")
 
                     # ÁREA DE CONTENIDO 
@@ -2697,7 +2719,11 @@ screen ventana_nota():
                         xysize (500, 300)
                         padding (20, 20)
                         
-                        text "NO CONFÍES EN EL SISTEMA.\n\nTodo lo que escribas queda registrado." color "#000" font "gui/fonts/VT323.ttf" size 25
+                        # Aquí hacemos la magia dependiendo de la variable global
+                        if nota_1_descifrada == False:
+                            text "████ ██ ████ ███████. \n████ ██ ████ ██████. \n████ ██████ █ ████ ██ ████████████" color "#000" font "DejaVuSans.ttf" size 25
+                        else:
+                            text "Nada es como piensas. \nNada es como parece. \nDATE CUENTA Y DEJA DE VICTIMIZARTE \n DEJA DE HUIR" color "#ff0000" font "gui/fonts/VT323.ttf" size 25
 
 # --- BARRA DE SCROLL DEL CHAT ---
 style chat_vscrollbar:
@@ -2748,7 +2774,7 @@ screen ventana_chat():
                 # caja para la chica
                 hbox:
                     xpos 42 
-                    ypos 95
+                    ypos 90
                     spacing 8
                     
                     imagebutton:
@@ -2767,7 +2793,7 @@ screen ventana_chat():
                 # caja para el nombre del usuario
                 hbox:
                     xpos 105  
-                    ypos 750
+                    ypos 760
                     yanchor 0.5
                     
                     text (persistent.nombre_jugador or pc_usuario or "Usuario"): 
@@ -2808,13 +2834,11 @@ screen ventana_chat():
                                             xalign 1.0
                                             xmaximum 500 
                                             
-                                            # MAGIA: Comprobamos si el mensaje es una imagen
                                             if msg.startswith("IMG:"):
-                                                $ ruta_img = msg.replace("IMG:", "").strip()
                                                 imagebutton:
-                                                    idle Transform(ruta_img, xysize=(200, 150), fit="cover") 
-                                                    hover Transform(ruta_img, xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
-                                                    action Show("zoom_galeria", img=ruta_img)
+                                                    idle Transform(msg.replace("IMG:", "").strip(), xysize=(200, 150), fit="cover") 
+                                                    hover Transform(msg.replace("IMG:", "").strip(), xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
+                                                    action Show("zoom_galeria", img=msg.replace("IMG:", "").strip())
                                                     xalign 0.5
                                             else:
                                                 text "[msg]":
@@ -2831,11 +2855,10 @@ screen ventana_chat():
                                             
                                             # MAGIA: Lo mismo para los mensajes de Rocío
                                             if msg.startswith("IMG:"):
-                                                $ ruta_img = msg.replace("IMG:", "").strip()
                                                 imagebutton:
-                                                    idle Transform(ruta_img, xysize=(200, 150), fit="cover") 
-                                                    hover Transform(ruta_img, xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
-                                                    action Show("zoom_galeria", img=ruta_img)
+                                                    idle Transform(msg.replace("IMG:", "").strip(), xysize=(200, 150), fit="cover") 
+                                                    hover Transform(msg.replace("IMG:", "").strip(), xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
+                                                    action Show("zoom_galeria", img=msg.replace("IMG:", "").strip())
                                                     xalign 0.5
                                             else:
                                                 text "[msg]":
@@ -2857,11 +2880,13 @@ screen ventana_chat():
                             xsize 520
                             xalign 0.5 
                             padding (20, 12)
+                        
                             action Function(enviar_respuesta_chat, texto_opcion, destino)
                             
                             text "> [texto_opcion]" color "#ccc" hover_color "#fff" font "gui/fonts/VT323.ttf" size 22 xalign 0.5 yalign 0.5
 
 # Pantalla para ver imagen de perfil en grande
+
 screen zoom_perfil(img):
     modal True 
     zorder 100 
@@ -2871,7 +2896,7 @@ screen zoom_perfil(img):
     add [img]:
         align (0.5, 0.5)
         at transform:
-            zoom 0.5 # Ajusta el tamaño del zoom aquí
+            zoom 0.5 
     
     button:
         action Hide("zoom_perfil")

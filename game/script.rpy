@@ -20,6 +20,9 @@ default persistent.nombre_jugador = None
 default capitulo_actual = "prologo"
 default decisiones_tomadas = {}
 
+# Variable de notas
+default nota_1_descifrada = False
+
 # --- Variables de los Formularios ---
 default pc_usuario = ""
 default pc_email = ""
@@ -129,29 +132,43 @@ default historial_mensajes = [
 # Las opciones que el jugador podrá elegir al abrir el chat
 default respuestas_disponibles = [
     ("Sí, acabo de entrar. ¿Acaso me espías o qué?", "chat_nodo_1"),
-    ("¿Tú qué crees? Si me he conectado por algo será", "chat_nodo_2")
+    ("¿Tú qué crees? Si aparezco conectado será por algo", "chat_nodo_2")
 ]
+
 
 # Lógica de chat
 init python:
-
     def recibir_mensaje(remitente, texto):
         store.historial_mensajes.append((remitente, texto))
+
+        renpy.restart_interaction() 
         
         if not store.apps_pc["chat"]["abierta"] or store.apps_pc["chat"]["minimizada"]:
             store.mensajes_nuevos = True
             renpy.sound.play("Musica/Efectos/notificacion.ogg")
             renpy.notify("Nuevo mensaje de: " + remitente)
 
+    def recibir_imagen(remitente, ruta_imagen, texto_chat="[Imagen adjunta]"):
+        if ruta_imagen not in store.lista_fotos:
+            store.lista_fotos.append(ruta_imagen)
+        store.historial_mensajes.append((remitente, texto_chat))    
+
+        store.ajuste_scroll_chat.value = 99999 
+        renpy.restart_interaction()   
+        
+        if not store.apps_pc["chat"]["abierta"] or store.apps_pc["chat"]["minimizada"]:
+            store.mensajes_nuevos = True
+            renpy.sound.play("Musica/Efectos/notificacion_mensajes.mp3")
+            renpy.notify("Nueva imagen de: " + remitente)
+
+    # Función para recibir texto
     def enviar_respuesta_chat(texto_elegido, etiqueta_destino):
-        # Añadir mensajes según elección
         store.historial_mensajes.append(("Yo", texto_elegido))
-        # Ocultar botones
         store.respuestas_disponibles = []
-        # Finalizar pantalla para que la historia avance
         renpy.end_interaction(None)
 
         renpy.jump(etiqueta_destino)
+    
 
 # Lista de rutas de las imagenes de galeria
 default lista_fotos = [
@@ -166,26 +183,32 @@ label start:
 
     # Introducción, prota hablando
     scene black with fade
+
+    play sound "Musica/Efectos/sonido_tecleando.ogg" loop volume 0.8
     "Por fin en casa, ya estaba cansado de las clases de hoy."
-    "Menos mal que mañana ya terminan los exámenes, al fin descansaré y me pondré a jugar toda la semana."
+    "Menos mal que mañana ya terminan los exámenes, al fin puedo descansar!!."
     "Voy a ponerme un rato con el pc..."
+    stop sound fadeout 1.0
     window hide
-    
+    play sound "Musica/Efectos/sonido_inicioSistema.ogg"
+
     # Aquí mostramos la IMAGEN del fondo, no la pantalla. 
-    scene fondo_escritorio_pc   
-    with fade 
+    scene fondo_escritorio_pc
+    with fade
 
     pause 2.0
 
     # Usamos el sonido y la notificación iniciales a mano para arrancar el juego
-    play sound "Musica/Efectos/notificacion.ogg"
+    play sound "Musica/Efectos/notificacion_mensajes.mp3"
     $ mensajes_nuevos = True
     $ renpy.notify("Nuevo mensaje de: Roxy26")
     
     # Como es una imagen normal, el jugador podrá hacer clic para leer esto sin problemas
-    "Vaya, ha sido encender el pc y ya me está escribiendo Rocío xD."
-    "Le contestaré ahora a ver qué quiere."
-    window hide 
+    "Vaya, ha sido encender el pc y ya me está escribiendo Rocío."
+    "Le contestaré a ver qué quiere esta pesada."
+    "Aunque antes creo que pondré algo de música de mientras para que no esté todo tan soso."
+    $ reproducir_pista()
+    window hide
     
     # lanzamos el ordenador 
     jump bucle_pc
@@ -199,28 +222,85 @@ label bucle_pc:
     return
 
 label chat_nodo_1:
-    show screen escritorio_pc #añadir en cada nodo 
-    
-    $ renpy.pause(1.5, hard=True)
+    pause 1.5
     $ recibir_mensaje("Rocío", "Jajaja ya sabes cuánto me aburro. Ha sido verte conectado y quería molestarte un poco.")
+    $ recibir_mensaje("Yo", "Hmmmm muy graciosa.")
     
-    $ renpy.pause(1.0, hard=True)
-    $ historial_mensajes.append(("Yo", "Hmmmmm muy graciosa."))
-    
-    $ renpy.pause(1.0, hard=True)
+    pause 1.0
     $ recibir_mensaje("Rocío", "Oye, quería preguntarte por los exámenes. ¿Cómo los llevas? No pude preguntarte esta mañana.")
-    
-    $ renpy.pause(1.0, hard=True)
-    $ historial_mensajes.append(("Yo", "¿Los exámenes? Bueno, creo que están aprobados, quería quitármelos de encima lo antes posible para tener libertad al fin."))
-    
-    $ renpy.pause(1.5, hard=True)
-    $ recibir_mensaje("Rocío", "Ya, te entiendo perfectamente. Yo estoy que me subo por las paredes con el de historia...")
+    pause 1.5
+    $ recibir_mensaje("Yo", "¿Los exámenes? Bueno, creo que están aprobados.") 
+    pause 1.0
+    $ recibir_mensaje("Yo", "Quería quitármelos de encima lo antes posible para ser libre al fin.")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Joo, yo creo que voy a suspender alguno que otro. Ojalá tener tu mente privilegiada.")
 
     # NUEVAS RESPUESTAS 
     $ respuestas_disponibles = [
-        ("Tranquila, seguro que lo sacas sin problemas.", "chat_nodo_apoyo"),
-        ("Pues haber estudiado más, que eres una vaga.", "chat_nodo_borde")
+        ("Eso te pasa por no estudiar ni hacer nada en clase.", "chat_nodo_3"),
+        ("Ya te avisé en su momento pero no me hiciste caso (￢_￢)", "chat_nodo_3")
     ]
 
     # VOLVEMOS AL ESCRITORIO 
     jump bucle_pc
+
+label chat_nodo_2:
+    pause 1.5
+    $ recibir_mensaje("Rocío", "-_- | Contigo no se puede hablar con ironía no?")
+    pause 1.0
+    $ recibir_mensaje("Yo", "<_< Estás tú para hablar...")
+    
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Deja de ser tan borde >_<")
+    pause 1.0
+    $ recibir_mensaje("Rocío", "Oye, quería preguntarte por los exámenes. ¿Cómo los llevas? No pude preguntarte esta mañana.")
+    pause 1.5
+    $ recibir_mensaje("Yo", "¿Los exámenes? Bueno, creo que están aprobados.") 
+    pause 1.0
+    $ recibir_mensaje("Yo", "Quería quitármelos de encima lo antes posible para ser libre al fin.")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Joo, yo creo que voy a suspender alguno que otro. Ojalá tener tu mente privilegiada.")
+    
+    # NUEVAS RESPUESTAS 
+    $ respuestas_disponibles = [
+        ("Eso te pasa por no estudiar ni hacer nada en clase.", "chat_nodo_3"),
+        ("Ya te avisé en su momento pero no me hiciste caso (￢_￢)", "chat_nodo_3")
+    ]
+
+    # VOLVEMOS AL ESCRITORIO 
+    jump bucle_pc
+
+label chat_nodo_3:
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Lo hecho pecho, supongo que tendré que presentarme a la recuperación.")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Mañana es ya el último examen, espero que se me dé mejor que el de hoy :'( ")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Menos mal que no soy tan vago como tú ( ¬_¬)")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Que si, que si... ya deja de recordarme que no estudié lo suficiente. :< ")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Por cierto, ¿viste la foto que te envié esta mañana? ")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Ehm... Nope")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "¿¡¿¡¿Como que no?!?!? :O")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Te la vuelvo a mandar entonces.")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "IMG:images/escritorioPC/galeria/imagen_infancia.png")
+    pause 1.0
+    $ recibir_mensaje("Rocío", "¡¡¿Has visto qué lindos?! Me la pasó mi madre el otro día.")
+    pause 1.0
+    $ recibir_mensaje("Yo", "¿¡¿¡¿Esos somos nosotros?!?!?")
+    pause 1.5
+    $ recibir_mensaje("Yo", "No sabía que había una foto nuestra de cuando éramos pequeños.")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Yo también me sorprendí ^^")
+
+    window show
+    "Vaya, no me esperaba que nuestras madres guardaran una foto de nosotros tan pequeños. Cuánto hemos cambiado la verdad."
+    "Me acuerdo de ese día, salimos a dar un paseo por el parque de la urbanización."
+    "No recordaba qué pasó ese día, pero gracias a esa foto lo recordé todo" 
+    window hide
+    
