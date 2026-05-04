@@ -53,24 +53,28 @@ init python:
             with urllib.request.urlopen(req, timeout=15) as response:
                 if response.getcode() in [200, 201]:
                     respuesta = json.loads(response.read().decode('utf-8'))
+                    
+                    # GUARDADO CRÍTICO EN PERSISTENT
                     renpy.store.persistent.user_id = respuesta.get("user_id")
                     renpy.store.persistent.nombre_jugador = respuesta.get("username")
-                    renpy.store.pc_email = respuesta.get("email")
+                    
                     progreso = respuesta.get("progreso", {})
-                    renpy.store.capitulo_actual = progreso.get("capitulo", "prologo")
-                    renpy.store.decisiones_tomadas = progreso.get("decisiones", {})
+                    # Guardamos el capítulo de la nube en una variable que Start() no borre
+                    renpy.store.persistent.nube_capitulo = progreso.get("capitulo", "prologo")
+                    renpy.store.persistent.nube_decisiones = progreso.get("decisiones", {})
+                    
+                    # Sincronizamos las variables locales por si acaso
+                    renpy.store.capitulo_actual = renpy.store.persistent.nube_capitulo
+                    renpy.store.decisiones_tomadas = renpy.store.persistent.nube_decisiones
 
                     login_exitoso = True
         except urllib.error.HTTPError as e:
-            try:
-                error_data = json.loads(e.read().decode('utf-8'))
-                renpy.notify(str(error_data.get('detail', "Error en el login.")))
-            except:
-                renpy.notify("Usuario o contraseña incorrectos.")
+            renpy.notify("Error de credenciales.")
         except Exception as e:
-            renpy.notify(f"Fallo técnico: {str(e)}")
+            renpy.notify("Error de conexión.")
+            
         if login_exitoso:
-            renpy.notify("¡Acceso concedido! Cargando estado...")
+            renpy.notify("¡Sincronización completa!")
             renpy.end_interaction(True)
             
     # --- FUNCIÓN: PEDIR CÓDIGO AL CORREO ---

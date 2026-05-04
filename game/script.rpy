@@ -16,6 +16,8 @@ image fondo_escritorio_pc = im.Scale("images/escritorioPC/fondo_escritorio.png",
 # --- Variables de Usuario ---
 default persistent.user_id = None
 default persistent.nombre_jugador = None
+default persistent.nube_capitulo = None     
+default persistent.nube_decisiones = {}     
 
 default capitulo_actual = "prologo"
 default decisiones_tomadas = {}
@@ -65,6 +67,10 @@ label ejecutar_borrado_cuenta:
         if exito:
             persistent.user_id = None
             persistent.nombre_jugador = None
+
+            persistent.nube_capitulo = None
+            persistent.nube_decisiones = {}
+
             renpy.save_persistent()
 
             pc_email = ""
@@ -135,6 +141,8 @@ default respuestas_disponibles = [
     ("¿Tú qué crees? Si aparezco conectado será por algo", "chat_nodo_2")
 ]
 
+# Boton para finalizar la noche en el chat
+default mostrar_boton_finalizar = False
 
 # Lógica de chat
 init python:
@@ -177,11 +185,18 @@ default lista_fotos = [
 ]
 
 label start:
-    # El jugador ha confirmado empezar la partida    
+
+    if persistent.nube_capitulo:
+        $ capitulo_actual = persistent.nube_capitulo
+        $ decisiones_tomadas = persistent.nube_decisiones
+
     $ default_mouse = "pc_normal"
     $ quick_menu = False
 
-    # Introducción, prota hablando
+    # SALTO DE CAPÍTULO
+    if capitulo_actual != "prologo" and capitulo_actual != "":
+        jump expression capitulo_actual
+
     scene black with fade
 
     play sound "Musica/Efectos/sonido_tecleando.ogg" loop volume 0.8
@@ -192,18 +207,16 @@ label start:
     window hide
     play sound "Musica/Efectos/sonido_inicioSistema.ogg"
 
-    # Aquí mostramos la IMAGEN del fondo, no la pantalla. 
     scene fondo_escritorio_pc
     with fade
 
     pause 2.0
 
-    # Usamos el sonido y la notificación iniciales a mano para arrancar el juego
+    # notificacion de rocio al iniciar el escritorio
     play sound "Musica/Efectos/notificacion_mensajes.mp3"
     $ mensajes_nuevos = True
     $ renpy.notify("Nuevo mensaje de: Roxy26")
     
-    # Como es una imagen normal, el jugador podrá hacer clic para leer esto sin problemas
     "Vaya, ha sido encender el pc y ya me está escribiendo Rocío."
     "Le contestaré a ver qué quiere esta pesada."
     "Aunque antes creo que pondré algo de música de mientras para que no esté todo tan soso."
@@ -220,6 +233,9 @@ label bucle_pc:
     scene black with fade
     "He apagado el ordenador. La pantalla se vuelve negra..."
     return
+
+# Opciones: "pc", "dia_normal", "dia_tetrico"
+default estilo_interfaz = "pc"
 
 label chat_nodo_1:
     pause 1.5
@@ -238,7 +254,7 @@ label chat_nodo_1:
     # NUEVAS RESPUESTAS 
     $ respuestas_disponibles = [
         ("Eso te pasa por no estudiar ni hacer nada en clase.", "chat_nodo_3"),
-        ("Ya te avisé en su momento pero no me hiciste caso (￢_￢)", "chat_nodo_3")
+        ("Ya te avisé en su momento pero no me hiciste caso...", "chat_nodo_3")
     ]
 
     # VOLVEMOS AL ESCRITORIO 
@@ -264,7 +280,7 @@ label chat_nodo_2:
     # NUEVAS RESPUESTAS 
     $ respuestas_disponibles = [
         ("Eso te pasa por no estudiar ni hacer nada en clase.", "chat_nodo_3"),
-        ("Ya te avisé en su momento pero no me hiciste caso (￢_￢)", "chat_nodo_3")
+        ("Ya te avisé en su momento pero no me hiciste caso...", "chat_nodo_3")
     ]
 
     # VOLVEMOS AL ESCRITORIO 
@@ -276,7 +292,7 @@ label chat_nodo_3:
     pause 1.5
     $ recibir_mensaje("Rocío", "Mañana es ya el último examen, espero que se me dé mejor que el de hoy :'( ")
     pause 1.5
-    $ recibir_mensaje("Yo", "Menos mal que no soy tan vago como tú ( ¬_¬)")
+    $ recibir_mensaje("Yo", "Menos mal que no soy tan vago como tú...")
     pause 1.5
     $ recibir_mensaje("Rocío", "Que si, que si... ya deja de recordarme que no estudié lo suficiente. :< ")
     pause 1.5
@@ -301,6 +317,120 @@ label chat_nodo_3:
     window show
     "Vaya, no me esperaba que nuestras madres guardaran una foto de nosotros tan pequeños. Cuánto hemos cambiado la verdad."
     "Me acuerdo de ese día, salimos a dar un paseo por el parque de la urbanización."
-    "No recordaba qué pasó ese día, pero gracias a esa foto lo recordé todo" 
+    "No recordaba para nada ese momento, pero gracias a esa foto lo recordé todo." 
     window hide
     
+    $ recibir_mensaje("Rocío", "Fíjate si hemos cambiado que casi no me reconozco ")
+    pause 1.5
+    $ recibir_mensaje("Yo", "La verdad es que da para pensar...")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Sí, sí... jeje")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Por cierto, cambiando de tema... ")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "¿Quedamos mañana después de clase como siempre no?")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Después de los exámenes digo.")
+    pause 1.0
+    $ recibir_mensaje("Yo", "Ufff no sé...quedar con una pesada como tú puede ser agotador...")
+    pause 1.0
+    $ recibir_mensaje("Rocío", "(-_-)")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Vale vale señor amargado, ojalá te vaya mal el examen de mañana :D")
+    pause 1.0
+    $ recibir_mensaje("Yo", "Jajajaja")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Bueno...supongo que no me queda otra que aguantarte.")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Es broma :D")
+    pause 1.0
+    $ recibir_mensaje("Yo", "Sisi, mañana como siempre quedamos")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Hmmm (-_-) bueno, más te vale")
+    pause 1.0
+    $ recibir_mensaje("Yo", "Jeje")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Te dejo, voy a ver si logro estudiar un poco más.")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Va, yo también repasaré un poco antes de dormir")
+    pause 1.0
+    $ recibir_mensaje("Yo", "Buenas noches Zzz")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Suerte con eso :3")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Espero que aprobemos ambos el examen y podamos celebrarlo")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Zzzzzzz")
+    
+    $ mostrar_boton_finalizar = True
+
+    jump bucle_pc
+    
+    
+label transicion_dia_1:
+    hide screen escritorio_pc
+    hide screen ventana_chat
+    hide screen ventana_nota
+    hide screen ventana_galeria
+    hide screen ventana_musica
+    hide screen ventana_webcam
+    
+    python:
+        for app in apps_pc:
+            apps_pc[app]["abierta"] = False
+            apps_pc[app]["minimizada"] = False
+
+    window hide
+    stop music fadeout 2.0
+
+    scene black with fade
+    pause 1.0
+
+    show expression Text("DÍA 1", font="gui/fonts/Micro5.ttf", size=150, color="#ffffff") as cartel_dia:
+        xalign 0.5
+        yalign 0.5
+    with dissolve
+    
+    pause 3.0
+    
+    hide cartel_dia with dissolve
+
+    $ capitulo_actual = "dia_1"
+
+    jump dia_1
+
+# Parte diurna 1
+label dia_1:
+    # Empezamos el día con el marco bonito y floral
+    $ estilo_interfaz = "dia_normal"
+    $ default_mouse = "cursor_normal"
+
+    # Guardar el estado de la partida
+    $ capitulo_actual = "dia_1"
+    $ persistent.nube_capitulo = "dia_1" 
+    $ guardar_progreso(capitulo_actual, decisiones_tomadas)
+
+    scene fondo_patio:
+        xysize(1920, 1080)
+        fit "cover"
+        align (0.0, 0.0)
+    with fade    
+
+    "Rocío" "Hoy hace un día precioso, ¿verdad?"
+    "Yo" "Sí, la verdad es que se está muy bien aquí."
+    
+    "De repente, el cielo se nubló. Rocío dejó de sonreír y se quedó mirando al vacío."
+    
+    # ¡BUM! CAMBIO DE INTERFAZ Y DE MÚSICA PARA EL SUSTO
+    $ estilo_interfaz = "dia_tetrico"
+    $ default_mouse = "cursor_normal_terror"
+    play music "sonido_terror_estatica.ogg"
+    
+    "Rocío" "Tú la dejaste morir... ¿Por qué lo hiciste?"
+    "Yo" "¿Q-qué estás diciendo...?"
+    
+    # Y si quieres volver a la normalidad como si hubiera sido una alucinación:
+    $ estilo_interfaz = "dia_normal"
+    stop music
+    
+    "Rocío" "¡Eh! ¿Me estás escuchando? Te estaba hablando de los exámenes."

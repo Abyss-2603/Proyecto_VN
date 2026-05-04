@@ -101,23 +101,139 @@ transform miniatura_galeria:
 ##
 ## https://www.renpy.org/doc/html/screen_special.html#say
 
+# Menu parte visual novel normal (diurna)
 screen say(who, what):
+    style_prefix "say"
 
-    window:
-        id "window"
+    if estilo_interfaz == "dia_normal":
+        window:
+            id "window"
+            style "empty"
+            xysize (1920, 1080)
+            xalign 0.0
+            yalign 0.0
 
-        if who is not None:
+            # Añadimos tu marco gigante
+            add Transform("images/diurna/interfaz_sinfondo2.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
 
-            window:
-                id "namebox"
-                style "namebox"
-                text who id "who"
+            # Nombre de quien habla
+            if who is not None:
+                text who id "who":
+                    font "gui/fonts/VT323.ttf" 
+                    size 40 
+                    color "#ffffff"
+                    xpos 890
+                    ypos 737
+            
+            # Texto del diálogo
+            text what id "what":
+                font "gui/fonts/VT323.ttf" 
+                size 35 
+                color "#ffffff"
+                xpos 285
+                ypos 810
+                xsize 1300 
 
-        text what id "what"
+            # BOTONES LATERALES
+            vbox:
+                xalign 0.96
+                yalign 0.26
+                spacing -55
 
+                imagebutton:
+                    idle Transform("images/diurna/boton_historial_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    hover Transform("images/diurna/boton_historial_pulsado_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    mouse "cursor_select"
+                    action ShowMenu('history')
+                    at transform:
+                        zoom 0.2 
+                        
+                imagebutton:
+                    idle Transform("images/diurna/boton_opciones_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    hover Transform("images/diurna/boton_opciones_pulsado_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    mouse "cursor_select"
+                    action ShowMenu('preferences')
+                    at transform:
+                        zoom 0.2 
+                        
+                imagebutton:
+                    idle Transform("images/diurna/boton_salir_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    hover Transform("images/diurna/boton_salir_pulsado_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    mouse "cursor_select"
+                    action MainMenu()
+                    at transform:
+                        zoom 0.2
 
-    ## Si hay una imagen lateral, la muestra encima del texto. No la muestra en
-    ## la variante de teléfono - no hay lugar.
+    elif estilo_interfaz == "dia_tetrico":
+        window:
+            id "window"
+            style "empty"
+            xysize (1920, 1080)
+            xalign 0.0
+            yalign 0.0
+
+            # Añadimos tu marco gigante
+            add Transform("images/diurna/interfaz_sinfondo.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+
+            # Nombre de quien habla
+            if who is not None:
+                text who id "who":
+                    font "gui/fonts/VT323.ttf" 
+                    size 40 
+                    color "#ffffff"
+                    xpos 890
+                    ypos 737
+            
+            # Texto del diálogo
+            text what id "what":
+                font "gui/fonts/VT323.ttf" 
+                size 35 
+                color "#ffffff"
+                xpos 285
+                ypos 810
+                xsize 1300 
+
+            # BOTONES LATERALES
+            vbox:
+                xalign 0.96
+                yalign 0.26
+                spacing -55
+
+                imagebutton:
+                    idle Transform("images/diurna/boton_historial_pulsado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    hover Transform("images/diurna/boton_historial_seleccionado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    mouse "cursor_select_terror"
+                    action ShowMenu('history')
+                    at transform:
+                        zoom 0.2 
+                        
+                imagebutton:
+                    idle Transform("images/diurna/boton_opciones_pulsado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    hover Transform("images/diurna/boton_opciones_seleccionado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    mouse "cursor_select_terror"
+                    action ShowMenu('preferences')
+                    at transform:
+                        zoom 0.2 
+                        
+                imagebutton:
+                    idle Transform("images/diurna/boton_salir_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    hover Transform("images/diurna/boton_salir_seleccionado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                    mouse "cursor_select_terror"
+                    action MainMenu()
+                    at transform:
+                        zoom 0.2
+
+    else:
+        # INTERFAZ PC
+        window:
+            id "window"
+            if who is not None:
+                window:
+                    id "namebox"
+                    style "namebox"
+                    text who id "who"
+            text what id "what"
+
     if not renpy.variant("small"):
         add SideImage() xalign 0.0 yalign 1.0
 
@@ -2877,14 +2993,24 @@ screen ventana_chat():
                     for texto_opcion, destino in respuestas_disponibles:
                         button:
                             background Frame("images/escritorioPC/frame_decisiones_chat.png", 30, 30, 30, 30) 
-                            xsize 520
-                            xalign 0.5 
+                            xsize 600
+                            xalign 0.5
                             padding (20, 12)
                         
                             action Function(enviar_respuesta_chat, texto_opcion, destino)
                             
                             text "> [texto_opcion]" color "#ccc" hover_color "#fff" font "gui/fonts/VT323.ttf" size 22 xalign 0.5 yalign 0.5
-
+                    if mostrar_boton_finalizar:
+                        button:
+                            background Frame("images/escritorioPC/frame_decisiones_chat.png", 30, 30, 30, 30) 
+                            xsize 520
+                            xalign 0.5 
+                            padding (20, 12)   
+                            # Este action da el salto para apagar el PC y cambiar de día
+                            action Jump("transicion_dia_1")
+                            
+                            text "> FINALIZAR NOCHE" color "#ff4444" hover_color "#ff0000" font "gui/fonts/VT323.ttf" size 26 xalign 0.5 yalign 0.5
+                            
 # Pantalla para ver imagen de perfil en grande
 
 screen zoom_perfil(img):
@@ -3118,3 +3244,5 @@ screen ventana_webcam():
                     ypos 10
                     action Function(cerrar_app, "webcam")
                 
+# --- PARTE DIURNA ---
+

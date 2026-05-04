@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 2534: ATL block expects a non-empty block.
-    image "images/escritorioPC/circulo.png" at transform:
-                                                         ^
+File "game/script.rpy", line 228: invalid syntax
+    False;
+         ^
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Thu Apr 30 15:00:10 2026
+Mon May  4 16:27:33 2026
