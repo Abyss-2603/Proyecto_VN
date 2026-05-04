@@ -138,7 +138,7 @@ screen say(who, what):
             vbox:
                 xalign 0.96
                 yalign 0.26
-                spacing -55
+                spacing -70
 
                 imagebutton:
                     idle Transform("images/diurna/boton_historial_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
@@ -197,7 +197,7 @@ screen say(who, what):
             vbox:
                 xalign 0.96
                 yalign 0.26
-                spacing -55
+                spacing -70
 
                 imagebutton:
                     idle Transform("images/diurna/boton_historial_pulsado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
