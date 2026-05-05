@@ -136,9 +136,9 @@ screen say(who, what):
 
             # BOTONES LATERALES
             vbox:
-                xalign 0.96
-                yalign 0.26
-                spacing -70
+                xalign 0.93
+                yalign 0.28
+                spacing 10
 
                 imagebutton:
                     idle Transform("images/diurna/boton_historial_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
@@ -146,7 +146,7 @@ screen say(who, what):
                     mouse "cursor_select"
                     action ShowMenu('history')
                     at transform:
-                        zoom 0.2 
+                        zoom 0.15
                         
                 imagebutton:
                     idle Transform("images/diurna/boton_opciones_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
@@ -154,7 +154,7 @@ screen say(who, what):
                     mouse "cursor_select"
                     action ShowMenu('preferences')
                     at transform:
-                        zoom 0.2 
+                        zoom 0.15
                         
                 imagebutton:
                     idle Transform("images/diurna/boton_salir_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
@@ -162,7 +162,7 @@ screen say(who, what):
                     mouse "cursor_select"
                     action MainMenu()
                     at transform:
-                        zoom 0.2
+                        zoom 0.15
 
     elif estilo_interfaz == "dia_tetrico":
         window:
@@ -195,9 +195,9 @@ screen say(who, what):
 
             # BOTONES LATERALES
             vbox:
-                xalign 0.96
-                yalign 0.26
-                spacing -70
+                xalign 0.93
+                yalign 0.28
+                spacing 10
 
                 imagebutton:
                     idle Transform("images/diurna/boton_historial_pulsado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
@@ -205,7 +205,7 @@ screen say(who, what):
                     mouse "cursor_select_terror"
                     action ShowMenu('history')
                     at transform:
-                        zoom 0.2 
+                        zoom 0.15
                         
                 imagebutton:
                     idle Transform("images/diurna/boton_opciones_pulsado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
@@ -213,7 +213,7 @@ screen say(who, what):
                     mouse "cursor_select_terror"
                     action ShowMenu('preferences')
                     at transform:
-                        zoom 0.2 
+                        zoom 0.15
                         
                 imagebutton:
                     idle Transform("images/diurna/boton_salir_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
@@ -221,8 +221,7 @@ screen say(who, what):
                     mouse "cursor_select_terror"
                     action MainMenu()
                     at transform:
-                        zoom 0.2
-
+                        zoom 0.15
     else:
         # INTERFAZ PC
         window:

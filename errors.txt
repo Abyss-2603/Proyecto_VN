@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 228: invalid syntax
-    False;
-         ^
+File "game/script.rpy", line 423: expected 'simple_expression' not found.
+    yalign
+           ^
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Mon May  4 16:27:33 2026
+Tue May  5 14:29:12 2026

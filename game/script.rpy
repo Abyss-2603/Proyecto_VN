@@ -184,6 +184,11 @@ default lista_fotos = [
     "images/escritorioPC/icono_chica.png"
 ]
 
+# Variables chica
+image chica_hablando = "images/diurna/chica_hablando.png"
+image chica_molesta = "images/diurna/chica_molesta.png"
+image chica_molesta2 = "images/diurna/chica_molesta2.png"
+
 label start:
 
     if persistent.nube_capitulo:
@@ -206,7 +211,6 @@ label start:
     stop sound fadeout 1.0
     window hide
     play sound "Musica/Efectos/sonido_inicioSistema.ogg"
-
     scene fondo_escritorio_pc
     with fade
 
@@ -410,18 +414,24 @@ label dia_1:
     $ persistent.nube_capitulo = "dia_1" 
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
-    scene fondo_patio:
-        xysize(1920, 1080)
-        fit "cover"
-        align (0.0, 0.0)
-    with fade    
+    scene fondo_patio2:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade 
+
+    show chica_hablando:
+        xalign 0.5      
+        yalign 1.0      
+        yoffset -280     
+        zoom 2.0    
+    with dissolve
 
     "Rocío" "Hoy hace un día precioso, ¿verdad?"
     "Yo" "Sí, la verdad es que se está muy bien aquí."
     
     "De repente, el cielo se nubló. Rocío dejó de sonreír y se quedó mirando al vacío."
     
-    # ¡BUM! CAMBIO DE INTERFAZ Y DE MÚSICA PARA EL SUSTO
     $ estilo_interfaz = "dia_tetrico"
     $ default_mouse = "cursor_normal_terror"
     play music "sonido_terror_estatica.ogg"
