@@ -185,9 +185,29 @@ default lista_fotos = [
 ]
 
 # Variables chica
-image chica_hablando = "images/diurna/chica_hablando.png"
-image chica_molesta = "images/diurna/chica_molesta.png"
-image chica_molesta2 = "images/diurna/chica_molesta2.png"
+image chica comiendo = "images/diurna/modelos_chica/chica_comiendo.png"
+image chica inexpresiva = "images/diurna/modelos_chica/chica_inexpresiva.png"
+image chica inquieta = "images/diurna/modelos_chica/chica_inquieta.png"
+image chica llorando = "images/diurna/modelos_chica/chica_llorando.png"
+image chica orgullosa = "images/diurna/modelos_chica/chica_orgullosa.png"
+image chica pensando = "images/diurna/modelos_chica/chica_pensando.png"
+image chica rota = "images/diurna/modelos_chica/chica_rota.png"
+image chica hablando = "images/diurna/modelos_chica/chica_hablando.png"
+image chica molesta = "images/diurna/modelos_chica/chica_molesta.png"
+image chica molesta2 = "images/diurna/modelos_chica/chica_molesta2.png"
+image chica resoplando = "images/diurna/modelos_chica/chica_resoplando.png"
+image chica molestaBroma = "images/diurna/modelos_chica/chica_molestaBroma.png"
+image chica reverencia = "images/diurna/modelos_chica/chica_reverencia.png"
+image chica riendo = "images/diurna/modelos_chica/chica_riendo.png"
+image chica apenada = "images/diurna/modelos_chica/chica_apenada.png"
+
+# Definicion de personajes
+define r = Character("Rocío")
+define y = Character("Yo")
+
+# Variables de Puntos Finales
+default puntos_mentira = 0
+default puntos_verdad = 0
 
 label start:
 
@@ -390,7 +410,7 @@ label transicion_dia_1:
     scene black with fade
     pause 1.0
 
-    show expression Text("DÍA 1", font="gui/fonts/Micro5.ttf", size=150, color="#ffffff") as cartel_dia:
+    show expression Text("DÍA 1 (escena diurna)", font="gui/fonts/Micro5.ttf", size=150, color="#ffffff") as cartel_dia:
         xalign 0.5
         yalign 0.5
     with dissolve
@@ -414,33 +434,183 @@ label dia_1:
     $ persistent.nube_capitulo = "dia_1" 
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
+    # poner música alegre 
+
     scene fondo_patio2:
         xysize (1430, 700) 
         xalign 0.5  
         yalign 0.2 
     with fade 
 
-    show chica_hablando:
+    show chica resoplando:
         xalign 0.5      
         yalign 1.0      
         yoffset -280     
         zoom 2.0    
     with dissolve
 
-    "Rocío" "Hoy hace un día precioso, ¿verdad?"
-    "Yo" "Sí, la verdad es que se está muy bien aquí."
+    r "Ahhhhhhhhhhhhhhh por fin terminaron los exámenes!!!!!!!!!"
     
-    "De repente, el cielo se nubló. Rocío dejó de sonreír y se quedó mirando al vacío."
+    show chica hablando
+    r "Ya somos libres al fin"
     
-    $ estilo_interfaz = "dia_tetrico"
-    $ default_mouse = "cursor_normal_terror"
-    play music "sonido_terror_estatica.ogg"
+    y "Jajajaja por fin eh! fueron dos semanas intensas pero ya podemos olvidarnos un tiempo de todo."
     
-    "Rocío" "Tú la dejaste morir... ¿Por qué lo hiciste?"
-    "Yo" "¿Q-qué estás diciendo...?"
+    r "Sisi, por cierto, qué tal el último examen? No te pareció demasiado difícil?!?"
     
-    # Y si quieres volver a la normalidad como si hubiera sido una alucinación:
-    $ estilo_interfaz = "dia_normal"
-    stop music
+    y "Eh? Si bueno...tampoco fue para tanto, creo que lo aprobaré."
     
-    "Rocío" "¡Eh! ¿Me estás escuchando? Te estaba hablando de los exámenes."
+    show chica molestaBroma
+    r "Eh?!?! Que no era para tanto?? Oye....me tienes que enseñar a estudiar, no sé cómo lo haces pero a mí me cuesta muchísimo y encima éste examen me fue bastante regulero UnU"
+    
+    y "Ya te dije que estudiaras más, hasta te ofrecí mi ayuda pero me dijiste que podías sola."
+    
+    show chica reverencia
+    r "Perdone mi insolencia maestro, a partir de ahora te haré caso en todo."
+    
+    y "Ujum, así me gusta discípula, espero que no haya más faltas de respeto."
+    
+    show chica riendo
+    r "Pffffff jajajajajaaja al final me volveré tu discípula de verdad"
+    
+    y "Jajajajaja déjate de tonterías."
+    
+    scene fondo_calle:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade 
+
+    show chica pensando
+    r "Ah...........ahora sin exámenes podemos ir a celebrar a algún lado."
+    
+    y "No es mala idea aunque estoy algo agotado tras el examen, quiero irme a casa a descansar."
+    
+    show chica molesta
+    r "Oye oye como así?!?! Justo acabamos los exámenes y ya estás pensando en volver a casa?!?!?" 
+    r "No será que quieres volver para ponerte con el PC y dejarme aquí sola no? UnU"
+    y "Simplemente estoy cansado, no me apetece mucho ir a algún lado; si quieres mañana vamos a tomar algo si?"
+    
+    show chica resoplando
+    r "Hmmm bueeeenooo....Mientras me lo prometas..."
+    y "Prometido"
+    
+    show chica inquieta
+    r "Ah.................................."
+    r "Bueno..."
+    r "Espero que no vuelvas a esa época..."
+    
+    y "¿?"
+    
+    show chica hablando
+    r "Te acuerdas cuando estábamos en secundaria y había que sacarte a rastras para que salieses del cuarto?" 
+    show chica molestaBroma
+    r "No salías por nada del mundo, querías quedarte con tus videojuegos y tu computadora."
+
+    # primera eleccion
+    menu:
+        "Seguro que eso no lo dices por ti? Era yo quien tenía que ir detrás de ti para que salieses":
+            jump mentira_uno
+
+        "Ya...no me alejaba de mi PC por nada del mundo jajaja":
+            jump verdad_uno
+
+# RUTAS DEL PRIMERA ELECCIÓN
+label mentira_uno:
+    $ puntos_mentira += 1
+
+    $ decisiones_tomadas["dia_1_eleccion_1"] = "mentira"
+
+    show chica apenada
+    r "Ay...es cierto, perdona, me costaba salir de mi cuarto jajaja quería quedarme todo el día en frente de la computadora con mis videojuegos y mi anime :3"
+
+    y "Ya decía yo, me quieres echar la culpa de tus irresponsabilidades eh? hmmm"
+    
+    show chica molestaBroma
+    r "Ya ya, que si, simplemente me equivoqué vale? Pensaba que eras tú el antisocial de los dos."
+
+    y "Jajajajaj"
+
+    "Cuando teníamos 13 años Rocío se encerró en su cuarto casi toda la secundaria, por lo menos hasta los 15 o 16 años. Diría que quedábamos una vez al mes o hasta dos meses. "
+    "A menos de que yo le insistiese no salía de casa, prefería quedarse con su PC todo el día. Solo podíamos vernos en las quedadas o a veces de regreso a casa."
+    "Me alegra que por fin haya salido de su cascarón."
+
+    show chica hablando
+    r "De todas formas eso ya es agua pasada, ya salí de mi cueva así que podremos hacer quedadas más frecuentes, hasta podríamos ir a un karaoke."
+
+    jump dia_1_escena2
+
+label verdad_uno:
+    $ puntos_verdad += 1
+    
+    $ decisiones_tomadas["dia_1_eleccion_1"] = "verdad"
+
+    show chica pensando
+    r "No sé porqué no querías alejarte del PC, parecía tu DIOS."
+    
+    y "Tampoco tanto jajaja solo que...no sé, me lo pasaba bien encerrado con mis cosas. Pero eso ya es agua pasada, ahora por fin me di cuenta de que en la vida hay algo más aparte de la compu. Ya dejé de ser un hikikomori de esos. Aunque yo si iba a clases." 
+
+    show chica hablando
+    r "Me alegra que por fin te decidiste salir y dar un cambio a tu vida, no es sano quedarse tanto tiempo encerrado frente a una pantalla."
+
+    y "Ya ya, ya sé tonta. No he dejado atrás mis pasiones pero sé que la vida sigue xD."
+
+    "Cuando tenía 13 años de la nada empecé a encerrarme en mi cuarto y a pasar cada vez más horas frente a la computadora. No era por nada en especial, simplemente me lo pasaba bien y así me alejaba de la realidad."
+    "Me pasé así casi toda mi secundaria, hasta los 15 o 16 años."
+    "De igual forma iba a clases cada día y aprobaba como podía, pero si que llegué a hacer pellas con tal de terminar algún anime..."
+    "Rocío siempre tenía que venir a mi casa para convencerme de salir; aunque pocas veces funcionaba, había veces que le hacía caso."
+
+    show chica hablando
+    r "De todas formas eso ya es agua pasada, ya salí de mi cueva así que podremos hacer quedadas más frecuentes, hasta podríamos ir a un karaoke."
+
+    jump dia_1_escena2
+
+label dia_1_escena2:
+    y "Oh!! La idea del karaoke no es mala, podríamos ir la semana que viene."
+
+    show chica orgullosa
+    r "¿Ves? Siempre propongo buenas ideas JeJE"
+
+    show chica hablando
+    r "Pues decidido, ¿no me dejes plantada esta vez eh?"
+
+    y "Si si, me lo apuntaré en el cerebro para no olvidarlo."
+    
+    show chica orgullosa
+    r "Así me gusta Ujumm."
+
+    show chica hablando
+    r "¿Tampoco olvides lo de mañana eh? Después de clases vayamos a alguna cafetería a tomar algo."
+    y "Si si, también lo tengo apuntado."
+
+    show chica molestaBroma
+    r "Más te vale Hmmm"
+
+    scene fondo_calle_atardecer:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade 
+
+    show chica hablando
+    y "Bueno, creo que es hora de que nos vayamos ya a casa, ya estamos en el cruce."
+    y "Y estoy que me muero..."
+    r "Hmmmmm sé que te pondrás con el PC, de igual forma te escribiré como te vea conectado"
+    y "Sólo estaré un rato anda, no me seas tan controladora."
+    show chica molestaBroma
+    r "Simplemente me preocupo de que quieras pasar más tiempo con tu computadora que con tu amiga."
+    y "No es eso tonta, sabes que no."
+    show chica reverencia
+    r "Bueno, con esto me despido, gracias por acompañarme hasta aquí pero...nuestros caminos se tienen que separar...fue bonito mientras duró..."
+    y "Venga anda, nos vemos mañana."
+    r "Chaoooo ;D"
+    hide chica
+    r "Recuerda que te escribiré esta noche."
+    y "Si si, adiós."
+
+    "Hora de ir a casa por fin, supongo que me conectaré un rato."
+
+    jump dia_1_escenaNoche
+
+label dia_1_escenaNoche:
+    
