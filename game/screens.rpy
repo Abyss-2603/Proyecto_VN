@@ -328,17 +328,73 @@ style input:
 screen choice(items):
     style_prefix "choice"
 
+    #MANTENEMOS EL MARCO Y LOS BOTONES VISIBLES DURANTE LAS OPCIONES
+    if estilo_interfaz == "dia_normal":
+        add Transform("images/diurna/interfaz_sinfondo2.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+        vbox:
+            xalign 0.93
+            yalign 0.28
+            spacing 10
+            imagebutton:
+                idle Transform("images/diurna/boton_historial_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                hover Transform("images/diurna/boton_historial_pulsado_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                mouse "cursor_select"
+                action ShowMenu('history')
+                at transform:
+                    zoom 0.15
+            imagebutton:
+                idle Transform("images/diurna/boton_opciones_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                hover Transform("images/diurna/boton_opciones_pulsado_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                mouse "cursor_select"
+                action ShowMenu('preferences')
+                at transform:
+                    zoom 0.15
+            imagebutton:
+                idle Transform("images/diurna/boton_salir_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                hover Transform("images/diurna/boton_salir_pulsado_bien.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                mouse "cursor_select"
+                action MainMenu()
+                at transform:
+                    zoom 0.15
+
+    elif estilo_interfaz == "dia_tetrico":
+        add Transform("images/diurna/interfaz_sinfondo.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+        vbox:
+            xalign 0.93
+            yalign 0.28
+            spacing 10
+            imagebutton:
+                idle Transform("images/diurna/boton_historial_pulsado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                hover Transform("images/diurna/boton_historial_seleccionado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                mouse "cursor_select_terror"
+                action ShowMenu('history')
+                at transform:
+                    zoom 0.15
+            imagebutton:
+                idle Transform("images/diurna/boton_opciones_pulsado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                hover Transform("images/diurna/boton_opciones_seleccionado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                mouse "cursor_select_terror"
+                action ShowMenu('preferences')
+                at transform:
+                    zoom 0.15
+            imagebutton:
+                idle Transform("images/diurna/boton_salir_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                hover Transform("images/diurna/boton_salir_seleccionado_mal.png", xysize=(1920, 1080), xalign=0.0, yalign=0.0)
+                mouse "cursor_select_terror"
+                action MainMenu()
+                at transform:
+                    zoom 0.15
+
     vbox:
         for i in items:
             textbutton i.caption action i.action
-
 
 style choice_vbox is vbox
 style choice_button is button
 style choice_button_text is button_text
 
 style choice_vbox:
-    xalign 0.5
+    xalign 0.33
     ypos 405
     yanchor 0.5
 
@@ -664,8 +720,8 @@ screen gallery():
                 spacing 10
                 
                 # Botón
-                if renpy.seen_image("cg1"):
-                    add g.make_button("cg1", "images/cg1_mini.png") at miniatura_galeria
+                if persistent.cg1_desbloqueada:
+                    add g.make_button("cg1", "images/cg1_mini.png") at miniatura_galeria                
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
                 
@@ -679,7 +735,7 @@ screen gallery():
             vbox:
                 xalign 0.5
                 spacing 10
-                if renpy.seen_image("cg2"):
+                if persistent.cg2_desbloqueada:
                     add g.make_button("cg2", "images/cg2_mini.png") at miniatura_galeria
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
@@ -694,7 +750,7 @@ screen gallery():
             vbox:
                 xalign 0.5
                 spacing 10
-                if renpy.seen_image("cg3"):
+                if persistent.cg3_desbloqueada:
                     add g.make_button("cg3", "images/cg3_mini.png") at miniatura_galeria
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
@@ -2607,8 +2663,88 @@ screen recuperacion():
 screen escritorio_pc():
     modal True 
 
-    add "images/escritorioPC/fondo_escritorio.png":
-        xysize (1920, 1080)
+    if nivel_corrupto == 0:
+        add "images/escritorioPC/fondo_escritorio.png":
+            xysize (1920, 1080)
+    elif nivel_corrupto == 1:
+        add "images/escritorioPC/fondo_escritorio_corrupto.png":
+            xysize (1920, 1080)
+    else:
+        add "images/escritorioPC/fondo_escritorio_corrupto2.png":
+            xysize (1920, 1080)
+
+    # ARCHIVOS TURBIO
+    if nivel_corrupto >= 1:
+        hbox:
+            xpos 1000 ypos 200 # Lejos de los normales
+            spacing 40
+            
+            # Nota_1
+            vbox:
+                spacing 5 xalign 0.5
+                imagebutton:
+                    idle "images/escritorioPC/icono_nota.png" hover Transform("images/escritorioPC/icono_nota.png", matrixcolor=BrightnessMatrix(0.2))
+                    mouse "pc_select"
+                    action [Function(abrir_app, "nota_corrupta_1"), SetVariable("archivos_explorados", archivos_explorados + 1)]
+                text "ayuda.txt" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+            
+            # Nota_2
+            vbox:
+                spacing 5 xalign 0.5
+                imagebutton:
+                    idle "images/escritorioPC/icono_nota.png" hover Transform("images/escritorioPC/icono_nota.png", matrixcolor=BrightnessMatrix(0.2))
+                    mouse "pc_select"
+                    action [Function(abrir_app, "nota_corrupta_2"), SetVariable("archivos_explorados", archivos_explorados + 1)]
+                text "ayuda.txt" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+            
+            # Nota_3
+            vbox:
+                spacing 5 xalign 0.5
+                imagebutton:
+                    idle "images/escritorioPC/icono_nota.png" hover Transform("images/escritorioPC/icono_nota.png", matrixcolor=BrightnessMatrix(0.2))
+                    mouse "pc_select"
+                    action [Function(abrir_app, "nota_corrupta_3"), SetVariable("archivos_explorados", archivos_explorados + 1)]
+                text "ayuda.txt" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+            
+            # Imagen 1
+            vbox:
+                spacing 5 xalign 0.5
+                imagebutton:
+                    idle "images/escritorioPC/icono_img.png" hover Transform("images/escritorioPC/icono_img.png", matrixcolor=BrightnessMatrix(0.2))
+                    mouse "pc_select"
+                    action [SetVariable("ruta_visor_actual", "images/escritorioPC/foto_rara_1.png"), 
+                            Show("ventana_visor_fotos_raras"), 
+                            AddToSet(lista_fotos, "images/escritorioPC/foto_rara_1.png"), 
+                            SetVariable("persistent.cg1_desbloqueada", True), 
+                            SetVariable("archivos_explorados", archivos_explorados + 1)]                
+                text "cu41t0.jpg" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+                
+            # Imagen 2
+            vbox:
+                spacing 5 xalign 0.5
+                imagebutton:
+                    idle "images/escritorioPC/icono_img.png" hover Transform("images/escritorioPC/icono_img.png", matrixcolor=BrightnessMatrix(0.2))
+                    mouse "pc_select"
+                    action [SetVariable("ruta_visor_actual", "images/escritorioPC/foto_rara_2.png"), 
+                            Show("ventana_visor_fotos_raras"), 
+                            AddToSet(lista_fotos, "images/escritorioPC/foto_rara_2.png"), 
+                            SetVariable("persistent.cg2_desbloqueada", True), 
+                            SetVariable("archivos_explorados", archivos_explorados + 1)]                
+                text "##er#e.png" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+            
+            # Imagen 3
+            vbox:
+                spacing 5 xalign 0.5
+                imagebutton:
+                    idle "images/escritorioPC/icono_img.png" hover Transform("images/escritorioPC/icono_img.png", matrixcolor=BrightnessMatrix(0.2))
+                    mouse "pc_select"
+                    action [SetVariable("ruta_visor_actual", "images/escritorioPC/foto_rara_3.png"), 
+                            Show("ventana_visor_fotos_raras"), 
+                            AddToSet(lista_fotos, "images/escritorioPC/foto_rara_3.png"), 
+                            SetVariable("persistent.cg3_desbloqueada", True), 
+                            SetVariable("archivos_explorados", archivos_explorados + 1)]                
+                text "######.png" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+
 
     # ICONOS DEL ESCRITORIO
     hbox:
@@ -2722,7 +2858,9 @@ screen escritorio_pc():
                 color "#ffffff"
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
-
+    
+    if archivos_explorados >=2 and not susto_voces_hecho:
+        timer 1.0 action Jump("evento_voces_dia1")
 
     # BARRA DE TAREAS Y APLICACIONES ABIERTAS
     frame:
@@ -2763,7 +2901,7 @@ screen escritorio_pc():
             yalign 0.5 
             xalign 1.0
             
-            text "01/10/2004 | 23:05":
+            text "01/10/2005 | 23:05":
                 font "gui/fonts/VT323.ttf"
                 size 32
                 color "#000000"
@@ -2839,6 +2977,97 @@ screen ventana_nota():
                             text "████ ██ ████ ███████. \n████ ██ ████ ██████. \n████ ██████ █ ████ ██ ████████████" color "#000" font "DejaVuSans.ttf" size 25
                         else:
                             text "Nada es como piensas. \nNada es como parece. \nDATE CUENTA Y DEJA DE VICTIMIZARTE \n DEJA DE HUIR" color "#ff0000" font "gui/fonts/VT323.ttf" size 25
+
+# --- Ventana de imagenes corruptas ---
+screen ventana_visor_fotos_raras():
+    zorder 16 
+    
+    drag:
+        drag_name "visor_drag"
+        xpos 500 ypos 150 
+        drag_handle (0, 0, 1.0, 50) 
+        
+        fixed:
+            xysize (800, 600) 
+            
+            # El marco de la ventana
+            add Transform("images/escritorioPC/ventana_webcam.png", xysize=(800, 600), nearest=True)
+            
+            # La imagen corrupta en el centro (usando la variable general)
+            add Transform(ruta_visor_actual, xysize=(788, 533), fit="contain"):
+                xpos 7
+                ypos 60
+            
+            # BARRA SUPERIOR (Icono y Título genérico)
+            hbox:
+                xpos 20 ypos 18
+                spacing 10
+                add Transform("images/escritorioPC/icono_img.png", xysize=(30, 30), nearest=True)
+                text "Visor de Imágenes":
+                    font "gui/fonts/VT323.ttf" 
+                    size 26 
+                    color "#ffffff" 
+                    outlines [(1, "#000000", 0, 0)]
+    
+            # BOTÓN CERRAR 
+            imagebutton:
+                idle Solid("#00000000") hover Solid("#ff000055") 
+                xysize (50, 50) xpos 745 ypos 10
+                action Hide("ventana_visor_fotos_raras")
+
+# --- Ventana nota corrupta ---
+screen ventana_nota_turbia():
+    zorder 15 
+    
+    if apps_pc["nota_turbia"]["abierta"] and not apps_pc["nota_turbia"]["minimizada"]:
+        drag:
+            drag_name "nota_turbia_drag"
+            xpos 600 ypos 300 
+            drag_handle (0, 0, 1.0, 40)
+            
+            frame:
+                background Solid("#222222") 
+                padding (2, 2)
+                
+                vbox:
+                    # BARRA SUPERIOR ROJA OSCURA 
+                    frame:
+                        xsize 500
+                        ysize 40
+                        background Solid("#660000") 
+                        padding (10, 0)
+                        
+                        hbox:
+                            xfill True
+                            yalign 0.5
+                            text apps_pc["nota_turbia"]["titulo"] font "gui/fonts/VT323.ttf" size 25 color "#fff" yalign 0.5
+                            
+                            # BOTONES MINIMIZAR Y CERRAR
+                            hbox:
+                                xalign 1.0
+                                yalign 0.5
+                                spacing 4
+                                textbutton "-":
+                                    xysize (34, 34) 
+                                    text_font "gui/fonts/VT323.ttf" text_size 30 text_color "#fff" 
+                                    text_xalign 0.5 text_yalign 0.3
+                                    background Solid("#888888") action Function(toggle_minimizar, "nota_turbia")
+                                    
+                                textbutton "X":
+                                    xysize (34, 34) 
+                                    text_font "gui/fonts/VT323.ttf" text_size 30 text_color "#fff" 
+                                    text_xalign 0.5 text_yalign 0.5 
+                                    background Solid("#cc0000") action Function(cerrar_app, "nota_turbia")
+
+                    # ÁREA DE CONTENIDO DINÁMICO
+                    frame:
+                        background Solid("#000000") 
+                        xysize (500, 300)
+                        padding (20, 20)
+                        
+                        # AQUÍ LA MAGIA: Lee lo que hayas puesto en la historia para esa noche
+                        text apps_pc["nota_turbia"]["contenido"] color "#ff0000" font "gui/fonts/VT323.ttf" size 35
+
 
 # --- BARRA DE SCROLL DEL CHAT ---
 style chat_vscrollbar:
@@ -3006,7 +3235,7 @@ screen ventana_chat():
                             xalign 0.5 
                             padding (20, 12)   
                             # Este action da el salto para apagar el PC y cambiar de día
-                            action Jump("transicion_dia_1")
+                            action Jump(destino_noche)
                             
                             text "> FINALIZAR NOCHE" color "#ff4444" hover_color "#ff0000" font "gui/fonts/VT323.ttf" size 26 xalign 0.5 yalign 0.5
                             
@@ -3199,7 +3428,7 @@ screen ventana_webcam():
     zorder 10
     
     # He corregido la posición de esta línea, que estaba demasiado a la derecha
-    if not apps_pc["webcam"]["minimizada"]:
+    if apps_pc["webcam"]["abierta"] and not apps_pc["webcam"]["minimizada"]:
         
         drag:
             drag_name "webcam_drag"

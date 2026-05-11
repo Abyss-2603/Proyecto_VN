@@ -130,6 +130,7 @@ init python:
 # --- Variables para chat y mensajes ---
 default mensajes_nuevos = False
 
+
 # El chat empieza con mensajes de ella
 default historial_mensajes = [
     ("Rocío", "¡Por fin te conectas! ¿Estás dentro del ordenador?")
@@ -141,16 +142,36 @@ default respuestas_disponibles = [
     ("¿Tú qué crees? Si aparezco conectado será por algo", "chat_nodo_2")
 ]
 
+# Variables de terror y progreso
+default archivos_corruptos = False
+default estado_webcam = "apagada"
+
+default nivel_corrupto = 0
+default destino_noche = "transicion_dia_1"
+
 # Boton para finalizar la noche en el chat
 default mostrar_boton_finalizar = False
+
+default archivos_explorados = 0
+default susto_voces_hecho = False
+
+# variables para la galería
+default persistent.cg1_desbloqueada = False
+default persistent.cg2_desbloqueada = False
+default persistent.cg3_desbloqueada = False
+default persistent.cg4_desbloqueada = False
+default persistent.cg5_desbloqueada = False
+default persistent.cg6_desbloqueada = False
+default persistent.cg7_desbloqueada = False
+default persistent.cg8_desbloqueada = False
+
+default ruta_visor_actual = "" # Guarda qué foto se está viendo
 
 # Lógica de chat
 init python:
     def recibir_mensaje(remitente, texto):
         store.historial_mensajes.append((remitente, texto))
-
         renpy.restart_interaction() 
-        
         if not store.apps_pc["chat"]["abierta"] or store.apps_pc["chat"]["minimizada"]:
             store.mensajes_nuevos = True
             renpy.sound.play("Musica/Efectos/notificacion.ogg")
@@ -160,23 +181,66 @@ init python:
         if ruta_imagen not in store.lista_fotos:
             store.lista_fotos.append(ruta_imagen)
         store.historial_mensajes.append((remitente, texto_chat))    
-
         store.ajuste_scroll_chat.value = 99999 
         renpy.restart_interaction()   
-        
         if not store.apps_pc["chat"]["abierta"] or store.apps_pc["chat"]["minimizada"]:
             store.mensajes_nuevos = True
             renpy.sound.play("Musica/Efectos/notificacion_mensajes.mp3")
             renpy.notify("Nueva imagen de: " + remitente)
 
-    # Función para recibir texto
     def enviar_respuesta_chat(texto_elegido, etiqueta_destino):
         store.historial_mensajes.append(("Yo", texto_elegido))
         store.respuestas_disponibles = []
         renpy.end_interaction(None)
-
         renpy.jump(etiqueta_destino)
     
+
+# --- LÓGICA DEL SISTEMA OPERATIVO ---
+init python:
+    # Diccionario con apps 
+    apps_pc = {
+        "nota": {"abierta": False, "minimizada": False, "titulo": "Nota_1.txt"},
+        "chat": {"abierta": False, "minimizada": False, "titulo": "Chat"},
+        "galeria": {"abierta": False, "minimizada": False, "titulo": "Galería"},
+        "musica": {"abierta": False, "minimizada": False, "titulo": "Música"},
+        "webcam": {"abierta": False, "minimizada": False, "titulo": "WebCam"},
+
+        "nota_turbia": {"abierta": False, "minimizada": False, "titulo": "LEEME.txt", "contenido": "..."},
+        
+        # archivos corruptos de la noche 1    
+        "nota_corrupta_1": {"abierta": False, "minimizada": False, "titulo": "ayuda.txt", "contenido": "NO PUEDO RESPIRAR", "visible": True},
+        "foto_corrupta_1": {"abierta": False, "minimizada": False, "titulo": "cu41t0.jpg", "ruta": "images/escritorioPC/foto_rara_1.png", "visible": True},
+        "foto_corrupta_2": {"abierta": False, "minimizada": False, "titulo": "##er#e.jpg", "ruta": "images/escritorioPC/foto_rara_2.png", "visible": True},
+        
+        # mas archivos corruptos
+        "nota_corrupta_2": {"abierta": False, "minimizada": False, "titulo": "", "contenido": "", "visible": True},
+        "nota_corrupta_3": {"abierta": False, "minimizada": False, "titulo": "", "contenido": "", "visible": True},
+        "foto_corrupta_3": {"abierta": False, "minimizada": False, "titulo": "", "ruta": "", "visible": True}
+    }
+
+    #  orden en el que aparecerán minimizadas en la barra de tareas
+    orden_apps = ["nota", "chat", "galeria", "musica", "webcam", "nota_turbia", "nota_corrupta_1", "foto_corrupta_1", "foto_corrupta_2", "nota_corrupta_2", "nota_corrupta_3", "foto_corrupta_3"]
+
+    def abrir_app(app_id):
+        store.apps_pc[app_id]["abierta"] = True
+        store.apps_pc[app_id]["minimizada"] = False
+        renpy.restart_interaction()
+
+    def abrir_y_guardar_foto(app_id):
+        abrir_app(app_id)
+        ruta = store.apps_pc[app_id]["ruta"]
+        if ruta not in store.lista_fotos:
+            store.lista_fotos.append(ruta)
+            renpy.notify("Imagen guardada en la Galería")
+
+    def cerrar_app(app_id):
+        store.apps_pc[app_id]["abierta"] = False
+        renpy.restart_interaction()
+
+    def toggle_minimizar(app_id):
+        if store.apps_pc[app_id]["abierta"]:
+            store.apps_pc[app_id]["minimizada"] = not store.apps_pc[app_id]["minimizada"]
+            renpy.restart_interaction()
 
 # Lista de rutas de las imagenes de galeria
 default lista_fotos = [
@@ -185,25 +249,132 @@ default lista_fotos = [
 ]
 
 # Variables chica
-image chica comiendo = "images/diurna/modelos_chica/chica_comiendo.png"
-image chica inexpresiva = "images/diurna/modelos_chica/chica_inexpresiva.png"
-image chica inquieta = "images/diurna/modelos_chica/chica_inquieta.png"
-image chica llorando = "images/diurna/modelos_chica/chica_llorando.png"
-image chica orgullosa = "images/diurna/modelos_chica/chica_orgullosa.png"
-image chica pensando = "images/diurna/modelos_chica/chica_pensando.png"
-image chica rota = "images/diurna/modelos_chica/chica_rota.png"
-image chica hablando = "images/diurna/modelos_chica/chica_hablando.png"
-image chica molesta = "images/diurna/modelos_chica/chica_molesta.png"
-image chica molesta2 = "images/diurna/modelos_chica/chica_molesta2.png"
-image chica resoplando = "images/diurna/modelos_chica/chica_resoplando.png"
-image chica molestaBroma = "images/diurna/modelos_chica/chica_molestaBroma.png"
-image chica reverencia = "images/diurna/modelos_chica/chica_reverencia.png"
-image chica riendo = "images/diurna/modelos_chica/chica_riendo.png"
-image chica apenada = "images/diurna/modelos_chica/chica_apenada.png"
+image chica comiendo:
+    "images/diurna/modelos_chica/chica_comiendo.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300 
+
+image chica inexpresiva:
+    "images/diurna/modelos_chica/chica_inexpresiva.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica inquieta:
+    "images/diurna/modelos_chica/chica_inquieta.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica llorando:
+    "images/diurna/modelos_chica/chica_llorando.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica orgullosa:
+    "images/diurna/modelos_chica/chica_orgullosa.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica pensando:
+    "images/diurna/modelos_chica/chica_pensando.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica rota:
+    "images/diurna/modelos_chica/chica_rota.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica hablando:
+    "images/diurna/modelos_chica/chica_hablando.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica molesta:
+    "images/diurna/modelos_chica/chica_molesta.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica molesta2:
+    "images/diurna/modelos_chica/chica_molesta2.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica resoplando:
+    "images/diurna/modelos_chica/chica_resoplando.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+    
+
+
+image chica molestaBroma:
+    "images/diurna/modelos_chica/chica_molestaBroma.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica reverencia:
+    "images/diurna/modelos_chica/chica_reverencia.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica riendo:
+    "images/diurna/modelos_chica/chica_riendo.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
+
+image chica apenada:
+    "images/diurna/modelos_chica/chica_apenada.png"
+    ysize 700
+    fit "contain"
+    xalign 0.5
+    yalign 1.0
+    yoffset -300
 
 # Definicion de personajes
 define r = Character("Rocío")
 define y = Character("Yo")
+define v = Character("Voz")
 
 # Variables de Puntos Finales
 default puntos_mentira = 0
@@ -251,12 +422,29 @@ label start:
     jump bucle_pc
 
 label bucle_pc:
+    # Cargamos TODAS las ventanas en la memoria (invisibles o minimizadas)
+    show screen ventana_nota
+    show screen ventana_chat
+    show screen ventana_galeria
+    show screen ventana_musica
+    show screen ventana_webcam
+    show screen ventana_nota_turbia 
+    show screen ventana_visor_fotos_raras
+    
+    # Mostramos el escritorio interactivo encima de todo
     call screen escritorio_pc 
     $ default_mouse = "pc_normal"
     
+    # Por si el jugador decide pulsar el botón de apagar manualmente
     scene black with fade
-    "He apagado el ordenador. La pantalla se vuelve negra..."
-    return
+    "He apagado el ordenador manualmente..."
+    
+    if capitulo_actual == "prologo":
+        jump transicion_dia_1
+    else:
+        # Si apaga el PC de noche en lugar de usar el chat, vuelve a encenderlo
+        "Todavía no debería apagarlo. Tengo cosas que ver."
+        jump bucle_pc
 
 # Opciones: "pc", "dia_normal", "dia_tetrico"
 default estilo_interfaz = "pc"
@@ -410,7 +598,7 @@ label transicion_dia_1:
     scene black with fade
     pause 1.0
 
-    show expression Text("DÍA 1 (escena diurna)", font="gui/fonts/Micro5.ttf", size=150, color="#ffffff") as cartel_dia:
+    show expression Text("DÍA 1", font="gui/fonts/Micro5.ttf", size=150, color="#ffffff") as cartel_dia:
         xalign 0.5
         yalign 0.5
     with dissolve
@@ -442,12 +630,7 @@ label dia_1:
         yalign 0.2 
     with fade 
 
-    show chica resoplando:
-        xalign 0.5      
-        yalign 1.0      
-        yoffset -280     
-        zoom 2.0    
-    with dissolve
+    show chica resoplando
 
     r "Ahhhhhhhhhhhhhhh por fin terminaron los exámenes!!!!!!!!!"
     
@@ -610,7 +793,233 @@ label dia_1_escena2:
 
     "Hora de ir a casa por fin, supongo que me conectaré un rato."
 
+    jump transicion_dia_1_noche
+
+label transicion_dia_1_noche:
+    scene black with fade
+    pause 1.0
+
+    show expression Text("DÍA 1 (noche)", font="gui/fonts/Micro5.ttf", size=150, color="#ffffff") as cartel_dia:
+        xalign 0.5
+        yalign 0.5
+    with dissolve
+    
+    pause 3.0
+    
+    hide cartel_dia with dissolve
+
+    # Y ahora sí, saltamos a tu escena de la noche
     jump dia_1_escenaNoche
 
 label dia_1_escenaNoche:
+    $ capitulo_actual = "dia_1_noche"
+    $ persistent.nube_capitulo = "dia_1_noche"
+    $ guardar_progreso(capitulo_actual, decisiones_tomadas)
+
+    $ nivel_corrupto = 1
+    $ apps_pc["nota_turbia"]["contenido"] = "¿Por qué no contestaste?\nMe ahogo."
+    $ destino_noche = "transicion_dia_2" # a donde salta el botón de finalizar del chat
+
+
+    scene black with fade
+    "Por fin en casa... estoy agotado."
+    "¿Eh? Qué es todo esto? Anoche no estaban estos archivos en el escritorio n-no?"
+    "¿Será que tengo un virus? Ah.......un virus que deja notas en el escritorio e imágenes raras..."
+    "Espero que lo pueda sacar."
     
+    jump bucle_pc
+
+label evento_voces_dia1:
+    $ susto_voces_hecho = True
+    window show # aparece la caja de diálogo
+    v "Deja de hacerte el tonto..."
+    "¿Eh?"
+    v "Deja de huir..."
+    "¿Huir? ¿¿Cómo?? Creo que he escuchado algo...."
+    "..."
+    "............."
+    "Hmmmm quizás...ha sido cosa mía, qué raro..."
+    "No sé porqué pero siento que me cuesta respirar...."
+    
+    play sound "Musica/Efectos/notificacion_mensajes.mp3"
+    $ mensajes_nuevos = True
+    $ renpy.notify("Nuevo mensaje de: Roxy26")
+
+    "¡¡Ah!! Uf...es solo un mensaje de Rocío. Menos mal."
+    "Mi cabeza me está jugando malas pasadas por este estúpido virus."
+    "Será mejor que le conteste y me distraiga un poco."
+
+    window hide
+
+    python:
+        store.historial_mensajes = [] 
+        recibir_mensaje("Rocío", "Heyyyyyyyyyyyyy")
+        recibir_mensaje("Rocío", "Sé que estás en línea!!!!!")
+        recibir_mensaje("Rocío", "CONTESTAAAA")
+        recibir_mensaje("Rocío", "*cara molesta*")
+        
+        store.respuestas_disponibles = [
+            ("Ya estoy, ya estoy. Estaba mirando unas cosas raras en el pc...", "chat_dia1_noche_nodo1")
+        ]
+
+    jump bucle_pc
+
+
+label chat_dia1_noche_nodo1:
+    pause 1.0
+    $ recibir_mensaje("Rocío", "Eh? Te has puesto a ver guarradas o qué?")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Qué?? Malpensada, no, me refería a que hay algo raro en mi PC")
+    pause 1.0
+    $ recibir_mensaje("Rocío", "Algo raro?")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Si...de la nada han aparecido varios archivos de texto e imágenes en el escritorio")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Ehm? Será algo que dejaste pero te olvidaste de ello")
+    pause 1.0
+    $ recibir_mensaje("Yo", "Nahh estoy al 100% de que no es mío.")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Creo que tengo un virus peligroso :/")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Hmmm, vaya... ¿y qué vas a hacer?")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Por ahora...supongo que ignorarlo. Lo llevaré a reparar en unos días a ver.")
+    
+    pause 2.0
+    $ recibir_mensaje("Rocío", "...")
+    pause 2.0
+    $ recibir_mensaje("Rocío", "Siempre haces lo mismo no?")
+    pause 1.5
+    $ recibir_mensaje("Yo", "¿Qué?")
+    pause 2.0
+    $ recibir_mensaje("Rocío", "Ignorar las cosas cuando se ponen feas, esperando a que pasen solas.")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Aunque alguien te pida ayuda a gritos en tu propia cara.")
+
+    $ respuestas_disponibles = [
+        ("Es lo más facil cuando no sabes qué hacer. Ojos que no ven, corazón que no siente.", "mentira_dos"),
+        ("Lo siento. Sé que es un defecto mío que debo corregir.", "verdad_dos")
+    ]
+    jump bucle_pc
+
+label mentira_dos:
+    $ puntos_mentira += 1
+    
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Ya......")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Supongo que tienes razón. Bueno, no te rayes con el PC")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Llévalo a reparar cuando puedas.")
+    pause 1.5
+    $ recibir_mensaje("Yo", "La semana que viene lo llevaré")
+    pause 1.0
+    $ recibir_mensaje("Yo", "O espero a que se arregle solo jajajaja")
+    pause 2.0
+    $ recibir_mensaje("Rocío", "...")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Jajajaja siempre igual ")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Me voy a dormir que ya es tarde. ")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "No te olvides mañana de la quedada eh? ")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Te llevaré a rastras si hace falta")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Ya te dije que vamos a ir")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Eso espero. Bueno...")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Chaooo ")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Nos vemos mañana anda ")
+    
+    # Pensamientos del protagonista 
+    "No le he dicho nada pero...¿y esa actitud rara tan repentina?"
+    "Por no mencionar esa pregunta....bueno, da igual"
+    "No le daré mucha importancia, ni a ella ni al virus por ahora."
+
+
+    # Preparamos el botón para cerrar la noche
+    $ respuestas_disponibles = []
+    $ mostrar_boton_finalizar = True 
+    jump bucle_pc
+
+
+label verdad_dos:
+    $ puntos_verdad += 1
+    
+    pause 1.5
+    $ recibir_mensaje("Rocío", "...")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Ojalá te hubieras dado cuenta antes...")
+    pause 1.5
+    $ recibir_mensaje("Yo", "¿Antes, antes de qué?")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "De que ya es muy tarde tonto jajajaja.")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Me voy a dormir ya que mañana hay clase.")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Eh? B-bueno...")
+    
+    "Qué acaba de pasar? Por un momento la he notado rara..."
+
+    pause 1.5
+    $ recibir_mensaje("Rocío", "No te olvides mañana de la quedad eh? ")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Ya me prometiste que mañana vamos a celebrar Hmm.")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Te llevaré a rastras si hace falta")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Ya te dije que vamos a ir")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Eso espero. Bueno...")
+    pause 1.5
+    $ recibir_mensaje("Rocío", "Chaooo")
+    pause 1.5
+    $ recibir_mensaje("Yo", "Nos vemos mañana anda ")
+
+    # Pensamientos finales
+    
+    "No le he dicho nada pero...¿y esa actitud rara tan repentina?"
+    "Por no mencionar esa pregunta.....bueno, da igual"
+    "No le daré mucha importancia, ni a ella ni al virus por ahora."
+
+    # Preparamos el botón para cerrar la noche
+    $ respuestas_disponibles = []
+    $ mostrar_boton_finalizar = True 
+    jump bucle_pc
+
+label transicion_dia_2:
+    hide screen escritorio_pc
+    hide screen ventana_chat
+    hide screen ventana_nota
+    hide screen ventana_galeria
+    hide screen ventana_musica
+    hide screen ventana_webcam
+    hide screen ventana_nota_turbia
+    hide screen ventana_visor_fotos_raras
+    
+    python:
+        for app in apps_pc:
+            apps_pc[app]["abierta"] = False
+            apps_pc[app]["minimizada"] = False
+            
+    $ mostrar_boton_finalizar = False
+
+    window hide
+    stop music fadeout 2.0
+
+    scene black with fade
+    pause 1.0
+
+    show expression Text("DÍA 2 (escena diurna)", font="gui/fonts/Micro5.ttf", size=150, color="#ffffff") as cartel_dia:
+        xalign 0.5
+        yalign 0.5
+    with dissolve
+    
+    pause 3.0
+    
+    hide cartel_dia with dissolve
+
+    jump dia_2
