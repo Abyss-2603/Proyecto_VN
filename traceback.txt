@@ -1,112 +1,23 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 444, in script
-    call screen escritorio_pc
-  File "game/screens.rpy", line 2982, in execute
-    screen ventana_visor_fotos_raras():
-  File "game/screens.rpy", line 2982, in execute
-    screen ventana_visor_fotos_raras():
-  File "game/screens.rpy", line 2985, in execute
-    drag:
-  File "game/screens.rpy", line 2990, in execute
-    fixed:
-  File "game/screens.rpy", line 2997, in execute
-    add Transform(ruta_visor_actual, xysize=(788, 533), fit="contain"):
-  File "game/screens.rpy", line 2997, in <module>
-    add Transform(ruta_visor_actual, xysize=(788, 533), fit="contain"):
-        ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
-Exception: An empty string cannot be used as a displayable.
+  File "game/script.rpy", line 403, in script
+    jump expression capitulo_actual
+renpy.script.LabelNotFound: could not find label 'dia_1_noche'. Did you mean: 'dia_2_noche'?
 
 -- Full Traceback ------------------------------------------------------------
 
 Traceback (most recent call last):
-  File "game/script.rpy", line 444, in script
-    call screen escritorio_pc
-  File "renpy/ast.py", line 2232, in execute
-    statement_name(name)
-    ~~~~~~~~~~~~~~^^^^^^
-  File "renpy/ast.py", line 547, in statement_name
-    i(name)
-    ~^^^^^^
-  File "renpy/common/000window.rpy", line 129, in _window_auto_callback
-    _window_hide(auto=True)
-    ~~~~~~~~~~~~^^^^^^^^^^^
-  File "renpy/common/000window.rpy", line 111, in _window_hide
-    renpy.with_statement(trans)
-    ~~~~~~~~~~~~~~~~~~~~^^^^^^^
-  File "renpy/exports/statementexports.py", line 260, in with_statement
-    return renpy.game.interface.do_with(trans, paired, clear=clear)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "renpy/display/core.py", line 1478, in do_with
-    return self.interact(
-           ~~~~~~~~~~~~~^
-        trans_pause=True, suppress_overlay=not renpy.config.overlay_during_with, mouse="with", clear=clear
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "renpy/display/core.py", line 2154, in interact
-    repeat, rv = self.interact_core(
-                 ~~~~~~~~~~~~~~~~~~^
-        preloads=preloads,
-        ^^^^^^^^^^^^^^^^^^
-    ...<4 lines>...
-        **kwargs,
-        ^^^^^^^^^
-    )
-    ^
-  File "renpy/display/core.py", line 2700, in interact_core
-    root_widget.visit_all(lambda d: d.per_interact())
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "renpy/display/displayable.py", line 457, in visit_all
-    d.visit_all(callback, seen)
-    ~~~~~~~~~~~^^^^^^^^^^^^^^^^
-  File "renpy/display/displayable.py", line 457, in visit_all
-    d.visit_all(callback, seen)
-    ~~~~~~~~~~~^^^^^^^^^^^^^^^^
-  File "renpy/display/displayable.py", line 457, in visit_all
-    d.visit_all(callback, seen)
-    ~~~~~~~~~~~^^^^^^^^^^^^^^^^
-[Previous line repeated 1 more time]
-  File "renpy/display/screen.py", line 503, in visit_all
-    callback(self)
-    ~~~~~~~~^^^^^^
-  File "renpy/display/core.py", line 2700, in <lambda>
-    root_widget.visit_all(lambda d: d.per_interact())
-                                    ~~~~~~~~~~~~~~^^ 
-  File "renpy/display/screen.py", line 514, in per_interact
-    self.update()
-    ~~~~~~~~~~~^^
-  File "renpy/display/screen.py", line 715, in update
-    self.screen.function(**self.scope)
-    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
-  File "game/screens.rpy", line 2982, in execute
-    screen ventana_visor_fotos_raras():
-  File "game/screens.rpy", line 2982, in execute
-    screen ventana_visor_fotos_raras():
-  File "game/screens.rpy", line 2985, in execute
-    drag:
-  File "game/screens.rpy", line 2990, in execute
-    fixed:
-  File "game/screens.rpy", line 2997, in execute
-    add Transform(ruta_visor_actual, xysize=(788, 533), fit="contain"):
-  File "renpy/python.py", line 1305, in py_eval
-    return py_eval_bytecode(code, globals, locals)
-           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-  File "renpy/python.py", line 1298, in py_eval_bytecode
-    return eval(bytecode, globals, locals)
-           ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "game/screens.rpy", line 2997, in <module>
-    add Transform(ruta_visor_actual, xysize=(788, 533), fit="contain"):
-        ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
-  File "renpy/display/transform.py", line 743, in __init__
-    child = renpy.easy.displayable_or_none(child)
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
-  File "renpy/easy.py", line 69, in displayable_or_none
-    raise Exception("An empty string cannot be used as a displayable.")
-Exception: An empty string cannot be used as a displayable.
+  File "game/script.rpy", line 403, in script
+    jump expression capitulo_actual
+  File "renpy/ast.py", line 1928, in execute
+    rv = renpy.game.script.lookup(target)
+         ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "renpy/script.py", line 1201, in lookup
+    raise LabelNotFound(original)
+renpy.script.LabelNotFound: could not find label 'dia_1_noche'. Did you mean: 'dia_2_noche'?
 
 Windows-11-10.0.26200-SP0 AMD64
 Ren'Py 8.5.2.26010301
 Proyecto_VN 1.0
-Tue May 12 12:23:01 2026
+Tue May 12 12:46:28 2026

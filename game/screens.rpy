@@ -2710,7 +2710,7 @@ screen escritorio_pc():
             vbox:
                 spacing 5 xalign 0.5
                 imagebutton:
-                    idle "images/escritorioPC/icono_img.png" hover Transform("images/escritorioPC/icono_img.png", matrixcolor=BrightnessMatrix(0.2))
+                    idle "images/escritorioPC/icono_imagen.png" hover Transform("images/escritorioPC/icono_imagen.png", matrixcolor=BrightnessMatrix(0.2))
                     mouse "pc_select"
                     action [SetVariable("ruta_visor_actual", "images/escritorioPC/foto_rara_1.png"), 
                             Show("ventana_visor_fotos_raras"), 
@@ -2723,7 +2723,7 @@ screen escritorio_pc():
             vbox:
                 spacing 5 xalign 0.5
                 imagebutton:
-                    idle "images/escritorioPC/icono_img.png" hover Transform("images/escritorioPC/icono_img.png", matrixcolor=BrightnessMatrix(0.2))
+                    idle "images/escritorioPC/icono_imagen.png" hover Transform("images/escritorioPC/icono_imagen.png", matrixcolor=BrightnessMatrix(0.2))
                     mouse "pc_select"
                     action [SetVariable("ruta_visor_actual", "images/escritorioPC/foto_rara_2.png"), 
                             Show("ventana_visor_fotos_raras"), 
@@ -2736,7 +2736,7 @@ screen escritorio_pc():
             vbox:
                 spacing 5 xalign 0.5
                 imagebutton:
-                    idle "images/escritorioPC/icono_img.png" hover Transform("images/escritorioPC/icono_img.png", matrixcolor=BrightnessMatrix(0.2))
+                    idle "images/escritorioPC/icono_imagen.png" hover Transform("images/escritorioPC/icono_imagen.png", matrixcolor=BrightnessMatrix(0.2))
                     mouse "pc_select"
                     action [SetVariable("ruta_visor_actual", "images/escritorioPC/foto_rara_3.png"), 
                             Show("ventana_visor_fotos_raras"), 
@@ -2744,7 +2744,6 @@ screen escritorio_pc():
                             SetVariable("persistent.cg3_desbloqueada", True), 
                             SetVariable("archivos_explorados", archivos_explorados + 1)]                
                 text "######.png" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
-
 
     # ICONOS DEL ESCRITORIO
     hbox:
@@ -2911,8 +2910,7 @@ screen escritorio_pc():
 screen ventana_nota():
     zorder 10
     
-    if not apps_pc["nota"]["minimizada"]:
-        
+    if apps_pc["nota"]["abierta"] and not apps_pc["nota"]["minimizada"]:
         drag:
             drag_name "nota_drag"
             xpos 400 ypos 200
@@ -3002,7 +3000,7 @@ screen ventana_visor_fotos_raras():
                 hbox:
                     xpos 20 ypos 18
                     spacing 10
-                    add Transform("images/escritorioPC/icono_img.png", xysize=(30, 30), nearest=True)
+                    add Transform("images/escritorioPC/icono_imagen.png", xysize=(30, 30), nearest=True)
                     text "Visor de Imágenes":
                         font "gui/fonts/VT323.ttf" 
                         size 26 
@@ -3087,7 +3085,7 @@ style chat_vscrollbar:
 # ---VENTANA DE CHAT ---
 screen ventana_chat():
     zorder 10
-    if not apps_pc["chat"]["minimizada"]:
+    if apps_pc["chat"]["abierta"] and not apps_pc["chat"]["minimizada"]:
         drag:
             drag_name "chat_drag"
             xpos 350 ypos 50 
@@ -3262,7 +3260,7 @@ screen zoom_perfil(img):
 screen ventana_musica():
     zorder 10
     
-    if not apps_pc["musica"]["minimizada"]:
+    if apps_pc["musica"]["abierta"] and not apps_pc["musica"]["minimizada"]:
         
         drag:
             drag_name "musica_drag"
@@ -3356,7 +3354,7 @@ screen zoom_galeria(img):
 screen ventana_galeria():
     zorder 10
 
-    if not apps_pc["galeria"]["minimizada"]:
+    if apps_pc["galeria"]["abierta"] and not apps_pc["galeria"]["minimizada"]:
         
         drag:
             drag_name "galeria_drag"

@@ -12,6 +12,8 @@ image imagenBloqueada:
 
 # variable del fondo de escritorio
 image fondo_escritorio_pc = im.Scale("images/escritorioPC/fondo_escritorio.png", 1920, 1080)
+image fondo_escritorio_corrupto = im.Scale("images/escritorioPC/fondo_escritorio_corrupto.png", 1920, 1080)
+image fondo_escritorio_corrupto2 = im.Scale("images/escritorioPC/fondo_escritorio_co")
 
 # --- Variables de Usuario ---
 default persistent.user_id = None
@@ -645,7 +647,7 @@ label dia_1:
     show chica hablando
     r "Ya somos libres al fin"
     
-    y "Jajajaja por fin eh! fueron dos semanas intensas pero ya podemos olvidarnos un tiempo de todo."
+    y "Por fin eh! fueron dos semanas intensas pero ya podemos olvidarnos un tiempo de todo."
     
     r "Sisi, por cierto, qué tal el último examen? No te pareció demasiado difícil?!?"
     
@@ -818,9 +820,9 @@ label transicion_dia_1_noche:
     hide cartel_dia with dissolve
 
     # Y ahora sí, saltamos a tu escena de la noche
-    jump dia_1_escenaNoche
+    jump dia_1_noche
 
-label dia_1_escenaNoche:
+label dia_1_noche:
     $ estilo_interfaz = "pc"
     $ default_mouse = "pc_normal"
 
@@ -832,8 +834,14 @@ label dia_1_escenaNoche:
     $ apps_pc["nota_turbia"]["contenido"] = "¿Por qué no contestaste?\nMe ahogo."
     $ destino_noche = "transicion_dia_2" # a donde salta el botón de finalizar del chat
 
+    #Limpia el escritorio al iniciar
+    python:
+        for app in apps_pc:
+            apps_pc[app]["abierta"] = False
+            apps_pc[app]["minimizada"] = False
 
-    scene black with fade
+    scene expression "images/escritorioPC/fondo_escritorio_corrupto.png" with fade
+
     "Por fin en casa... estoy agotado."
     "¿Eh? Qué es todo esto? Anoche no estaban estos archivos en el escritorio n-no?"
     "¿Será que tengo un virus? Ah.......un virus que deja notas en el escritorio e imágenes raras..."
@@ -1519,7 +1527,7 @@ label dia_2_noche:
     $ destino_noche = "transicion_dia_3"
 
     # *fondo de pantalla más oscurecido*
-    scene expression "images/escritorioPC/fondo_escritorio_corrupto.png" with fade
+    scene expression "images/escritorioPC/fondo_escritorio_corrupto2.png" with fade
     
     y "¿Qué pasa con este escritorio??"
     y "La nota esa...parece que es un virus muy potente, será un troyano."
