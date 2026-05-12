@@ -2,9 +2,13 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 339: expected 'simple_expression' not found.
-    nearest=True
-           ^
+File "game/script.rpy", line 1928: expected end of line
+    play music "Musica/Efectos/cancion3.ogg" pitch 0.8
+                                             ^
+
+File "game/script.rpy", line 2067: expected end of line
+    play music "Musica/Efectos/cancion3.ogg" pitch 0.8
+                                             ^
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Mon May 11 14:20:39 2026
+Tue May 12 12:20:32 2026

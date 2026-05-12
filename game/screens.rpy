@@ -536,7 +536,7 @@ screen main_menu():
         fit "cover"
 
     ## 2. EL TÍTULO
-    text "Proyecto WASD":
+    text "R0X1026":
         font "gui/fonts/Micro5.ttf"
         size 150
         color "#ffffff"
@@ -2981,39 +2981,39 @@ screen ventana_nota():
 # --- Ventana de imagenes corruptas ---
 screen ventana_visor_fotos_raras():
     zorder 16 
-    
-    drag:
-        drag_name "visor_drag"
-        xpos 500 ypos 150 
-        drag_handle (0, 0, 1.0, 50) 
+    if ruta_visor_actual != "": 
+        drag:
+            drag_name "visor_drag"
+            xpos 500 ypos 150 
+            drag_handle (0, 0, 1.0, 50) 
+            
+            fixed:
+                xysize (800, 600) 
+                
+                # El marco de la ventana
+                add Transform("images/escritorioPC/ventana_webcam.png", xysize=(800, 600), nearest=True)
+                
+                # La imagen corrupta en el centro (usando la variable general)
+                add Transform(ruta_visor_actual, xysize=(788, 533), fit="contain"):
+                    xpos 7
+                    ypos 60
+                
+                # BARRA SUPERIOR (Icono y Título genérico)
+                hbox:
+                    xpos 20 ypos 18
+                    spacing 10
+                    add Transform("images/escritorioPC/icono_img.png", xysize=(30, 30), nearest=True)
+                    text "Visor de Imágenes":
+                        font "gui/fonts/VT323.ttf" 
+                        size 26 
+                        color "#ffffff" 
+                        outlines [(1, "#000000", 0, 0)]
         
-        fixed:
-            xysize (800, 600) 
-            
-            # El marco de la ventana
-            add Transform("images/escritorioPC/ventana_webcam.png", xysize=(800, 600), nearest=True)
-            
-            # La imagen corrupta en el centro (usando la variable general)
-            add Transform(ruta_visor_actual, xysize=(788, 533), fit="contain"):
-                xpos 7
-                ypos 60
-            
-            # BARRA SUPERIOR (Icono y Título genérico)
-            hbox:
-                xpos 20 ypos 18
-                spacing 10
-                add Transform("images/escritorioPC/icono_img.png", xysize=(30, 30), nearest=True)
-                text "Visor de Imágenes":
-                    font "gui/fonts/VT323.ttf" 
-                    size 26 
-                    color "#ffffff" 
-                    outlines [(1, "#000000", 0, 0)]
-    
-            # BOTÓN CERRAR 
-            imagebutton:
-                idle Solid("#00000000") hover Solid("#ff000055") 
-                xysize (50, 50) xpos 745 ypos 10
-                action Hide("ventana_visor_fotos_raras")
+                # BOTÓN CERRAR 
+                imagebutton:
+                    idle Solid("#00000000") hover Solid("#ff000055") 
+                    xysize (50, 50) xpos 745 ypos 10
+                    action Hide("ventana_visor_fotos_raras")
 
 # --- Ventana nota corrupta ---
 screen ventana_nota_turbia():
@@ -3472,5 +3472,10 @@ screen ventana_webcam():
                     ypos 10
                     action Function(cerrar_app, "webcam")
                 
-# --- PARTE DIURNA ---
+# Variable global para saber si ya se asustó con la webcam
+default susto_webcam_hecho = False
 
+# Pantalla invisible que vigila si el jugador abre la webcam en la noche 2
+screen detector_webcam_noche2():
+    if apps_pc["webcam"]["abierta"] and capitulo_actual == "dia_2_noche" and not susto_webcam_hecho:
+        timer 0.1 action Jump("evento_webcam_dia2")

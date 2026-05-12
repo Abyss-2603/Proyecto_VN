@@ -170,35 +170,7 @@ init python:
 
         return False
 
-    apps_pc = {
-        "nota": {"abierta": False, "minimizada": False, "titulo": "Nota_1.txt"},
-        "chat": {"abierta": False, "minimizada": False, "titulo": "Chat.exe"},
-        "ajustes": {"abierta": False, "minimizada": False, "titulo": "Panel de Control"},
-        "carpeta": {"abierta": False, "minimizada": False, "titulo": "Archivos Ocultos"},
-        "galeria": {"abierta": False, "minimizada": False, "titulo": "Visor de Imágenes"},
-        "musica": {"abierta": False, "minimizada": False, "titulo": "Reproductor"},
-        "webcam": {"abierta": False, "minimizada": False, "titulo": "Webcam"}
-    }
-
-    # --- Lógica de ventanas del escritorio ---
-    # El orden en el que aparecerán en la barra de tareas
-    orden_apps = ["nota", "chat", "ajustes", "carpeta", "galeria", "musica", "webcam"]
-
-    # --- FUNCIONES DEL SISTEMA OPERATIVO ---
-    def abrir_app(app_id):
-        apps_pc[app_id]["abierta"] = True
-        apps_pc[app_id]["minimizada"] = False
-        renpy.show_screen("ventana_" + app_id) # Invoca la pantalla correspondiente
-        renpy.restart_interaction()
-
-    def cerrar_app(app_id):
-        apps_pc[app_id]["abierta"] = False
-        apps_pc[app_id]["minimizada"] = False
-        renpy.hide_screen("ventana_" + app_id) # Destruye la pantalla
-        renpy.restart_interaction()
-
-    def toggle_minimizar(app_id):
-        # Si está abierta, invierte su estado de minimizado (True a False, o False a True)
-        if apps_pc[app_id]["abierta"]:
-            apps_pc[app_id]["minimizada"] = not apps_pc[app_id]["minimizada"]
-            renpy.restart_interaction()
+    def enviar_correo_real(destinatario):
+        if destinatario != "":
+            renpy.notify("Enviando correo del sistema a: " + str(destinatario))
+        renpy.sound.play("Musica/Efectos/notificacion.ogg")
