@@ -2,13 +2,8 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 1928: expected end of line
-    play music "Musica/Efectos/cancion3.ogg" pitch 0.8
-                                             ^
-
-File "game/script.rpy", line 2067: expected end of line
-    play music "Musica/Efectos/cancion3.ogg" pitch 0.8
-                                             ^
+File "game/script.rpy", line 238: Indentation mismatch.
+    def abrir_app(app_id):
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Tue May 12 12:20:32 2026
+Wed May 13 13:58:01 2026

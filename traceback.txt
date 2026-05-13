@@ -1,23 +1,50 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 403, in script
-    jump expression capitulo_actual
-renpy.script.LabelNotFound: could not find label 'dia_1_noche'. Did you mean: 'dia_2_noche'?
+  File "game/script.rpy", line 455, in script
+    show screen ventana_nota_turbia("nota_corrupta_1")
+TypeError: missing a required argument: 'app_id'
 
 -- Full Traceback ------------------------------------------------------------
 
 Traceback (most recent call last):
-  File "game/script.rpy", line 403, in script
-    jump expression capitulo_actual
-  File "renpy/ast.py", line 1928, in execute
-    rv = renpy.game.script.lookup(target)
-         ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
-  File "renpy/script.py", line 1201, in lookup
-    raise LabelNotFound(original)
-renpy.script.LabelNotFound: could not find label 'dia_1_noche'. Did you mean: 'dia_2_noche'?
+  File "game/script.rpy", line 455, in script
+    show screen ventana_nota_turbia("nota_corrupta_1")
+  File "renpy/ast.py", line 2241, in execute
+    self.call("execute")
+    ~~~~~~~~~^^^^^^^^^^^
+  File "renpy/ast.py", line 2195, in call
+    return renpy.statements.call(method, parsed, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/statements.py", line 381, in call
+    return method(parsed, *args, **kwargs)
+           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/common/000statements.rpy", line 671, in execute_show_screen
+    renpy.show_screen(name, *args, **kwargs)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/display/screen.py", line 1388, in show_screen
+    sls.add(_layer, d, _tag, zorder=_zorder, transient=_transient, keep_st=True, name=name)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/display/scenelists.py", line 432, in add
+    if not self.hide_or_replace(layer, remove_index, "replaced"):
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+  File "renpy/display/scenelists.py", line 490, in hide_or_replace
+    if not oldsle.displayable._handles_event(prefix):
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^ 
+  File "renpy/display/screen.py", line 553, in _handles_event
+    self.update()
+    ~~~~~~~~~~~^^
+  File "renpy/display/screen.py", line 715, in update
+    self.screen.function(**self.scope)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "renpy/parameter.py", line 468, in apply_arguments
+    return parameters.apply(args or (), kwargs or {}, ignore_errors)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/parameter.py", line 321, in apply
+    raise TypeError(msg) from None
+TypeError: missing a required argument: 'app_id'
 
 Windows-11-10.0.26200-SP0 AMD64
 Ren'Py 8.5.2.26010301
 Proyecto_VN 1.0
-Tue May 12 12:46:28 2026
+Wed May 13 14:03:13 2026

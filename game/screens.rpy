@@ -2673,10 +2673,10 @@ screen escritorio_pc():
         add "images/escritorioPC/fondo_escritorio_corrupto2.png":
             xysize (1920, 1080)
 
-    # ARCHIVOS TURBIO
+    #ARCHIVOS TURBIO
     if nivel_corrupto >= 1:
         hbox:
-            xpos 1000 ypos 200 # Lejos de los normales
+            xpos 1000 ypos 200 
             spacing 40
             
             # Nota_1
@@ -2685,7 +2685,7 @@ screen escritorio_pc():
                 imagebutton:
                     idle "images/escritorioPC/icono_nota.png" hover Transform("images/escritorioPC/icono_nota.png", matrixcolor=BrightnessMatrix(0.2))
                     mouse "pc_select"
-                    action [Function(abrir_app, "nota_corrupta_1"), SetVariable("archivos_explorados", archivos_explorados + 1)]
+                    action Function(abrir_archivo_corrupto, "nota_corrupta_1")
                 text "ayuda.txt" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
             
             # Nota_2
@@ -2694,8 +2694,9 @@ screen escritorio_pc():
                 imagebutton:
                     idle "images/escritorioPC/icono_nota.png" hover Transform("images/escritorioPC/icono_nota.png", matrixcolor=BrightnessMatrix(0.2))
                     mouse "pc_select"
-                    action [Function(abrir_app, "nota_corrupta_2"), SetVariable("archivos_explorados", archivos_explorados + 1)]
-                text "ayuda.txt" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+                    action Function(abrir_archivo_corrupto, "nota_corrupta_2")
+                # Le actualizo el nombre para que quede guay en el escritorio
+                text "NO_ABRIR.txt" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
             
             # Nota_3
             vbox:
@@ -2703,48 +2704,39 @@ screen escritorio_pc():
                 imagebutton:
                     idle "images/escritorioPC/icono_nota.png" hover Transform("images/escritorioPC/icono_nota.png", matrixcolor=BrightnessMatrix(0.2))
                     mouse "pc_select"
-                    action [Function(abrir_app, "nota_corrupta_3"), SetVariable("archivos_explorados", archivos_explorados + 1)]
-                text "ayuda.txt" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+                    action Function(abrir_archivo_corrupto, "nota_corrupta_3")
+                text "secreto.txt" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
             
             # Imagen 1
             vbox:
                 spacing 5 xalign 0.5
                 imagebutton:
-                    idle "images/escritorioPC/icono_imagen.png" hover Transform("images/escritorioPC/icono_imagen.png", matrixcolor=BrightnessMatrix(0.2))
+                    idle Transform("images/escritorioPC/icono_imagen.png", xysize=(65, 65), fit="contain") 
+                    hover Transform("images/escritorioPC/icono_imagen.png", xysize=(65, 65), fit="contain", matrixcolor=BrightnessMatrix(0.2))
                     mouse "pc_select"
-                    action [SetVariable("ruta_visor_actual", "images/escritorioPC/foto_rara_1.png"), 
-                            Show("ventana_visor_fotos_raras"), 
-                            AddToSet(lista_fotos, "images/escritorioPC/foto_rara_1.png"), 
-                            SetVariable("persistent.cg1_desbloqueada", True), 
-                            SetVariable("archivos_explorados", archivos_explorados + 1)]                
+                    action Function(abrir_archivo_corrupto, "foto_corrupta_1", "cg1_desbloqueada")
                 text "cu41t0.jpg" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
                 
             # Imagen 2
             vbox:
                 spacing 5 xalign 0.5
                 imagebutton:
-                    idle "images/escritorioPC/icono_imagen.png" hover Transform("images/escritorioPC/icono_imagen.png", matrixcolor=BrightnessMatrix(0.2))
+                    idle Transform("images/escritorioPC/icono_imagen.png", xysize=(65, 65), fit="contain") 
+                    hover Transform("images/escritorioPC/icono_imagen.png", xysize=(65, 65), fit="contain", matrixcolor=BrightnessMatrix(0.2))
                     mouse "pc_select"
-                    action [SetVariable("ruta_visor_actual", "images/escritorioPC/foto_rara_2.png"), 
-                            Show("ventana_visor_fotos_raras"), 
-                            AddToSet(lista_fotos, "images/escritorioPC/foto_rara_2.png"), 
-                            SetVariable("persistent.cg2_desbloqueada", True), 
-                            SetVariable("archivos_explorados", archivos_explorados + 1)]                
-                text "##er#e.png" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+                    action Function(abrir_archivo_corrupto, "foto_corrupta_2", "cg2_desbloqueada")
+                text "0j0###.jpg" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
             
             # Imagen 3
             vbox:
                 spacing 5 xalign 0.5
                 imagebutton:
-                    idle "images/escritorioPC/icono_imagen.png" hover Transform("images/escritorioPC/icono_imagen.png", matrixcolor=BrightnessMatrix(0.2))
+                    idle Transform("images/escritorioPC/icono_imagen.png", xysize=(65, 65), fit="contain") 
+                    hover Transform("images/escritorioPC/icono_imagen.png", xysize=(65, 65), fit="contain", matrixcolor=BrightnessMatrix(0.2))
                     mouse "pc_select"
-                    action [SetVariable("ruta_visor_actual", "images/escritorioPC/foto_rara_3.png"), 
-                            Show("ventana_visor_fotos_raras"), 
-                            AddToSet(lista_fotos, "images/escritorioPC/foto_rara_3.png"), 
-                            SetVariable("persistent.cg3_desbloqueada", True), 
-                            SetVariable("archivos_explorados", archivos_explorados + 1)]                
-                text "######.png" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
-
+                    action Function(abrir_archivo_corrupto, "foto_corrupta_3", "cg3_desbloqueada")
+                text "P@5tI11@.png" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+    
     # ICONOS DEL ESCRITORIO
     hbox:
         xpos 40    
@@ -2849,7 +2841,9 @@ screen escritorio_pc():
                 idle "images/escritorioPC/icono_webcam.png"
                 hover Transform("images/escritorioPC/icono_webcam.png", matrixcolor=BrightnessMatrix(0.2))
                 mouse "pc_select"
-                action Function(abrir_app, "webcam")
+                action If(capitulo_actual == "dia_2_noche" and not susto_webcam_hecho, 
+                    true=Jump("evento_webcam_dia2"), 
+                    false=Function(abrir_app, "webcam"))
                 xalign 0.5
             text "WebCam":
                 font "gui/fonts/VT323.ttf"
@@ -2977,11 +2971,12 @@ screen ventana_nota():
                             text "Nada es como piensas. \nNada es como parece. \nDATE CUENTA Y DEJA DE VICTIMIZARTE \n DEJA DE HUIR" color "#ff0000" font "gui/fonts/VT323.ttf" size 25
 
 # --- Ventana de imagenes corruptas ---
-screen ventana_visor_fotos_raras():
+screen ventana_visor_fotos_raras(app_id):
     zorder 16 
-    if ruta_visor_actual != "": 
+    
+    if apps_pc[app_id]["abierta"] and not apps_pc[app_id]["minimizada"]:
         drag:
-            drag_name "visor_drag"
+            drag_name f"visor_drag_{app_id}"
             xpos 500 ypos 150 
             drag_handle (0, 0, 1.0, 50) 
             
@@ -2989,37 +2984,55 @@ screen ventana_visor_fotos_raras():
                 xysize (800, 600) 
                 
                 # El marco de la ventana
-                add Transform("images/escritorioPC/ventana_webcam.png", xysize=(800, 600), nearest=True)
+                add Transform("images/escritorioPC/ventana_galeria.png", xysize=(800, 600), nearest=True)
                 
-                # La imagen corrupta en el centro (usando la variable general)
-                add Transform(ruta_visor_actual, xysize=(788, 533), fit="contain"):
-                    xpos 7
+                # La imagen centrada
+                add Transform(apps_pc[app_id]["ruta"], xysize=(786, 533), fit="contain"):
+                    xalign 0.5 
                     ypos 60
                 
-                # BARRA SUPERIOR (Icono y Título genérico)
+                # BARRA SUPERIOR
                 hbox:
                     xpos 20 ypos 18
                     spacing 10
                     add Transform("images/escritorioPC/icono_imagen.png", xysize=(30, 30), nearest=True)
-                    text "Visor de Imágenes":
-                        font "gui/fonts/VT323.ttf" 
-                        size 26 
-                        color "#ffffff" 
-                        outlines [(1, "#000000", 0, 0)]
+                    text apps_pc[app_id]["titulo"]:
+                        font "gui/fonts/VT323.ttf" size 26 color "#ffffff" outlines [(1, "#000000", 0, 0)]
         
-                # BOTÓN CERRAR 
+                # BOTONES CERRAR Y MINIMIZAR IGUALES
+                hbox:
+                    xalign 1.0
+                    yalign 0.0
+                    xoffset -15
+                    yoffset 10
+                    spacing 4
+                    
+                # BOTONES Minimizar y Cerrar
                 imagebutton:
-                    idle Solid("#00000000") hover Solid("#ff000055") 
-                    xysize (50, 50) xpos 745 ypos 10
-                    action Hide("ventana_visor_fotos_raras")
+                    idle Solid("#00000000") 
+                    hover Solid("#ffffff33") 
+                    xysize (50, 50) 
+                    xpos 693
+                    ypos 10
+                    action Function(toggle_minimizar, app_id)
+                    
+                imagebutton:
+                    idle Solid("#00000000") 
+                    hover Solid("#ff000055") 
+                    xysize (50, 50)  
+                    xpos 745
+                    ypos 10
+                    action Function(cerrar_app, app_id)
 
-# --- Ventana nota corrupta ---
-screen ventana_nota_turbia():
+
+
+# --- Ventana nota corrupta MULTIPLE ---
+screen ventana_nota_turbia(app_id):
     zorder 15 
     
-    if apps_pc["nota_turbia"]["abierta"] and not apps_pc["nota_turbia"]["minimizada"]:
+    if apps_pc[app_id]["abierta"] and not apps_pc[app_id]["minimizada"]:
         drag:
-            drag_name "nota_turbia_drag"
+            drag_name f"nota_turbia_drag_{app_id}"
             xpos 600 ypos 300 
             drag_handle (0, 0, 1.0, 40)
             
@@ -3030,42 +3043,36 @@ screen ventana_nota_turbia():
                 vbox:
                     # BARRA SUPERIOR ROJA OSCURA 
                     frame:
-                        xsize 500
-                        ysize 40
+                        xsize 500 ysize 40
                         background Solid("#660000") 
                         padding (10, 0)
                         
                         hbox:
-                            xfill True
-                            yalign 0.5
-                            text apps_pc["nota_turbia"]["titulo"] font "gui/fonts/VT323.ttf" size 25 color "#fff" yalign 0.5
+                            xfill True yalign 0.5
+                            text apps_pc[app_id]["titulo"] font "gui/fonts/VT323.ttf" size 25 color "#fff" yalign 0.5
                             
-                            # BOTONES MINIMIZAR Y CERRAR
+                            # BOTONES MINIMIZAR Y CERRAR EXACTOS
                             hbox:
-                                xalign 1.0
-                                yalign 0.5
-                                spacing 4
+                                xalign 1.0 yalign 0.5 spacing 4
+                                
                                 textbutton "-":
                                     xysize (34, 34) 
-                                    text_font "gui/fonts/VT323.ttf" text_size 30 text_color "#fff" 
-                                    text_xalign 0.5 text_yalign 0.3
-                                    background Solid("#888888") action Function(toggle_minimizar, "nota_turbia")
+                                    text_font "gui/fonts/VT323.ttf" text_size 30 text_color "#fff" text_xalign 0.5 text_yalign 0.3
+                                    background Solid("#888888") hover_background Solid("#aaaaaa") 
+                                    action Function(toggle_minimizar, app_id)
                                     
                                 textbutton "X":
                                     xysize (34, 34) 
-                                    text_font "gui/fonts/VT323.ttf" text_size 30 text_color "#fff" 
-                                    text_xalign 0.5 text_yalign 0.5 
-                                    background Solid("#cc0000") action Function(cerrar_app, "nota_turbia")
+                                    text_font "gui/fonts/VT323.ttf" text_size 30 text_color "#fff" text_xalign 0.5 text_yalign 0.5 
+                                    background Solid("#cc0000") hover_background Solid("#ff3333") 
+                                    action Function(cerrar_app, app_id)
 
-                    # ÁREA DE CONTENIDO DINÁMICO
+                    # ÁREA DE CONTENIDO
                     frame:
                         background Solid("#000000") 
-                        xysize (500, 300)
-                        padding (20, 20)
+                        xysize (500, 300) padding (20, 20)
+                        text apps_pc[app_id]["contenido"] color "#ff0000" font "gui/fonts/VT323.ttf" size 35
                         
-                        # AQUÍ LA MAGIA: Lee lo que hayas puesto en la historia para esa noche
-                        text apps_pc["nota_turbia"]["contenido"] color "#ff0000" font "gui/fonts/VT323.ttf" size 35
-
 
 # --- BARRA DE SCROLL DEL CHAT ---
 style chat_vscrollbar:
@@ -3407,7 +3414,7 @@ screen ventana_galeria():
                         
                         vpgrid:
                             cols 3       
-                            spacing 25   
+                            spacing 25  
                             xfill True
 
                             for foto in lista_fotos:
@@ -3425,7 +3432,6 @@ screen ventana_galeria():
 screen ventana_webcam():
     zorder 10
     
-    # He corregido la posición de esta línea, que estaba demasiado a la derecha
     if apps_pc["webcam"]["abierta"] and not apps_pc["webcam"]["minimizada"]:
         
         drag:
@@ -3439,10 +3445,24 @@ screen ventana_webcam():
                 # marco de la ventana
                 add Transform("images/escritorioPC/ventana_webcam.png", xysize=(800, 600), nearest=True)
                 
-                add Transform("images/escritorioPC/webcam_no_disponible.png", xysize=(788, 533), fit="fill"):
-                    xpos 7
-                    ypos 60
+                # --- MAGIA DEL CONTENIDO DINÁMICO ---
+                if contenido_webcam == "negro":
+                    # Estado normal del juego: cámara apagada/rota
+                    add Transform("images/escritorioPC/webcam_no_disponible.png", xysize=(788, 533), fit="fill"):
+                        xpos 7
+                        ypos 60
                 
+                elif contenido_webcam == "habitacion":
+                    add Transform("images/escritorioPC/webcam_sinSilueta.png", xysize=(788, 533), fit="cover"):
+                        xpos 7
+                        ypos 60
+                
+                elif contenido_webcam == "gif":
+                    add Transform("gif_webcam", xysize=(788, 533), fit="cover"):
+                        xpos 7
+                        ypos 60
+                
+                # BARRA SUPERIOR Y BOTONES
                 hbox:
                     xpos 20 ypos 18
                     spacing 10
@@ -3455,19 +3475,13 @@ screen ventana_webcam():
         
                 # BOTONES Minimizar y Cerrar
                 imagebutton:
-                    idle Solid("#00000000") 
-                    hover Solid("#ffffff33") 
-                    xysize (50, 50) 
-                    xpos 693
-                    ypos 10
+                    idle Solid("#00000000") hover Solid("#ffffff33") 
+                    xysize (50, 50) xpos 693 ypos 10
                     action Function(toggle_minimizar, "webcam")
                     
                 imagebutton:
-                    idle Solid("#00000000") 
-                    hover Solid("#ff000055") 
-                    xysize (50, 50)  
-                    xpos 745
-                    ypos 10
+                    idle Solid("#00000000") hover Solid("#ff000055") 
+                    xysize (50, 50) xpos 745 ypos 10
                     action Function(cerrar_app, "webcam")
                 
 # Variable global para saber si ya se asustó con la webcam

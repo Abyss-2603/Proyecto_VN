@@ -13,7 +13,11 @@ image imagenBloqueada:
 # variable del fondo de escritorio
 image fondo_escritorio_pc = im.Scale("images/escritorioPC/fondo_escritorio.png", 1920, 1080)
 image fondo_escritorio_corrupto = im.Scale("images/escritorioPC/fondo_escritorio_corrupto.png", 1920, 1080)
-image fondo_escritorio_corrupto2 = im.Scale("images/escritorioPC/fondo_escritorio_co")
+image fondo_escritorio_corrupto2 = im.Scale("images/escritorioPC/fondo_escritorio_corrupto2.png", 1920, 1080)
+
+# variable de gif
+image gif_webcam = "images/escritorioPC/webcam_silueta.gif"
+default contenido_webcam = "negro"
 
 # --- Variables de Usuario ---
 default persistent.user_id = None
@@ -38,9 +42,6 @@ default pc_confirm_pass = "" # para la parte de recuperar contraseña y cambiarl
 default ver_password = False
 
 # --- Variables de Mensajes y Control ---
-default registro_completado = False
-default login_msg = ""
-default registro_msg = ""
 default recuperacion_msg = ""
 default fase_recuperacion = 1
 
@@ -144,10 +145,7 @@ default respuestas_disponibles = [
     ("¿Tú qué crees? Si aparezco conectado será por algo", "chat_nodo_2")
 ]
 
-# Variables de terror y progreso
-default archivos_corruptos = False
-default estado_webcam = "apagada"
-
+# Variables de terror y progresos
 default nivel_corrupto = 0
 default destino_noche = "transicion_dia_1"
 
@@ -211,17 +209,30 @@ init python:
         
         # archivos corruptos de la noche 1    
         "nota_corrupta_1": {"abierta": False, "minimizada": False, "titulo": "ayuda.txt", "contenido": "NO PUEDO RESPIRAR", "visible": True},
-        "foto_corrupta_1": {"abierta": False, "minimizada": False, "titulo": "cu41t0.jpg", "ruta": "images/escritorioPC/foto_rara_1.png", "visible": True},
-        "foto_corrupta_2": {"abierta": False, "minimizada": False, "titulo": "##er#e.jpg", "ruta": "images/escritorioPC/foto_rara_2.png", "visible": True},
+        "foto_corrupta_1": {"abierta": False, "minimizada": False, "titulo": "cu41t0.jpg", "ruta": "images/escritorioPC/galeria/cuarto_destrozado.png", "visible": True},
+        "foto_corrupta_2": {"abierta": False, "minimizada": False, "titulo": "##er#e.jpg", "ruta": "images/escritorioPC/galeria/ojo.png", "visible": True},
         
         # mas archivos corruptos
-        "nota_corrupta_2": {"abierta": False, "minimizada": False, "titulo": "", "contenido": "", "visible": True},
-        "nota_corrupta_3": {"abierta": False, "minimizada": False, "titulo": "", "contenido": "", "visible": True},
-        "foto_corrupta_3": {"abierta": False, "minimizada": False, "titulo": "", "ruta": "", "visible": True}
+        "nota_corrupta_2": {"abierta": False, "minimizada": False, "titulo": "NO_ABRIR.txt", "contenido": "¿Por qué no estabas?\nTodo esto es tu culpa.", "visible": True},
+        "nota_corrupta_3": {"abierta": False, "minimizada": False, "titulo": "secreto.txt", "contenido": "Duele respirar.", "visible": True},
+        "foto_corrupta_3": {"abierta": False, "minimizada": False, "titulo": "P@5tI11@.png", "ruta": "images/escritorioPC/galeria/pastillas.png", "visible": True}
     }
 
     #  orden en el que aparecerán minimizadas en la barra de tareas
     orden_apps = ["nota", "chat", "galeria", "musica", "webcam", "nota_turbia", "nota_corrupta_1", "foto_corrupta_1", "foto_corrupta_2", "nota_corrupta_2", "nota_corrupta_3", "foto_corrupta_3"]
+
+    def abrir_archivo_corrupto(app_id, cg_var=None):
+        store.apps_pc[app_id]["abierta"] = True
+        store.apps_pc[app_id]["minimizada"] = False
+        store.archivos_explorados += 1
+        
+        if cg_var:
+            setattr(store.persistent, cg_var, True)
+            ruta = store.apps_pc[app_id]["ruta"]
+            if ruta not in store.lista_fotos:
+                store.lista_fotos.append(ruta)
+                
+        renpy.restart_interaction()
 
     def abrir_app(app_id):
         store.apps_pc[app_id]["abierta"] = True
@@ -433,13 +444,21 @@ label start:
     jump bucle_pc
 
 label bucle_pc:
-    # Cargamos TODAS las ventanas en la memoria (invisibles o minimizadas)
+    # Cargamos las ventanas normales
     show screen ventana_nota
     show screen ventana_chat
     show screen ventana_galeria
     show screen ventana_musica
     show screen ventana_webcam
-    show screen ventana_nota_turbia 
+    
+    # --- Cargamos las ventanas múltiples usando 'as' para que no se pisen ---
+    show screen ventana_nota_turbia("nota_corrupta_1") as turbia_1
+    show screen ventana_nota_turbia("nota_corrupta_2") as turbia_2
+    show screen ventana_nota_turbia("nota_corrupta_3") as turbia_3
+    
+    show screen ventana_visor_fotos_raras("foto_corrupta_1") as visor_1
+    show screen ventana_visor_fotos_raras("foto_corrupta_2") as visor_2
+    show screen ventana_visor_fotos_raras("foto_corrupta_3") as visor_3
     
     # Mostramos el escritorio interactivo encima de todo
     call screen escritorio_pc 
@@ -452,7 +471,6 @@ label bucle_pc:
     if capitulo_actual == "prologo":
         jump transicion_dia_1
     else:
-        # Si apaga el PC de noche en lugar de usar el chat, vuelve a encenderlo
         "Todavía no debería apagarlo. Tengo cosas que ver."
         jump bucle_pc
 
@@ -840,7 +858,7 @@ label dia_1_noche:
             apps_pc[app]["abierta"] = False
             apps_pc[app]["minimizada"] = False
 
-    scene expression "images/escritorioPC/fondo_escritorio_corrupto.png" with fade
+    scene fondo_escritorio_corrupto with fade
 
     "Por fin en casa... estoy agotado."
     "¿Eh? Qué es todo esto? Anoche no estaban estos archivos en el escritorio n-no?"
@@ -1511,10 +1529,10 @@ label dia_2_noche:
     window show
     scene black with fade
 
-    y "Ufff que cansado me siento..."
-    y "Todo ha sido tan raro el día de hoy. Me pregunto qué le pasará a Rocío para que diga cosas como esas..."
-    y "Hmmm sin contar las cosas raras que he sentido a lo largo del día..."
-    y "Ah.................. Me distraeré un poco con la computadora."
+    "Ufff que cansado me siento..."
+    "Todo ha sido tan raro el día de hoy. Me pregunto qué le pasará a Rocío para que diga cosas como esas..."
+    "Hmmm sin contar las cosas raras que he sentido a lo largo del día..."
+    "Ah.................. Me distraeré un poco con la computadora."
 
     # *enciende el pc*
     play sound "Musica/Efectos/sonido_inicioSistema.ogg"
@@ -1527,12 +1545,12 @@ label dia_2_noche:
     $ destino_noche = "transicion_dia_3"
 
     # *fondo de pantalla más oscurecido*
-    scene expression "images/escritorioPC/fondo_escritorio_corrupto2.png" with fade
-    
-    y "¿Qué pasa con este escritorio??"
-    y "La nota esa...parece que es un virus muy potente, será un troyano."
-    y "El fondo está como más oscuro y...ni la música en el escritorio funciona... Supongo que no puedo pasar ya del virus, mañana o pasado lo llevo a reparar."
-    y "Intentaré no hacerle mucho caso..."
+    scene fondo_escritorio_corrupto2 with fade
+
+    "¿Qué pasa con este escritorio??"
+    "La nota esa...parece que es un virus muy potente, será un troyano."
+    "El fondo está como más oscuro y...ni la música en el escritorio funciona... Supongo que no puedo pasar ya del virus, mañana o pasado lo llevo a reparar."
+    "Intentaré no hacerle mucho caso..."
 
     # *sonido de notificación de chat x3*
     play sound "Musica/Efectos/notificacion.ogg"
@@ -1544,9 +1562,9 @@ label dia_2_noche:
     $ mensajes_nuevos = True
     $ renpy.notify("Nuevos mensajes de: Roxy26")
 
-    y "¿Eh? ¿Mensajes a estas horas?"
-    y "Pero... si Rocío se supone que se fue a dormir no? Se encontraba mal."
-    y "Esta tonta...le diré que se vaya a descansar"
+    "¿Eh? ¿Mensajes a estas horas?"
+    "Pero... si Rocío se supone que se fue a dormir no? Se encontraba mal."
+    "Esta tonta...le diré que se vaya a descansar"
 
     # Preparamos el chat inicial
     python:
@@ -1563,21 +1581,24 @@ label dia_2_noche:
     show screen detector_webcam_noche2
     jump bucle_pc
 
-# --- EVENTO WEBCAM (Salta si el jugador abre la app de la Webcam) ---
+# --- EVENTO WEBCAM ---
 label evento_webcam_dia2:
     $ susto_webcam_hecho = True
     
-    # Ocultamos la interfaz normal y mostramos la de terror
-    window hide
+    $ contenido_webcam = "habitacion"
     
-    # Aquí puedes añadir un "show imagen_sombra_webcam" si tienes el asset
+    window hide
     play sound "Musica/Efectos/glitch.ogg"
     with vpunch
     
     window show
-    y "¿PERO QUÉ? Porqué...porqué no aparezco en la webcam si se supone que me está enfocando?"
-    y "¿Estará descompuesta o será el virus?"
-    y "Espera....qué...qué es eso del fondo?"
+    "¿PERO QUÉ? Porqué...porqué no aparezco en la webcam si se supone que me está enfocando?"
+    "¿Estará descompuesta o será el virus?"
+    
+    $ contenido_webcam = "gif"
+    play sound "Musica/Efectos/glitch.ogg"
+    "Espera....qué...qué es eso del fondo?"
+
     
     v "ERES UN COBARDE"
     with hpunch
@@ -1585,15 +1606,15 @@ label evento_webcam_dia2:
     v "OJALÁ ELLA NUNCA SE HUBIESE INTERESADO POR TI"
     v "OJALÁ ELLA TE ABANDONE"
     
-    y "..."
-    y "*me giro para mirar la puerta pero no hay nada*"
+    "..."
+    "*me giro para mirar la puerta pero no hay nada*"
     
-    # *la sombra de la imagen desaparece*
-    # hide imagen_sombra_webcam
+    $ cerrar_app("webcam")
+    $ contenido_webcam = "apagada"
     
-    y "P-p-pero...pero qué mierdas acabo de ver...?"
-    y "Yo...mi corazón va a mil por hora. Estoy sudando frío."
-    y "V-voy a c-contestarle a Rocío..."
+    "P-p-pero...pero qué mierdas acabo de ver...?"
+    "Yo...mi corazón va a mil por hora. Estoy sudando frío."
+    "V-voy a c-contestarle a Rocío..."
     
     jump bucle_pc
 
@@ -1637,9 +1658,9 @@ label chat_dia2_noche_nodo1:
     # --- AQUÍ SUCEDE EL CORREO A LA VIDA REAL ---
     $ enviar_correo_real(pc_email)
 
-    y "¿Qué le pasa? Sus mensajes están llegando demasiado rápido, es imposible que escriba a esta velocidad."
-    y "Y yo no tengo ninguna llamada perdida suya en el móvil... "
-    y "¿Será el virus este de mierda que está controlando el chat? ¿O le han hackeado la cuenta?"
+    "¿Qué le pasa? Sus mensajes están llegando demasiado rápido, es imposible que escriba a esta velocidad."
+    "Y yo no tengo ninguna llamada perdida suya en el móvil... "
+    "¿Será el virus este de mierda que está controlando el chat?"
     
     pause 1.0
     $ recibir_mensaje("Yo", "Oye oye oye, qué estás diciendo????")
@@ -1648,8 +1669,8 @@ label chat_dia2_noche_nodo1:
     pause 2.0
     $ recibir_mensaje("Rocío", "Me quedé sin aire...")
     
-    y "Siento una presión horrible en el pecho. Me cuesta respirar..."
-    y "Esto no es Rocío. No puede ser ella. Tiene que ser el hacker de este maldito virus jugando con mi mente."
+    "Siento una presión horrible en el pecho. Me cuesta respirar..."
+    "Esto no es Rocío. No puede ser ella. Tiene que ser el hacker de este maldito virus jugando con mi mente."
 
     $ respuestas_disponibles = [
         ("¡Ya vale de bromas! Mañana hablamos cuando se te pase la tontería.", "mentira_cinco"),
@@ -1696,7 +1717,7 @@ label verdad_cinco:
     pause 1.0
     $ recibir_mensaje("Yo", "Rocío, por favor.... ")
     pause 1.5
-    $ recibir_mensaje("Yo", "Siento mucho si te ignoré alguna vez por estar jugando. Fui un idiota, lo admito.")
+    $ recibir_mensaje("Yo", "Siento mucho si te ignoré alguna vez. Fui un idiota, lo admito.")
     pause 1.5
     $ recibir_mensaje("Yo", "Pero no entiendo de qué hablas. No me has llamado en todo el día.")
     
@@ -1720,10 +1741,10 @@ label verdad_cinco:
     "*Usuario desconectado*"
     $ cerrar_app("chat")
 
-    y "¿Qué \"último día\"? "
-    y "Mi pecho... me duele muchísimo. Como si me estuvieran clavando agujas."
-    y "Me tiemblan las manos. Quiero llamarla al móvil de verdad, pero... tengo un miedo irracional a que nadie conteste."
-    y "Necesito dormir. Mañana la veré en el instituto y le pediré perdón en persona."
+    "¿Qué \"último día\"? "
+    "Mi pecho... me duele muchísimo. Como si me estuvieran clavando agujas."
+    "Me tiemblan las manos. Quiero llamarla al móvil de verdad, pero... tengo un miedo irracional a que nadie conteste."
+    "Necesito dormir. Mañana la veré en el instituto y le pediré perdón en persona."
 
     $ mostrar_boton_finalizar = True
     jump bucle_pc
@@ -1767,49 +1788,49 @@ label transicion_dia_3:
 
 # ---------------- DÍA 3 ----------------
 label dia_3:
-    $ estilo_interfaz = "dia_tetrico" # Interfaz de terror
-    $ default_mouse = "cursor_terror" # Si tienes un cursor tétrico, ponlo aquí
+    $ estilo_interfaz = "dia_tetrico"
+    $ default_mouse = "cursor_normal_mal"
 
     window show
     scene black with fade
     
-    y "Me he despertado, pero... siento que no he dormido nada."
-    y "Me pesa muchísimo el cuerpo. Cada vez me cuesta más llenar los pulmones de aire."
-    y "Anoche... lo de los mensajes de anoche fue una pesadilla. Tuvo que serlo. El estrés me está volviendo loco."
-    y "Hoy todo volverá a la normalidad. Seguro que Rocío me está esperando en la entrada del instituto, quejándose de que llego tarde como siempre."
+    "Me he despertado, pero... siento que no he dormido nada."
+    "Me pesa muchísimo el cuerpo. Cada vez me cuesta más llenar los pulmones de aire."
+    "Anoche... lo de los mensajes de anoche fue una pesadilla. Tuvo que serlo. El estrés me está volviendo loco."
+    "Hoy todo volverá a la normalidad. Seguro que Rocío me está esperando en la entrada del instituto, quejándose de que llego tarde como siempre."
 
     # *escenario del instituto de día pero está oscuro*
     scene fondo_patio2 with fade
-    show expression "#00000088" as capa_oscura # Esto oscurece cualquier fondo dinámicamente
+    show expression "#00000088" as capa_oscura
     
-    y "Pero...no se supone que es de día?"
-    y "Qué es todo este ambiente tan oscuro? Y...porqué me duele el pecho?"
+    "Pero...no se supone que es de día?"
+    "Qué es todo este ambiente tan oscuro? Y...porqué me duele el pecho?"
     
     v "TE ESTÁ ESPERANDO"
     v "INSTITUTO"
     
-    y "..."
-    y "Voy a buscarla"
+    "..."
+    "Voy a buscarla"
     
     scene black with dissolve
     pause 1.0
     scene fondo_calle with dissolve
     show expression "#00000088" as capa_oscura
     
-    y "Qué raro."
-    y "No hay nadie."
-    y "Ni en la puerta, ni en el patio... no se escucha absolutamente nada. Cero voces. Cero pasos."
-    y "No. Las luces están encendidas, pero el aire se siente estancado. Huele fuerte a... ¿medicina? "
-    y "Es como si el mundo entero se hubiera congelado."
+    "Qué raro."
+    "No hay nadie."
+    "Ni en la puerta, ni en el patio... no se escucha absolutamente nada. Cero voces. Cero pasos."
+    "No. Las luces están encendidas, pero el aire se siente estancado. Huele fuerte a... ¿medicina? "
+    "Es como si el mundo entero se hubiera congelado."
     
     y "¡¿Rocío?! ¡¿Hay alguien?!"
     # play sound "Musica/Efectos/eco_vacio.ogg"
     
-    y "Nada."
-    y "El pecho me vuelve a arder. Un pánico helado empieza a subir por mi garganta."
-    y "Esto no está bien. "
-    y "Tengo que encontrarla. Tengo que encontrar a Rocío ya mismo."
-    y "Tengo un muy mal presentimiento"
+    "Nada."
+    "El pecho me vuelve a arder. Un pánico helado empieza a subir por mi garganta."
+    "Esto no está bien. "
+    "Tengo que encontrarla. Tengo que encontrar a Rocío ya mismo."
+    "Tengo un muy mal presentimiento"
 
     scene black with dissolve
     pause 1.0
@@ -1817,20 +1838,20 @@ label dia_3:
     scene fondo_patio2 with dissolve 
     show expression "#000000cc" as capa_oscura
     
-    y "Uf.....uf......"
-    y "¿¡¿¡¿¡¿Pero qué leches está pasando?!?!?!?"
-    y "¿Porqué todo es tan oscuro? ¿Porqué no hay nadie?"
-    y "NO ENTIENDO NADA!!! "
-    y "Todo esto está pasado desde hace dos días..."
-    y "AHHHHHHHHHH......................."
-    y "..."
-    y "Iré a ver a la clase de Rocío a ver si está ahí"
+    "Uf.....uf......"
+    "¿¡¿¡¿¡¿Pero qué leches está pasando?!?!?!?"
+    "¿Porqué todo es tan oscuro? ¿Porqué no hay nadie?"
+    "NO ENTIENDO NADA!!! "
+    "Todo esto está pasado desde hace dos días..."
+    "Ahhh.................."
+    "..."
+    "Iré a ver a la clase de Rocío a ver si está ahí"
 
     # *El aula con cables de hospital*
-    scene fondo_escritorio_corrupto2 with fade # Usa un fondo turbio que tengas
+    scene fondo_escritorio_corrupto2 with fade
     
-    y "¿Qué hacen unos soportes de hospital en la clase?"
-    y "¿Y por qué el aire es tan pesado... tan frío?"
+    "¿Qué hacen unos soportes de hospital en la clase?"
+    "¿Y por qué el aire es tan pesado... tan frío?"
     y "R-Rocío... ¿eres tú?"
 
     # Muestra a la chica de espaldas o rota
