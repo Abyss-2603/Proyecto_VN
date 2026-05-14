@@ -444,6 +444,7 @@ label start:
     jump bucle_pc
 
 label bucle_pc:
+    window hide
     # Cargamos las ventanas normales
     show screen ventana_nota
     show screen ventana_chat
@@ -648,6 +649,9 @@ label dia_1:
     # Guardar el estado de la partida
     $ capitulo_actual = "dia_1"
     $ persistent.nube_capitulo = "dia_1" 
+    $ persistent.nube_decisiones = decisiones_tomadas
+    $ renpy.save_persistent()
+
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
     # poner música alegre 
@@ -846,6 +850,9 @@ label dia_1_noche:
 
     $ capitulo_actual = "dia_1_noche"
     $ persistent.nube_capitulo = "dia_1_noche"
+    $ persistent.nube_decisiones = decisiones_tomadas
+    $ renpy.save_persistent()
+
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
     $ nivel_corrupto = 1
@@ -868,8 +875,10 @@ label dia_1_noche:
     jump bucle_pc
 
 label evento_voces_dia1:
+    show screen escritorio_pc
+
     $ susto_voces_hecho = True
-    window show # aparece la caja de diálogo
+    window show 
     v "Deja de hacerte el tonto..."
     "¿Eh?"
     v "Deja de huir..."
@@ -899,7 +908,8 @@ label evento_voces_dia1:
         store.respuestas_disponibles = [
             ("Ya estoy, ya estoy. Estaba mirando unas cosas raras en el pc...", "chat_dia1_noche_nodo1")
         ]
-
+    
+    hide screen escritorio_pc
     jump bucle_pc
 
 
@@ -942,7 +952,8 @@ label chat_dia1_noche_nodo1:
 
 label mentira_dos:
     $ puntos_mentira += 1
-    
+    $ decisiones_tomadas["dia_1_eleccion_2"] = "mentira"
+
     pause 1.5
     $ recibir_mensaje("Rocío", "Ya......")
     pause 1.5
@@ -986,7 +997,8 @@ label mentira_dos:
 
 label verdad_dos:
     $ puntos_verdad += 1
-    
+    $ decisiones_tomadas["dia_1_eleccion_2"] = "verdad"
+
     pause 1.5
     $ recibir_mensaje("Rocío", "...")
     pause 1.5
@@ -1069,6 +1081,8 @@ label dia_2:
     # Guardar el estado de la partida
     $ capitulo_actual = "dia_2"
     $ persistent.nube_capitulo = "dia_2" 
+    $ persistent.nube_decisiones = decisiones_tomadas
+    $ renpy.save_persistent()
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
     window show 
@@ -1078,7 +1092,7 @@ label dia_2:
         xysize (1430, 700) 
         xalign 0.5  
         yalign 0.2 
-    with fade 
+    with fade
 
     "Por fin terminaron las clases."
     "Ahora iré al patio para buscar a Rocío."
@@ -1124,7 +1138,6 @@ label dia_2:
     y "Ah......bueno vale, vamos "
 
     # -- En el local --
-    # Nota: Asegúrate de tener un fondo llamado "fondo_cafeteria" o cambia el nombre
     scene fondo_cafeteria:
         xysize (1430, 700) 
         xalign 0.5  
@@ -1516,7 +1529,6 @@ label transicion_dia_2_noche:
 
     jump dia_2_noche
 
-
 # ---------------- DÍA 2 - NOCHE ----------------
 label dia_2_noche:
     $ estilo_interfaz = "pc"
@@ -1524,10 +1536,13 @@ label dia_2_noche:
     
     $ capitulo_actual = "dia_2_noche"
     $ persistent.nube_capitulo = "dia_2_noche" 
+    $ persistent.nube_decisiones = decisiones_tomadas
+
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
-    window show
     scene black with fade
+
+    window show
 
     "Ufff que cansado me siento..."
     "Todo ha sido tan raro el día de hoy. Me pregunto qué le pasará a Rocío para que diga cosas como esas..."
@@ -1543,6 +1558,11 @@ label dia_2_noche:
     $ apps_pc["nota_turbia"]["contenido"] = "¿Por qué no contestaste?\nMe ahogo."
     $ apps_pc["nota_turbia"]["visible"] = True
     $ destino_noche = "transicion_dia_3"
+
+    # Nombre de las apps cambiado
+    $ apps_pc["galeria"]["titulo"] = "recuerdos_muertos"
+    $ apps_pc["musica"]["titulo"] = "ruido.exe"
+    $ apps_pc["chat"]["titulo"] = "NO_ESTOY_SOLO"
 
     # *fondo de pantalla más oscurecido*
     scene fondo_escritorio_corrupto2 with fade
@@ -1566,6 +1586,8 @@ label dia_2_noche:
     "Pero... si Rocío se supone que se fue a dormir no? Se encontraba mal."
     "Esta tonta...le diré que se vaya a descansar"
 
+    window hide
+
     # Preparamos el chat inicial
     python:
         store.historial_mensajes = [] 
@@ -1577,15 +1599,18 @@ label dia_2_noche:
             ("Sí, estoy. ¿Qué pasa? ¿No te ibas a dormir?", "chat_dia2_noche_nodo1")
         ]
 
-    # Activamos el detector de la webcam y vamos al escritorio
-    show screen detector_webcam_noche2
+    
     jump bucle_pc
 
 # --- EVENTO WEBCAM ---
 label evento_webcam_dia2:
     $ susto_webcam_hecho = True
     
+    $ apps_pc["webcam"]["abierta"] = True
+    $ apps_pc["webcam"]["minimizada"] = False
     $ contenido_webcam = "habitacion"
+    
+    show screen escritorio_pc
     
     window hide
     play sound "Musica/Efectos/glitch.ogg"
@@ -1599,7 +1624,6 @@ label evento_webcam_dia2:
     play sound "Musica/Efectos/glitch.ogg"
     "Espera....qué...qué es eso del fondo?"
 
-    
     v "ERES UN COBARDE"
     with hpunch
     v "OJALÁ HUBIERAS MUERTO"
@@ -1609,12 +1633,14 @@ label evento_webcam_dia2:
     "..."
     "*me giro para mirar la puerta pero no hay nada*"
     
-    $ cerrar_app("webcam")
-    $ contenido_webcam = "apagada"
+    $ apps_pc["webcam"]["abierta"] = False
+    $ contenido_webcam = "negro"
     
     "P-p-pero...pero qué mierdas acabo de ver...?"
     "Yo...mi corazón va a mil por hora. Estoy sudando frío."
     "V-voy a c-contestarle a Rocío..."
+    
+    hide screen escritorio_pc
     
     jump bucle_pc
 
@@ -1790,6 +1816,13 @@ label transicion_dia_3:
 label dia_3:
     $ estilo_interfaz = "dia_tetrico"
     $ default_mouse = "cursor_normal_mal"
+
+    $ capitulo_actual = "dia_3"
+    $ persistent.nube_capitulo = "dia_3" 
+    $ persistent.nube_decisiones = decisiones_tomadas
+    $ renpy.save_persistent()
+
+    $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
     window show
     scene black with fade

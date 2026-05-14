@@ -2852,7 +2852,7 @@ screen escritorio_pc():
                 outlines [(2, "#000000", 0, 0)]
                 xalign 0.5
     
-    if archivos_explorados >=2 and not susto_voces_hecho:
+    if capitulo_actual == "dia_1_noche" and archivos_explorados >= 2 and not susto_voces_hecho:
         timer 1.0 action Jump("evento_voces_dia1")
 
     # BARRA DE TAREAS Y APLICACIONES ABIERTAS
@@ -3421,12 +3421,15 @@ screen ventana_galeria():
                                 frame:
                                     background Solid("#000")
                                     padding (2, 2)
+                                    xysize (208, 158)
                                     
                                     imagebutton:
-                                        idle Transform(foto, xysize=(200, 150), fit="cover") 
-                                        hover Transform(foto, xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
+                                        idle Transform(foto, xysize=(200, 150), fit="contain") 
+                                        hover Transform(foto, xysize=(200, 150), fit="contain", matrixcolor=BrightnessMatrix(0.1))
                                         
-                                        action Show("zoom_galeria", img=foto) 
+                                        action Show("zoom_galeria", img=foto)
+                                        xalign 0.5 
+                                        yalign 0.5
 
 # ventana de Webcam
 screen ventana_webcam():
@@ -3446,20 +3449,21 @@ screen ventana_webcam():
                 add Transform("images/escritorioPC/ventana_webcam.png", xysize=(800, 600), nearest=True)
                 
                 # --- MAGIA DEL CONTENIDO DINÁMICO ---
+                # --- MAGIA DEL CONTENIDO DINÁMICO ---
                 if contenido_webcam == "negro":
                     # Estado normal del juego: cámara apagada/rota
-                    add Transform("images/escritorioPC/webcam_no_disponible.png", xysize=(788, 533), fit="fill"):
-                        xpos 7
+                    add Transform("images/escritorioPC/webcam_no_disponible.png", xysize=(786, 533), fit="fill"):
+                        xalign 0.5
                         ypos 60
                 
                 elif contenido_webcam == "habitacion":
-                    add Transform("images/escritorioPC/webcam_sinSilueta.png", xysize=(788, 533), fit="cover"):
-                        xpos 7
+                    add Transform("images/escritorioPC/webcam_sinSilueta.png", xysize=(786, 533), fit="fill"):
+                        xalign 0.5
                         ypos 60
                 
                 elif contenido_webcam == "gif":
-                    add Transform("gif_webcam", xysize=(788, 533), fit="cover"):
-                        xpos 7
+                    add Transform("gif_webcam", xysize=(786, 533), fit="fill"):
+                        xalign 0.5
                         ypos 60
                 
                 # BARRA SUPERIOR Y BOTONES
@@ -3486,8 +3490,3 @@ screen ventana_webcam():
                 
 # Variable global para saber si ya se asustó con la webcam
 default susto_webcam_hecho = False
-
-# Pantalla invisible que vigila si el jugador abre la webcam en la noche 2
-screen detector_webcam_noche2():
-    if apps_pc["webcam"]["abierta"] and capitulo_actual == "dia_2_noche" and not susto_webcam_hecho:
-        timer 0.1 action Jump("evento_webcam_dia2")
