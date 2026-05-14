@@ -2,8 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 238: Indentation mismatch.
-    def abrir_app(app_id):
+File "game/script.rpy", line 22: ATL statement contains two expressions in a row; is one of them a misspelled property? If not, separate them with pass.
+    loop True
+             ^
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Wed May 13 13:58:01 2026
+Thu May 14 14:34:47 2026

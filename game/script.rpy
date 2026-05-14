@@ -16,7 +16,7 @@ image fondo_escritorio_corrupto = im.Scale("images/escritorioPC/fondo_escritorio
 image fondo_escritorio_corrupto2 = im.Scale("images/escritorioPC/fondo_escritorio_corrupto2.png", 1920, 1080)
 
 # variable de gif
-image gif_webcam = "images/escritorioPC/webcam_silueta.gif"
+image gif_webcam = Movie(play="images/escritorioPC/webcam_silueta.webm", loop=True)
 default contenido_webcam = "negro"
 
 # --- Variables de Usuario ---

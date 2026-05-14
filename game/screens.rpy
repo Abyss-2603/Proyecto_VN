@@ -2661,7 +2661,6 @@ screen recuperacion():
 # --- PANTALLA DE ESCRITORIO PC ---
 
 screen escritorio_pc():
-    modal True 
 
     if nivel_corrupto == 0:
         add "images/escritorioPC/fondo_escritorio.png":
