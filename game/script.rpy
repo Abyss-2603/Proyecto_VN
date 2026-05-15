@@ -205,6 +205,9 @@ init python:
         "musica": {"abierta": False, "minimizada": False, "titulo": "Música"},
         "webcam": {"abierta": False, "minimizada": False, "titulo": "WebCam"},
 
+        "audio_turbio1": {"abierta": False, "minimizada": False, "titulo": "res##r##ion.wav"},
+        "audio_turbio2": {"abierta": False, "minimizada": False, "titulo": "c##pa.wav"},
+
         "nota_turbia": {"abierta": False, "minimizada": False, "titulo": "LEEME.txt", "contenido": "..."},
         
         # archivos corruptos de la noche 1    
@@ -219,7 +222,7 @@ init python:
     }
 
     #  orden en el que aparecerán minimizadas en la barra de tareas
-    orden_apps = ["nota", "chat", "galeria", "musica", "webcam", "nota_turbia", "nota_corrupta_1", "foto_corrupta_1", "foto_corrupta_2", "nota_corrupta_2", "nota_corrupta_3", "foto_corrupta_3"]
+    orden_apps = ["nota", "chat", "galeria", "musica", "webcam", "nota_turbia", "nota_corrupta_1", "foto_corrupta_1", "foto_corrupta_2", "nota_corrupta_2", "nota_corrupta_3", "foto_corrupta_3", "audio_turbio1", "audio_turbio2"]
 
     def abrir_archivo_corrupto(app_id, cg_var=None):
         store.apps_pc[app_id]["abierta"] = True
@@ -460,6 +463,12 @@ label bucle_pc:
     show screen ventana_visor_fotos_raras("foto_corrupta_1") as visor_1
     show screen ventana_visor_fotos_raras("foto_corrupta_2") as visor_2
     show screen ventana_visor_fotos_raras("foto_corrupta_3") as visor_3
+
+    show screen ventana_visor_fotos_raras("foto_corrupta_3") as visor_3
+
+
+    show screen ventana_audio_turbio("audio_turbio1") as rep_turbio_1
+    show screen ventana_audio_turbio("audio_turbio2") as rep_turbio_2
     
     # Mostramos el escritorio interactivo encima de todo
     call screen escritorio_pc 
@@ -546,6 +555,7 @@ label chat_nodo_3:
     $ recibir_mensaje("Rocío", "Te la vuelvo a mandar entonces.")
     pause 1.5
     $ recibir_mensaje("Rocío", "IMG:images/escritorioPC/galeria/imagen_infancia.png")
+    $ persistent.cg4_desbloqueada = True
     pause 1.0
     $ recibir_mensaje("Rocío", "¡¡¿Has visto qué lindos?! Me la pasó mi madre el otro día.")
     pause 1.0
@@ -1532,7 +1542,7 @@ label transicion_dia_2_noche:
 # ---------------- DÍA 2 - NOCHE ----------------
 label dia_2_noche:
     $ estilo_interfaz = "pc"
-    $ default_mouse = "cursor_normal"
+    $ default_mouse = "pc_normal"
     
     $ capitulo_actual = "dia_2_noche"
     $ persistent.nube_capitulo = "dia_2_noche" 
@@ -1567,17 +1577,18 @@ label dia_2_noche:
     # *fondo de pantalla más oscurecido*
     scene fondo_escritorio_corrupto2 with fade
 
+    pause 2.0
     "¿Qué pasa con este escritorio??"
     "La nota esa...parece que es un virus muy potente, será un troyano."
     "El fondo está como más oscuro y...ni la música en el escritorio funciona... Supongo que no puedo pasar ya del virus, mañana o pasado lo llevo a reparar."
     "Intentaré no hacerle mucho caso..."
 
-    # *sonido de notificación de chat x3*
-    play sound "Musica/Efectos/notificacion.ogg"
-    pause 0.4
-    play sound "Musica/Efectos/notificacion.ogg"
-    pause 0.4
-    play sound "Musica/Efectos/notificacion.ogg"
+    # *sonido de notificación de chat*
+    play sound "Musica/Efectos/notificacion_mensajes.mp3"
+    pause 0.5
+    play sound "Musica/Efectos/notificacion_mensajes.mp3"
+    pause 0.5
+    play sound "Musica/Efectos/notificacion_mensajes.mp3"
     
     $ mensajes_nuevos = True
     $ renpy.notify("Nuevos mensajes de: Roxy26")
@@ -1588,7 +1599,6 @@ label dia_2_noche:
 
     window hide
 
-    # Preparamos el chat inicial
     python:
         store.historial_mensajes = [] 
         recibir_mensaje("Rocío", "Estás ahí?")
@@ -1615,7 +1625,7 @@ label evento_webcam_dia2:
     window hide
     play sound "Musica/Efectos/glitch.ogg"
     with vpunch
-    
+
     window show
     "¿PERO QUÉ? Porqué...porqué no aparezco en la webcam si se supone que me está enfocando?"
     "¿Estará descompuesta o será el virus?"
@@ -1628,7 +1638,7 @@ label evento_webcam_dia2:
     with hpunch
     v "OJALÁ HUBIERAS MUERTO"
     v "OJALÁ ELLA NUNCA SE HUBIESE INTERESADO POR TI"
-    v "OJALÁ ELLA TE ABANDONE"
+    v "DEBERÍAS HABER SIDO ABANDONADO"
     
     "..."
     "*me giro para mirar la puerta pero no hay nada*"
@@ -1808,14 +1818,12 @@ label transicion_dia_3:
     
     hide cartel_dia with dissolve
 
-    # jump dia_3
-    "Aquí empezará el Día 3..."
-    return
+    jump dia_3
 
 # ---------------- DÍA 3 ----------------
 label dia_3:
     $ estilo_interfaz = "dia_tetrico"
-    $ default_mouse = "cursor_normal_mal"
+    $ default_mouse = "cursor_normal_terror"
 
     $ capitulo_actual = "dia_3"
     $ persistent.nube_capitulo = "dia_3" 
@@ -1833,7 +1841,11 @@ label dia_3:
     "Hoy todo volverá a la normalidad. Seguro que Rocío me está esperando en la entrada del instituto, quejándose de que llego tarde como siempre."
 
     # *escenario del instituto de día pero está oscuro*
-    scene fondo_patio2 with fade
+    scene fondo_patio2_tetrico:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade
     show expression "#00000088" as capa_oscura
     
     "Pero...no se supone que es de día?"
@@ -1847,8 +1859,11 @@ label dia_3:
     
     scene black with dissolve
     pause 1.0
-    scene fondo_calle with dissolve
-    show expression "#00000088" as capa_oscura
+    scene fondo_calle_tetrico:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade
     
     "Qué raro."
     "No hay nadie."
@@ -1865,11 +1880,12 @@ label dia_3:
     "Tengo que encontrarla. Tengo que encontrar a Rocío ya mismo."
     "Tengo un muy mal presentimiento"
 
-    scene black with dissolve
     pause 1.0
-    # Aquí puedes usar una imagen de un aula a oscuras
-    scene fondo_patio2 with dissolve 
-    show expression "#000000cc" as capa_oscura
+    scene fondo_patio2_tetrico:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade
     
     "Uf.....uf......"
     "¿¡¿¡¿¡¿Pero qué leches está pasando?!?!?!?"
@@ -1881,7 +1897,11 @@ label dia_3:
     "Iré a ver a la clase de Rocío a ver si está ahí"
 
     # *El aula con cables de hospital*
-    scene fondo_escritorio_corrupto2 with fade
+    scene fondo_aula_tetrica:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade
     
     "¿Qué hacen unos soportes de hospital en la clase?"
     "¿Y por qué el aire es tan pesado... tan frío?"
@@ -1909,7 +1929,13 @@ label dia_3:
     play sound "Musica/Efectos/monitor_cardiaco.ogg"
     with hpunch
     
-    y "¿Mi brazo? "
+    y "¿M-mi brazo? "
+    show brazo_intravenosa:
+        xalign 0.5 
+        yalign 0.5
+        xysize (800, 600)
+    with hpunch
+
     y "¡Aaaah! ¡¿Qué es esto?!"
     y "Tengo... tengo una vía intravenosa clavada en el brazo. La sangre está subiendo por el tubo hacia la oscuridad del techo. ¡¿En qué momento ha aparecido esto?!"
 
@@ -1992,7 +2018,11 @@ label final_neutro:
     # Música distorsionada
     play music "Musica/Efectos/cancion3.ogg"
     
-    scene fondo_cafeteria with fade
+    scene fondo_cafeteria:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade
     show chica hablando with dissolve
     
     y "Hey!! Hola Rocío, hoy habíamos decidido ir al café ese nuevo verdad?"
@@ -2006,9 +2036,22 @@ label final_neutro:
     show chica sonriendo
     r "Nope, nada de nada. Vayamos antes de que cierren."
     
+    window hide
     scene black with fade
+    pause 0.5
+    
+    # Cartel del Final
     show expression Text("FINAL NEUTRO\nMundo Falso", font="gui/fonts/Micro5.ttf", size=100, color="#ffffff") as cartel at truecenter
-    pause 4.0
+    with dissolve
+    
+    pause 5.0 
+    
+    hide cartel with dissolve
+    pause 1.0
+    
+    # Llamamos a los créditos guapos
+    call screen creditos_finales
+    
     return
 
 label despertar:
@@ -2054,6 +2097,13 @@ label final_malo:
     play sound "Musica/Efectos/monitor_cardiaco.ogg" loop
     
     scene black with fade
+    
+    scene fondo_hospital:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade
+
     y "Abro los ojos de golpe. La luz blanca del hospital me perfora las retinas."
     y "Una enfermera entra corriendo en la habitación. Siento cómo me arrancan un tubo de la garganta mientras me ahogo tosiendo."
     y "Físicamente he sobrevivido, pero... mi alma se apagó ese 'último día'."
@@ -2075,8 +2125,17 @@ label final_malo:
     # play sound "Musica/Efectos/flatline.ogg"
     
     show expression Text("FINAL MALO\nCulpa", font="gui/fonts/Micro5.ttf", size=100, color="#ffffff") as cartel at truecenter
-    pause 4.0
+    with dissolve
+    
+    pause 5.0 
+    
+    hide cartel with dissolve
+    pause 1.0
+    
+    call screen creditos_finales
+    
     return
+
 
 
 label final_bueno:
@@ -2084,6 +2143,13 @@ label final_bueno:
     play sound "Musica/Efectos/monitor_cardiaco.ogg" loop
     
     scene black with fade
+
+    scene fondo_hospital:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade
+
     y "Abro los ojos con pesadez. El olor a desinfectante inunda mis pulmones."
     y "Llevo horas en esta cama de hospital, mirando al techo blanco."
     y "Me duele cada respiración. La culpa sigue ahí, recordándome que le fallé cuando más me necesitaba."
@@ -2123,26 +2189,39 @@ label final_bueno:
     scene white with fade
     
     show expression Text("FINAL BUENO\nPerdón", font="gui/fonts/Micro5.ttf", size=100, color="#000000") as cartel at truecenter
-    pause 4.0
+    
+    pause 5.0 
+    
+    hide cartel with dissolve
+    pause 1.0
+    
+    call screen creditos_finales
+    
     return
+
 
 # --- ETIQUETAS DE BUCLE POST-JUEGO ---
 label bucle_postgame_neutro:
     $ estilo_interfaz = "dia_normal"
     play music "Musica/Efectos/cancion3.ogg"
-    scene fondo_cafeteria
+    scene fondo_cafeteria:
+        xysize (1430, 700) 
+        xalign 0.5  
+        yalign 0.2 
+    with fade
     show chica hablando
     window show
     y "Ah... qué tarta más rica..."
     r "Siempre dices lo mismo. Nunca cambiamos."
     y "Ni falta que hace."
     scene black with fade
-    pause 1.0
-    jump bucle_postgame_neutro
+    pause 3.0
+    return
 
 label bucle_postgame_malo:
     scene black
     # play sound "Musica/Efectos/flatline.ogg"
+    show expression Text("Los MUERTOS no tienen segundas oportunidades", size=150, color= "#ffffff") as cartel at truecenter
     pause 3.0
     return
 

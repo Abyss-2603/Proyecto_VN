@@ -209,10 +209,10 @@ init python:
  
     config.mouse['cursor_normal'] = [("images/cursores/cursor_normal_bien.png",0,0)]
     config.mouse['cursor_select'] = [("images/cursores/cursor_selector_bien.png",16,16)]
-    config.mouse['cursor_normal_terror'] = [("images/cursores/cursor_normal_mal.png",0,0)]
-    config.mouse['cursor_select_terror'] = [("images/cursores/cursor_selector_mal.png",16,16)]
     
-
+    # multiplica el tamaño original por 1.5
+    config.mouse['cursor_normal_terror'] = [(im.FactorScale("images/cursores/cursor_normal_mal.png", 1.5), 0, 0)]
+    config.mouse['cursor_select_terror'] = [(im.FactorScale("images/cursores/cursor_selector_mal.png", 1.5), 24, 24)]
 
 ## Se necesita una clave de licencia de Google Play para realizar compras dentro
 ## de la aplicación. Se puede encontrar en la consola de desarrollador de Google

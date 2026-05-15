@@ -685,16 +685,16 @@ screen aviso_legal():
                 action Return()
                 xalign 0.5
 
-#Pantalla de galería 
+# Ventana de Galería
 screen gallery():
     tag menu
 
-    ## 1. Fondo
+    ## Fondo
     add "fondo_video_menu":
         xysize (1920, 1080)
         fit "cover"
 
-    ## 2. Título
+    ## Título
     text "Galería de Imágenes":
         font "gui/fonts/Jacquard24.ttf"
         size 90
@@ -703,7 +703,7 @@ screen gallery():
         color "#ffffff"
         outlines [(3, "#000000", 0, 0)]
 
-    ## 3. EL MARCO GRIS (Contenedor)
+    ## EL MARCO GRIS (Contenedor)
     frame:
         background Solid("#000000aa")
         xalign 0.5
@@ -718,13 +718,10 @@ screen gallery():
             vbox: 
                 xalign 0.5 
                 spacing 10
-                
-                # Botón
                 if persistent.cg1_desbloqueada:
-                    add g.make_button("cg1", "images/cg1_mini.png") at miniatura_galeria                
+                    add g.make_button("cg1", "images/escritorioPC/galeria/cuarto_destrozado.png") at miniatura_galeria                
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                
                 text "Imagen 1":
                     font "gui/fonts/Jacquard24.ttf"
                     size 40
@@ -736,10 +733,9 @@ screen gallery():
                 xalign 0.5
                 spacing 10
                 if persistent.cg2_desbloqueada:
-                    add g.make_button("cg2", "images/cg2_mini.png") at miniatura_galeria
+                    add g.make_button("cg2", "images/escritorioPC/galeria/ojo.png") at miniatura_galeria
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                
                 text "Imagen 2":
                     font "gui/fonts/Jacquard24.ttf"
                     size 40
@@ -751,25 +747,23 @@ screen gallery():
                 xalign 0.5
                 spacing 10
                 if persistent.cg3_desbloqueada:
-                    add g.make_button("cg3", "images/cg3_mini.png") at miniatura_galeria
+                    add g.make_button("cg3", "images/escritorioPC/galeria/pastillas.png") at miniatura_galeria
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                
                 text "Imagen 3":
                     font "gui/fonts/Jacquard24.ttf"
                     size 40
                     color "#ffffff"
                     xalign 0.5
 
-            # --- IMAGEN 4 ---
+            # --- IMAGEN 4 (La de Rocío) ---
             vbox:
                 xalign 0.5
                 spacing 10
-                if renpy.seen_image("cg4"):
-                    add g.make_button("cg4", "images/cg4_mini.png") at miniatura_galeria
+                if persistent.cg4_desbloqueada:
+                    add g.make_button("cg4", "images/escritorioPC/galeria/imagen_infancia.png") at miniatura_galeria 
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                
                 text "Imagen 4":
                     font "gui/fonts/Jacquard24.ttf"
                     size 40
@@ -780,11 +774,10 @@ screen gallery():
             vbox:
                 xalign 0.5
                 spacing 10
-                if renpy.seen_image("cg5"):
-                    add g.make_button("cg5", "images/cg5_mini.png") at miniatura_galeria
+                if persistent.cg5_desbloqueada:
+                    add g.make_button("cg5", Solid("#000000")) at miniatura_galeria # Cambiar cuando tengas foto 5
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                
                 text "Imagen 5":
                     font "gui/fonts/Jacquard24.ttf"
                     size 40
@@ -795,11 +788,10 @@ screen gallery():
             vbox:
                 xalign 0.5
                 spacing 10
-                if renpy.seen_image("cg6"):
-                    add g.make_button("cg6", "images/cg6_mini.png") at miniatura_galeria
+                if persistent.cg6_desbloqueada:
+                    add g.make_button("cg6", Solid("#000000")) at miniatura_galeria # Cambiar cuando tengas foto 6
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                
                 text "Imagen 6":
                     font "gui/fonts/Jacquard24.ttf"
                     size 40
@@ -810,11 +802,10 @@ screen gallery():
             vbox:
                 xalign 0.5
                 spacing 10
-                if renpy.seen_image("cg7"):
-                    add g.make_button("cg7", "images/cg7_mini.png") at miniatura_galeria
+                if persistent.cg7_desbloqueada:
+                    add g.make_button("cg7", Solid("#000000")) at miniatura_galeria # Cambiar cuando tengas foto 7
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                
                 text "Imagen 7":
                     font "gui/fonts/Jacquard24.ttf"
                     size 40
@@ -825,11 +816,10 @@ screen gallery():
             vbox:
                 xalign 0.5
                 spacing 10
-                if renpy.seen_image("cg8"):
-                    add g.make_button("cg8", "images/cg8_mini.png") at miniatura_galeria
+                if persistent.cg8_desbloqueada:
+                    add g.make_button("cg8", Solid("#000000")) at miniatura_galeria # Cambiar cuando tengas foto 8
                 else:
                     imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                
                 text "Imagen 8":
                     font "gui/fonts/Jacquard24.ttf"
                     size 40
@@ -2672,6 +2662,32 @@ screen escritorio_pc():
         add "images/escritorioPC/fondo_escritorio_corrupto2.png":
             xysize (1920, 1080)
 
+    # Audios de la noche 2
+    if nivel_corrupto >= 2:
+        hbox: 
+            xpos 1000 ypos 600
+            spacing 40
+            
+            # Audio 1
+            vbox:
+                spacing 5 xalign 0.5
+                imagebutton:
+                    idle Transform("images/escritorioPC/icono_audio.png", xysize=(65, 65), fit="contain") 
+                    hover Transform("images/escritorioPC/icono_audio.png", xysize=(65, 65), fit="contain", matrixcolor=BrightnessMatrix(0.2))
+                    mouse "pc_select"
+                    action Function(abrir_app, "audio_turbio1")
+                text "res##r##ion.wav" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+
+            # Audio 2
+            vbox:
+                spacing 5 xalign 0.5
+                imagebutton:
+                    idle Transform("images/escritorioPC/icono_audio.png", xysize=(65, 65), fit="contain") # Sin la "s"
+                    hover Transform("images/escritorioPC/icono_audio.png", xysize=(65, 65), fit="contain", matrixcolor=BrightnessMatrix(0.2))
+                    mouse "pc_select"
+                    action Function(abrir_app, "audio_turbio2")
+                text "c##pa.wav" font "gui/fonts/VT323.ttf" size 25 color "#ff0000" outlines [(2, "#000", 0, 0)] xalign 0.5
+        
     #ARCHIVOS TURBIO
     if nivel_corrupto >= 1:
         hbox:
@@ -2852,7 +2868,7 @@ screen escritorio_pc():
                 xalign 0.5
     
     if capitulo_actual == "dia_1_noche" and archivos_explorados >= 2 and not susto_voces_hecho:
-        timer 1.0 action Jump("evento_voces_dia1")
+        timer 1.5 action Jump("evento_voces_dia1")
 
     # BARRA DE TAREAS Y APLICACIONES ABIERTAS
     frame:
@@ -2897,6 +2913,58 @@ screen escritorio_pc():
                 font "gui/fonts/VT323.ttf"
                 size 32
                 color "#000000"
+
+# --- VENTANA DE AUDIOS ---
+screen ventana_audio_turbio(app_id):
+    zorder 18
+    
+    if apps_pc[app_id]["abierta"] and not apps_pc[app_id]["minimizada"]:
+        drag:
+            drag_name f"audio_turbio_drag_{app_id}"
+            xpos 600 ypos 300 
+            drag_handle (0, 0, 1.0, 30) 
+            
+            fixed:
+                xysize (600, 480) 
+                
+                add Transform("images/escritorioPC/interfaz_audios.png", xysize=(600, 480), fit="fill")
+                
+                hbox:
+                    xpos 15 ypos 13
+                    spacing 8
+                    add Transform("images/escritorioPC/icono_audio.png", xysize=(20, 20), nearest=True)
+                    text apps_pc[app_id]["titulo"]:
+                        font "gui/fonts/VT323.ttf" size 25 color "#ffffff"
+                
+                # BOTONES MINIMIZAR Y CERRAR
+                hbox:
+                    xalign 1.0 ypos 10 xoffset -5 spacing 3
+                    
+                    imagebutton:
+                        idle Solid("#00000000") hover Solid("#ffffff33") 
+                        xysize (27, 29)
+                        action Function(toggle_minimizar, app_id)
+                    imagebutton:
+                        idle Solid("#00000000") hover Solid("#ff000055") 
+                        xysize (27, 29)
+                        action Function(cerrar_app, app_id)
+
+                # BOTONES DE PLAY Y PAUSA/STOP
+                hbox:
+                    xalign 0.5 ypos 360 
+                    spacing 30
+                    
+                    imagebutton:
+                        idle Transform("images/escritorioPC/icono_pausa.png", xysize=(60, 60))
+                        hover Transform("images/escritorioPC/icono_pausa.png", xysize=(60, 60), matrixcolor=BrightnessMatrix(0.2))
+                        mouse "pc_select"
+                        action Stop("sound")
+                        
+                    imagebutton:
+                        idle Transform("images/escritorioPC/icono_play.png", xysize=(60, 60))
+                        hover Transform("images/escritorioPC/icono_play.png", xysize=(60, 60), matrixcolor=BrightnessMatrix(0.2))
+                        mouse "pc_select"
+                        action Play("sound", "Musica/Efectos/monitor_cardiaco.ogg")
 
 
 # --- VENTANA DE NOTA 1 ---
@@ -3489,3 +3557,83 @@ screen ventana_webcam():
                 
 # Variable global para saber si ya se asustó con la webcam
 default susto_webcam_hecho = False
+
+
+# --- PANTALLA DE CRÉDITOS ---
+screen creditos_finales():
+    zorder 100
+    
+    # Fondo negro total
+    add Solid("#000000")
+    
+    # Botón invisible gigante por si el jugador quiere saltarse los créditos haciendo clic
+    button:
+        action Return()
+        xfill True 
+        yfill True
+        
+    # Contenedor de los textos que va a subir
+    vbox:
+        xalign 0.5
+        spacing 50 # Separación entre los bloques
+        
+        # Animación: empieza abajo del todo y sube durante 28 segundos
+        at transform:
+            yanchor 0.0 ypos 1.0 
+            linear 28.0 yanchor 1.0 ypos 0.0 
+            
+        null height 200 # Margen inicial
+        text "ROX1026":
+            font "gui/fonts/Micro5.ttf" size 150 color "#ff0000" xalign 0.5 outlines [(4, "#000", 0, 0)]
+        text "Mundo Falso":
+            font "gui/fonts/VT323.ttf" size 50 color "#aaaaaa" xalign 0.5
+            
+        null height 80
+
+        text "Proyecto Intermodular":
+            font "gui/fonts/VT323.ttf" size 45 color "#5555ff" xalign 0.5
+        text "2º Desarrollo de Aplicaciones Multiplataforma":
+            font "gui/fonts/VT323.ttf" size 55 color "#ffffff" xalign 0.5
+        text "(DAM)":
+            font "gui/fonts/VT323.ttf" size 45 color "#ffffff" xalign 0.5
+            
+        null height 10
+        
+        text "IES Ágora":
+            font "gui/fonts/Micro5.ttf" size 80 color "#aaaaaa" xalign 0.5
+            
+        null height 100
+        
+        text "Desarrollo y Programación":
+            font "gui/fonts/VT323.ttf" size 45 color "#5555ff" xalign 0.5
+        text "Eduard Ioan Paraschiv Pilug":
+            font "gui/fonts/VT323.ttf" size 60 color "#ffffff" xalign 0.5
+            
+        null height 40
+        
+        text "Historia y Guion Original":
+            font "gui/fonts/VT323.ttf" size 45 color "#5555ff" xalign 0.5
+        text "Eduard Ioan Paraschiv Pilug":
+            font "gui/fonts/VT323.ttf" size 60 color "#ffffff" xalign 0.5
+            
+        null height 40
+        
+        text "Diseño de Interfaces":
+            font "gui/fonts/VT323.ttf" size 45 color "#5555ff" xalign 0.5
+        text "Eduard Ioan Paraschiv Pilug":
+            font "gui/fonts/VT323.ttf" size 60 color "#ffffff" xalign 0.5
+            
+        null height 80
+        
+        text "Agradecimientos Especiales":
+            font "gui/fonts/VT323.ttf" size 45 color "#5555ff" xalign 0.5
+        text "A ti, por jugar.":
+            font "gui/fonts/VT323.ttf" size 60 color "#ffffff" xalign 0.5
+            
+        null height 200
+        
+        text "EL CICLO CONTINÚA":
+            font "gui/fonts/Micro5.ttf" size 100 color "#555555" xalign 0.5
+            
+    # El tiempo que duran los créditos
+    timer 30.0 action Return()

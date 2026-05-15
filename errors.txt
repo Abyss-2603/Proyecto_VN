@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 22: ATL statement contains two expressions in a row; is one of them a misspelled property? If not, separate them with pass.
-    loop True
-             ^
+File "game/screens.rpy", line 2976: Line is indented, but the preceding hover statement does not expect a block. Please check this line's indentation. You may have forgotten a colon (:).
+    mouse "pc_select"
+    ^
 
 Ren'Py Version: Ren'Py 8.5.2.26010301
-Thu May 14 14:34:47 2026
+Fri May 15 11:32:56 2026
