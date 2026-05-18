@@ -26,7 +26,7 @@ init python:
             with urllib.request.urlopen(req, timeout=15) as response:
                 if response.getcode() in [200, 201]:
                     renpy.store.persistent.nombre_jugador = username
-                    renpy.store.pc_email = email 
+                    renpy.store.persistent.pc_email = email
                     renpy.notify("¡Éxito! Cuenta creada. Por favor, inicia sesión.")
                     renpy.store.pc_pass = ""
                     renpy.store.pc_pass_confirm = ""
@@ -58,12 +58,15 @@ init python:
                     renpy.store.persistent.user_id = respuesta.get("user_id")
                     renpy.store.persistent.nombre_jugador = respuesta.get("username")
                     
+                    # guardado del email en el persistent para que no se borre nunca
+                    renpy.store.persistent.pc_email = respuesta.get("email")
+                    # sincronización de la variable local de los formularios
+                    renpy.store.pc_email = respuesta.get("email")
+                    
                     progreso = respuesta.get("progreso", {})
-                    # Guardamos el capítulo de la nube en una variable que Start() no borre
                     renpy.store.persistent.nube_capitulo = progreso.get("capitulo", "prologo")
                     renpy.store.persistent.nube_decisiones = progreso.get("decisiones", {})
                     
-                    # Sincronizamos las variables locales por si acaso
                     renpy.store.capitulo_actual = renpy.store.persistent.nube_capitulo
                     renpy.store.decisiones_tomadas = renpy.store.persistent.nube_decisiones
 
@@ -75,6 +78,7 @@ init python:
             
         if login_exitoso:
             renpy.notify("¡Sincronización completa!")
+            renpy.hide_screen("cargando_servidor")
             renpy.end_interaction(True)
             
     # --- FUNCIÓN: PEDIR CÓDIGO AL CORREO ---
@@ -170,7 +174,27 @@ init python:
 
         return False
 
-    def enviar_correo_real(destinatario):
-        if destinatario != "":
-            renpy.notify("Enviando correo del sistema a: " + str(destinatario))
-        renpy.sound.play("Musica/Efectos/notificacion.ogg")
+    # correo final de rocío
+    def enviar_correo_real(destinatario_boceto):
+        destinatario = destinatario_boceto or getattr(renpy.store.persistent, 'pc_email', "")
+        
+        if not destinatario or destinatario == "":
+            renpy.notify("Error: No hay ningún correo electrónico registrado.")
+            return 
+            
+        url = API_URL + "/api/creepy-email"
+        nombre = getattr(renpy.store.persistent, 'nombre_jugador', "Jugador")
+        
+        datos = {
+            "email": destinatario,
+            "nombre_jugador": nombre
+        }
+        
+        try:
+            json_data = json.dumps(datos).encode('utf-8')
+            req = urllib.request.Request(url, data=json_data, headers=get_headers())
+            with urllib.request.urlopen(req, timeout=5) as response:
+                pass
+        except Exception as e:
+            renpy.notify(f"Error de red al enviar: {str(e)}")
+            pass

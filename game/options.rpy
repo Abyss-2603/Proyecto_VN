@@ -62,7 +62,7 @@ define config.has_voice = True
 ## el menú principal. Este archivo seguirá sonando en el juego hasta que sea
 ## detenido o se reproduzca otro archivo.
 
-# define config.main_menu_music = "main-menu-theme.ogg"
+define config.main_menu_music = "Musica/canciones/The_Felted_Hour.ogg"
 
 
 ## Transiciones ################################################################
@@ -202,17 +202,16 @@ init python:
     # Cursores personalizados
     config.mouse = {}
 
-    config.mouse['default'] = [("images/cursores/cursor_normal_bien.png",0,0)]
+    config.mouse['default'] = [(im.FactorScale("images/cursores/cursor_normal_bien.png", 1.5), 0, 0)]
 
-    config.mouse['pc_normal'] = [("images/cursores/cursor_pc_normal.png",0,0)]
-    config.mouse['pc_select'] = [("images/cursores/cursor_pc_selector.png",16,16)]
+    config.mouse['pc_normal'] = [(im.FactorScale("images/cursores/cursor_pc_normal.png", 1.5), 0, 0)]
+    config.mouse['pc_select'] = [(im.FactorScale("images/cursores/cursor_pc_selector.png", 1.5), 24, 24)]
  
-    config.mouse['cursor_normal'] = [("images/cursores/cursor_normal_bien.png",0,0)]
-    config.mouse['cursor_select'] = [("images/cursores/cursor_selector_bien.png",16,16)]
+    config.mouse['cursor_normal'] = [(im.FactorScale("images/cursores/cursor_normal_bien.png", 1.5), 0, 0)]
+    config.mouse['cursor_select'] = [(im.FactorScale("images/cursores/cursor_selector_bien.png", 1.5), 24, 24)]
     
-    # multiplica el tamaño original por 1.5
-    config.mouse['cursor_normal_terror'] = [(im.FactorScale("images/cursores/cursor_normal_mal.png", 1.5), 0, 0)]
-    config.mouse['cursor_select_terror'] = [(im.FactorScale("images/cursores/cursor_selector_mal.png", 1.5), 24, 24)]
+    config.mouse['cursor_normal_terror'] = [(im.FactorScale("images/cursores/cursor_normal_mal.png", 2.0), 0, 0)]
+    config.mouse['cursor_select_terror'] = [(im.FactorScale("images/cursores/cursor_selector_mal.png", 2.0), 32, 32)]
 
 ## Se necesita una clave de licencia de Google Play para realizar compras dentro
 ## de la aplicación. Se puede encontrar en la consola de desarrollador de Google

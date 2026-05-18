@@ -689,12 +689,10 @@ screen aviso_legal():
 screen gallery():
     tag menu
 
-    ## Fondo
     add "fondo_video_menu":
         xysize (1920, 1080)
         fit "cover"
 
-    ## Título
     text "Galería de Imágenes":
         font "gui/fonts/Jacquard24.ttf"
         size 90
@@ -703,128 +701,59 @@ screen gallery():
         color "#ffffff"
         outlines [(3, "#000000", 0, 0)]
 
-    ## EL MARCO GRIS (Contenedor)
     frame:
         background Solid("#000000aa")
         xalign 0.5
         yalign 0.55
         padding (40, 40) 
         
-        ## LA CUADRÍCULA
-        grid 4 2:
-            spacing 30 
+        # CUADRÍCULA DE 4 HUECOS 
+        grid 4 1:
+            spacing 40 
             
             # --- IMAGEN 1 ---
             vbox: 
-                xalign 0.5 
-                spacing 10
-                if persistent.cg1_desbloqueada:
-                    add g.make_button("cg1", "images/escritorioPC/galeria/cuarto_destrozado.png") at miniatura_galeria                
-                else:
-                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                text "Imagen 1":
-                    font "gui/fonts/Jacquard24.ttf"
-                    size 40
-                    color "#ffffff"
-                    xalign 0.5 
+                xalign 0.5 spacing 10
+                frame:
+                    background Solid("#000") padding (5,5) xysize (280, 200) 
+                    if persistent.cg1_desbloqueada:
+                        imagebutton idle Transform("images/escritorioPC/galeria/cuarto_destrozado.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                    else:
+                        imagebutton idle Transform("images/menus/boton_block.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                text "Imagen 1" font "gui/fonts/Jacquard24.ttf" size 40 color "#ffffff" xalign 0.5 
 
             # --- IMAGEN 2 ---
             vbox:
-                xalign 0.5
-                spacing 10
-                if persistent.cg2_desbloqueada:
-                    add g.make_button("cg2", "images/escritorioPC/galeria/ojo.png") at miniatura_galeria
-                else:
-                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                text "Imagen 2":
-                    font "gui/fonts/Jacquard24.ttf"
-                    size 40
-                    color "#ffffff"
-                    xalign 0.5
+                xalign 0.5 spacing 10
+                frame:
+                    background Solid("#000") padding (5,5) xysize (280, 200)
+                    if persistent.cg2_desbloqueada:
+                        imagebutton idle Transform("images/escritorioPC/galeria/ojo.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                    else:
+                        imagebutton idle Transform("images/menus/boton_block.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                text "Imagen 2" font "gui/fonts/Jacquard24.ttf" size 40 color "#ffffff" xalign 0.5
 
             # --- IMAGEN 3 ---
             vbox:
-                xalign 0.5
-                spacing 10
-                if persistent.cg3_desbloqueada:
-                    add g.make_button("cg3", "images/escritorioPC/galeria/pastillas.png") at miniatura_galeria
-                else:
-                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                text "Imagen 3":
-                    font "gui/fonts/Jacquard24.ttf"
-                    size 40
-                    color "#ffffff"
-                    xalign 0.5
+                xalign 0.5 spacing 10
+                frame:
+                    background Solid("#000") padding (5,5) xysize (280, 200)
+                    if persistent.cg3_desbloqueada:
+                        imagebutton idle Transform("images/escritorioPC/galeria/pastillas.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                    else:
+                        imagebutton idle Transform("images/menus/boton_block.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                text "Imagen 3" font "gui/fonts/Jacquard24.ttf" size 40 color "#ffffff" xalign 0.5
 
-            # --- IMAGEN 4 (La de Rocío) ---
+            # --- IMAGEN 4 ---
             vbox:
-                xalign 0.5
-                spacing 10
-                if persistent.cg4_desbloqueada:
-                    add g.make_button("cg4", "images/escritorioPC/galeria/imagen_infancia.png") at miniatura_galeria 
-                else:
-                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                text "Imagen 4":
-                    font "gui/fonts/Jacquard24.ttf"
-                    size 40
-                    color "#ffffff"
-                    xalign 0.5
-
-            # --- IMAGEN 5 ---
-            vbox:
-                xalign 0.5
-                spacing 10
-                if persistent.cg5_desbloqueada:
-                    add g.make_button("cg5", Solid("#000000")) at miniatura_galeria # Cambiar cuando tengas foto 5
-                else:
-                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                text "Imagen 5":
-                    font "gui/fonts/Jacquard24.ttf"
-                    size 40
-                    color "#ffffff"
-                    xalign 0.5
-
-            # --- IMAGEN 6 ---
-            vbox:
-                xalign 0.5
-                spacing 10
-                if persistent.cg6_desbloqueada:
-                    add g.make_button("cg6", Solid("#000000")) at miniatura_galeria # Cambiar cuando tengas foto 6
-                else:
-                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                text "Imagen 6":
-                    font "gui/fonts/Jacquard24.ttf"
-                    size 40
-                    color "#ffffff"
-                    xalign 0.5
-
-            # --- IMAGEN 7 ---
-            vbox:
-                xalign 0.5
-                spacing 10
-                if persistent.cg7_desbloqueada:
-                    add g.make_button("cg7", Solid("#000000")) at miniatura_galeria # Cambiar cuando tengas foto 7
-                else:
-                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                text "Imagen 7":
-                    font "gui/fonts/Jacquard24.ttf"
-                    size 40
-                    color "#ffffff"
-                    xalign 0.5
-
-            # --- IMAGEN 8 ---
-            vbox:
-                xalign 0.5
-                spacing 10
-                if persistent.cg8_desbloqueada:
-                    add g.make_button("cg8", Solid("#000000")) at miniatura_galeria # Cambiar cuando tengas foto 8
-                else:
-                    imagebutton idle "images/menus/boton_block.png" hover "images/menus/boton_block_seleccionado.png" action NullAction() at miniatura_galeria
-                text "Imagen 8":
-                    font "gui/fonts/Jacquard24.ttf"
-                    size 40
-                    color "#ffffff"
-                    xalign 0.5
+                xalign 0.5 spacing 10
+                frame:
+                    background Solid("#000") padding (5,5) xysize (280, 200)
+                    if persistent.cg4_desbloqueada:
+                        imagebutton idle Transform("images/escritorioPC/galeria/imagen_infancia.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                    else:
+                        imagebutton idle Transform("images/menus/boton_block.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                text "Imagen 4" font "gui/fonts/Jacquard24.ttf" size 40 color "#ffffff" xalign 0.5
 
     ## 4. BOTÓN VOLVER
     imagebutton:        
@@ -834,6 +763,7 @@ screen gallery():
         action Return()
         xalign 0.5 
         yalign 0.95
+
 
 ## Pantalla del menú del juego #################################################
 ##
@@ -2958,14 +2888,13 @@ screen ventana_audio_turbio(app_id):
                         idle Transform("images/escritorioPC/icono_pausa.png", xysize=(60, 60))
                         hover Transform("images/escritorioPC/icono_pausa.png", xysize=(60, 60), matrixcolor=BrightnessMatrix(0.2))
                         mouse "pc_select"
-                        action Stop("sound")
+                        action Function(renpy.sound.stop)
                         
                     imagebutton:
                         idle Transform("images/escritorioPC/icono_play.png", xysize=(60, 60))
                         hover Transform("images/escritorioPC/icono_play.png", xysize=(60, 60), matrixcolor=BrightnessMatrix(0.2))
                         mouse "pc_select"
-                        action Play("sound", "Musica/Efectos/monitor_cardiaco.ogg")
-
+                        action Function(reproducir_audio_turbio, app_id)
 
 # --- VENTANA DE NOTA 1 ---
 screen ventana_nota():
@@ -3254,8 +3183,8 @@ screen ventana_chat():
                                                 imagebutton:
                                                     idle Transform(msg.replace("IMG:", "").strip(), xysize=(200, 150), fit="cover") 
                                                     hover Transform(msg.replace("IMG:", "").strip(), xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
-                                                    action Show("zoom_galeria", img=msg.replace("IMG:", "").strip())
-                                                    xalign 0.5
+                                                    
+                                                    action [Show("zoom_galeria", img=ruta_limpia), Function(guardar_foto_chat, ruta_limpia)]                                                    xalign 0.5
                                             else:
                                                 text "[msg]":
                                                     color "#fff" 
@@ -3452,21 +3381,16 @@ screen ventana_galeria():
 
                 # BOTONES Minimizar y Cerrar
                 imagebutton:
-                    idle Solid("#00000000") 
-                    hover Solid("#ffffff33") 
-                    xysize (50, 50) 
-                    xpos 693
-                    ypos 10
+                    idle Solid("#00000000") hover Solid("#ffffff33") 
+                    xysize (50, 50) xpos 693 ypos 10
                     action Function(toggle_minimizar, "galeria")
                     
                 imagebutton:
-                    idle Solid("#00000000") 
-                    hover Solid("#ff000055") 
-                    xysize (50, 50)  
-                    xpos 745
-                    ypos 10
+                    idle Solid("#00000000") hover Solid("#ff000055") 
+                    xysize (50, 50) xpos 745 ypos 10
                     action Function(cerrar_app, "galeria")
                 
+                # --- CONTENEDOR DE LAS FOTOS ---
                 frame:
                     background None
                     xpos 40 ypos 90 
@@ -3480,23 +3404,38 @@ screen ventana_galeria():
                         scrollbars "vertical"
                         
                         vpgrid:
-                            cols 3       
-                            spacing 25  
-                            xfill True
-
-                            for foto in lista_fotos:
-                                frame:
-                                    background Solid("#000")
-                                    padding (2, 2)
-                                    xysize (208, 158)
-                                    
-                                    imagebutton:
-                                        idle Transform(foto, xysize=(200, 150), fit="contain") 
-                                        hover Transform(foto, xysize=(200, 150), fit="contain", matrixcolor=BrightnessMatrix(0.1))
-                                        
-                                        action Show("zoom_galeria", img=foto)
-                                        xalign 0.5 
-                                        yalign 0.5
+                            cols 2        
+                            spacing 40  
+                            xalign 0.5
+                            yalign 0.5
+                            
+                            # HUECO 1
+                            vbox:
+                                spacing 10
+                                xalign 0.5
+                                add g.make_button("cg1", Transform("images/escritorioPC/galeria/cuarto_destrozado.png", xysize=(250, 150), fit="cover"))
+                                text "Imagen 1" font "gui/fonts/VT323.ttf" size 25 color "#ffffff" xalign 0.5
+                                
+                            # HUECO 2
+                            vbox:
+                                spacing 10
+                                xalign 0.5
+                                add g.make_button("cg2", Transform("images/escritorioPC/galeria/ojo.png", xysize=(250, 150), fit="cover"))
+                                text "Imagen 2" font "gui/fonts/VT323.ttf" size 25 color "#ffffff" xalign 0.5
+                                
+                            # HUECO 3
+                            vbox:
+                                spacing 10
+                                xalign 0.5
+                                add g.make_button("cg3", Transform("images/escritorioPC/galeria/pastillas.png", xysize=(250, 150), fit="cover"))
+                                text "Imagen 3" font "gui/fonts/VT323.ttf" size 25 color "#ffffff" xalign 0.5
+                                
+                            # HUECO 4
+                            vbox:
+                                spacing 10
+                                xalign 0.5
+                                add g.make_button("cg4", Transform("images/escritorioPC/galeria/imagen_infancia.png", xysize=(250, 150), fit="cover"))
+                                text "Imagen 4" font "gui/fonts/VT323.ttf" size 25 color "#ffffff" xalign 0.5
 
 # ventana de Webcam
 screen ventana_webcam():
@@ -3563,26 +3502,27 @@ default susto_webcam_hecho = False
 screen creditos_finales():
     zorder 100
     
+    on "show" action Play("music", "Musica/canciones/Three_O_Clock_Sunbeams.ogg", loop=False)
+
     # Fondo negro total
     add Solid("#000000")
     
-    # Botón invisible gigante por si el jugador quiere saltarse los créditos haciendo clic
+    # Botón invisible por si el jugador quiere saltarse los créditos haciendo clic
     button:
         action Return()
         xfill True 
         yfill True
         
-    # Contenedor de los textos que va a subir
+    # Contenedor de los textos que suben
     vbox:
         xalign 0.5
-        spacing 50 # Separación entre los bloques
+        spacing 50
         
-        # Animación: empieza abajo del todo y sube durante 28 segundos
         at transform:
             yanchor 0.0 ypos 1.0 
             linear 28.0 yanchor 1.0 ypos 0.0 
             
-        null height 200 # Margen inicial
+        null height 200
         text "ROX1026":
             font "gui/fonts/Micro5.ttf" size 150 color "#ff0000" xalign 0.5 outlines [(4, "#000", 0, 0)]
         text "Mundo Falso":
@@ -3635,5 +3575,4 @@ screen creditos_finales():
         text "EL CICLO CONTINÚA":
             font "gui/fonts/Micro5.ttf" size 100 color "#555555" xalign 0.5
             
-    # El tiempo que duran los créditos
     timer 30.0 action Return()

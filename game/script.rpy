@@ -98,11 +98,10 @@ default musica_pausada = False
 init python:
 
     lista_canciones = [
-        {"titulo": "Lofi Chill Vibes", "autor": "DJ Relax", "ruta": "Musica/Efectos/cancion1.ogg"},
-        {"titulo": "Synthwave City", "autor": "Neon M", "ruta": "Musica/Efectos/cancion2.ogg"},
-        {"titulo": "Acústica Relax", "autor": "Guitar Girl", "ruta": "Musica/Efectos/cancion3.ogg"},
-        {"titulo": "Canción del PC", "autor": "¿Quién sabe?", "ruta": "Musica/Efectos/pc_enciende_1.ogg"},
-        {"titulo": "Canción del PC2", "autor": "¿Quién sabe?", "ruta": "Musica/Efectos/pc_enciende_2.ogg"}
+        {"titulo": "Glass and Asphalt", "autor": "Metropolitan Drift", "ruta": "Musica/canciones/Glass_and_Asphalt.ogg"},
+        {"titulo": "Harbor View Terrace", "autor": "After Dark Correspondence", "ruta": "Musica/canciones/Harbor_View_Terrace.ogg"},
+        {"titulo": "Stillness Between Trains", "autor": "Windows in the Sky", "ruta": "Musica/canciones/Stillness_Between_Trains.ogg"},
+        {"titulo": "Victory Lap", "autor": "The 1988 Chronicles", "ruta": "Musica/canciones/Victory_Lap.ogg"}
     ]
 
     def reproducir_pista():
@@ -136,7 +135,7 @@ default mensajes_nuevos = False
 
 # El chat empieza con mensajes de ella
 default historial_mensajes = [
-    ("Rocío", "¡Por fin te conectas! ¿Estás dentro del ordenador?")
+    ("Fío", "¡Por fin te conectas! ¿Estás dentro del ordenador?")
 ]
 
 # Las opciones que el jugador podrá elegir al abrir el chat
@@ -160,10 +159,7 @@ default persistent.cg1_desbloqueada = False
 default persistent.cg2_desbloqueada = False
 default persistent.cg3_desbloqueada = False
 default persistent.cg4_desbloqueada = False
-default persistent.cg5_desbloqueada = False
-default persistent.cg6_desbloqueada = False
-default persistent.cg7_desbloqueada = False
-default persistent.cg8_desbloqueada = False
+
 
 default ruta_visor_actual = "" # Guarda qué foto se está viendo
 
@@ -205,8 +201,8 @@ init python:
         "musica": {"abierta": False, "minimizada": False, "titulo": "Música"},
         "webcam": {"abierta": False, "minimizada": False, "titulo": "WebCam"},
 
-        "audio_turbio1": {"abierta": False, "minimizada": False, "titulo": "res##r##ion.wav"},
-        "audio_turbio2": {"abierta": False, "minimizada": False, "titulo": "c##pa.wav"},
+        "audio_turbio1": {"abierta": False, "minimizada": False, "titulo": "res##r##ion.wav", "ruta": "Musica/Efectos/suspiro_espectro.mp3"},
+        "audio_turbio2": {"abierta": False, "minimizada": False, "titulo": "c##pa.wav", "ruta": "Musica/Efectos/musica_caja_terror.mp3"},
 
         "nota_turbia": {"abierta": False, "minimizada": False, "titulo": "LEEME.txt", "contenido": "..."},
         
@@ -224,6 +220,12 @@ init python:
     #  orden en el que aparecerán minimizadas en la barra de tareas
     orden_apps = ["nota", "chat", "galeria", "musica", "webcam", "nota_turbia", "nota_corrupta_1", "foto_corrupta_1", "foto_corrupta_2", "nota_corrupta_2", "nota_corrupta_3", "foto_corrupta_3", "audio_turbio1", "audio_turbio2"]
 
+    # audios raros
+    def reproducir_audio_turbio(app_id):
+        # Coge la ruta exacta que le hemos puesto en el diccionario arriba
+        ruta_archivo = store.apps_pc[app_id]["ruta"]
+        renpy.sound.play(ruta_archivo)
+
     def abrir_archivo_corrupto(app_id, cg_var=None):
         store.apps_pc[app_id]["abierta"] = True
         store.apps_pc[app_id]["minimizada"] = False
@@ -231,10 +233,24 @@ init python:
         
         if cg_var:
             setattr(store.persistent, cg_var, True)
+            renpy.save_persistent()
             ruta = store.apps_pc[app_id]["ruta"]
             if ruta not in store.lista_fotos:
                 store.lista_fotos.append(ruta)
+                store.lista_fotos = list(store.lista_fotos)
                 
+        renpy.restart_interaction()
+
+    def guardar_foto_chat(ruta_img):
+        if ruta_img not in store.lista_fotos:
+            store.lista_fotos.append(ruta_img)
+            store.lista_fotos = list(store.lista_fotos)
+            renpy.notify("Imagen guardada en el sistema")
+
+        if "imagen_infancia" in ruta_img:
+            persistent.cg4_desbloqueada = True
+            renpy.save_persistent()
+            
         renpy.restart_interaction()
 
     def abrir_app(app_id):
@@ -247,6 +263,7 @@ init python:
         ruta = store.apps_pc[app_id]["ruta"]
         if ruta not in store.lista_fotos:
             store.lista_fotos.append(ruta)
+            store.lista_fotos = list(store.lista_fotos)
             renpy.notify("Imagen guardada en la Galería")
 
     def cerrar_app(app_id):
@@ -397,6 +414,10 @@ default puntos_mentira = 0
 default puntos_verdad = 0
 
 label start:
+
+    hide screen cargando_servidor
+    # pausa música del menú
+    stop music fadeout 1.5
     
     # Sistema de bucle tras finalizar juego
     if persistent.final_alcanzado == "neutro":
@@ -405,7 +426,6 @@ label start:
         jump bucle_postgame_malo
     elif persistent.final_alcanzado == "bueno":
         jump bucle_postgame_bueno
-
 
     if persistent.nube_capitulo:
         $ capitulo_actual = persistent.nube_capitulo
@@ -432,7 +452,6 @@ label start:
 
     pause 2.0
 
-    # notificacion de rocio al iniciar el escritorio
     play sound "Musica/Efectos/notificacion_mensajes.mp3"
     $ mensajes_nuevos = True
     $ renpy.notify("Nuevo mensaje de: Roxy26")
@@ -455,7 +474,6 @@ label bucle_pc:
     show screen ventana_musica
     show screen ventana_webcam
     
-    # --- Cargamos las ventanas múltiples usando 'as' para que no se pisen ---
     show screen ventana_nota_turbia("nota_corrupta_1") as turbia_1
     show screen ventana_nota_turbia("nota_corrupta_2") as turbia_2
     show screen ventana_nota_turbia("nota_corrupta_3") as turbia_3
@@ -470,11 +488,9 @@ label bucle_pc:
     show screen ventana_audio_turbio("audio_turbio1") as rep_turbio_1
     show screen ventana_audio_turbio("audio_turbio2") as rep_turbio_2
     
-    # Mostramos el escritorio interactivo encima de todo
     call screen escritorio_pc 
     $ default_mouse = "pc_normal"
     
-    # Por si el jugador decide pulsar el botón de apagar manualmente
     scene black with fade
     "He apagado el ordenador manualmente..."
     
@@ -501,7 +517,6 @@ label chat_nodo_1:
     pause 1.5
     $ recibir_mensaje("Rocío", "Joo, yo creo que voy a suspender alguno que otro. Ojalá tener tu mente privilegiada.")
 
-    # NUEVAS RESPUESTAS 
     $ respuestas_disponibles = [
         ("Eso te pasa por no estudiar ni hacer nada en clase.", "chat_nodo_3"),
         ("Ya te avisé en su momento pero no me hiciste caso...", "chat_nodo_3")
@@ -527,13 +542,11 @@ label chat_nodo_2:
     pause 1.5
     $ recibir_mensaje("Rocío", "Joo, yo creo que voy a suspender alguno que otro. Ojalá tener tu mente privilegiada.")
     
-    # NUEVAS RESPUESTAS 
     $ respuestas_disponibles = [
         ("Eso te pasa por no estudiar ni hacer nada en clase.", "chat_nodo_3"),
         ("Ya te avisé en su momento pero no me hiciste caso...", "chat_nodo_3")
     ]
 
-    # VOLVEMOS AL ESCRITORIO 
     jump bucle_pc
 
 label chat_nodo_3:
@@ -555,7 +568,6 @@ label chat_nodo_3:
     $ recibir_mensaje("Rocío", "Te la vuelvo a mandar entonces.")
     pause 1.5
     $ recibir_mensaje("Rocío", "IMG:images/escritorioPC/galeria/imagen_infancia.png")
-    $ persistent.cg4_desbloqueada = True
     pause 1.0
     $ recibir_mensaje("Rocío", "¡¡¿Has visto qué lindos?! Me la pasó mi madre el otro día.")
     pause 1.0
@@ -637,7 +649,7 @@ label transicion_dia_1:
     scene black with fade
     pause 1.0
 
-    show expression Text("DÍA 1", font="gui/fonts/Micro5.ttf", size=150, color="#ffffff") as cartel_dia:
+    show expression Text("DÍA 1 (escena diurna)", font="gui/fonts/Micro5.ttf", size=150, color="#ffffff") as cartel_dia:
         xalign 0.5
         yalign 0.5
     with dissolve
@@ -650,11 +662,11 @@ label transicion_dia_1:
 
     jump dia_1
 
-# Parte diurna 1
 label dia_1:
-    # Empezamos el día con el marco bonito y floral
     $ estilo_interfaz = "dia_normal"
     $ default_mouse = "cursor_normal"
+
+    play music "Musica/canciones/chalk_and_sunlight.ogg" volume 0.5 fadein 2.0
 
     # Guardar el estado de la partida
     $ capitulo_actual = "dia_1"
@@ -664,7 +676,6 @@ label dia_1:
 
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
-    # poner música alegre 
 
     scene fondo_patio2:
         xysize (1430, 700) 
@@ -677,7 +688,7 @@ label dia_1:
     r "Ahhhhhhhhhhhhhhh por fin terminaron los exámenes!!!!!!!!!"
     
     show chica hablando
-    r "Ya somos libres al fin"
+    r "Ya somos libres al fin."
     
     y "Por fin eh! fueron dos semanas intensas pero ya podemos olvidarnos un tiempo de todo."
     
@@ -839,6 +850,9 @@ label dia_1_escena2:
 
 label transicion_dia_1_noche:
     window hide
+
+    stop music fadeout 2.0
+
     scene black with fade
     pause 1.0
 
@@ -851,7 +865,6 @@ label transicion_dia_1_noche:
     
     hide cartel_dia with dissolve
 
-    # Y ahora sí, saltamos a tu escena de la noche
     jump dia_1_noche
 
 label dia_1_noche:
@@ -865,9 +878,12 @@ label dia_1_noche:
 
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
+    play sound "Musica/Efectos/sonido_inicioSistema.ogg"
+
+
     $ nivel_corrupto = 1
     $ apps_pc["nota_turbia"]["contenido"] = "¿Por qué no contestaste?\nMe ahogo."
-    $ destino_noche = "transicion_dia_2" # a donde salta el botón de finalizar del chat
+    $ destino_noche = "transicion_dia_2"
 
     #Limpia el escritorio al iniciar
     python:
@@ -897,8 +913,9 @@ label evento_voces_dia1:
     "............."
     "Hmmmm quizás...ha sido cosa mía, qué raro..."
     "No sé porqué pero siento que me cuesta respirar...."
-    
-    play sound "Musica/Efectos/notificacion_mensajes.mp3"
+    play sound "Musica/Efectos/latido_Suave.ogg"
+    pause 1.0
+    play sound "Musica/Efectos/notificacion_mensajes.mp3" 
     $ mensajes_nuevos = True
     $ renpy.notify("Nuevo mensaje de: Roxy26")
 
@@ -1088,6 +1105,8 @@ label dia_2:
     $ estilo_interfaz = "dia_normal"
     $ default_mouse = "cursor_normal"
 
+    play music "Musica/canciones/Two_Chairs_by_the_Window.ogg" volume 0.5 fadein 2.0
+
     # Guardar el estado de la partida
     $ capitulo_actual = "dia_2"
     $ persistent.nube_capitulo = "dia_2" 
@@ -1109,11 +1128,13 @@ label dia_2:
     "Hmmm...?"
     "Sniff Sniff, que raro...huele mucho a alcohol desinfectante."
     "¿Habrán limpiado el instituto a fondo hoy?"
-    "Además...no sé porqué pero desde hace un rato siento como un pinchazo en el brazo izquierdo...Qué molestia"
-    
+
     # Efecto de sonido del hospital oculto
-    play sound "Musica/Efectos/monitor_cardiaco.ogg" loop
+    play sound "Musica/Efectos/monitor_cardiaco.mp3" loop
+
+    "Además...no sé porqué pero desde hace un rato siento como un pinchazo en el brazo izquierdo...Qué molestia"
     "..."
+
     stop sound fadeout 1.0
 
     show chica hablando
@@ -1124,7 +1145,7 @@ label dia_2:
     r "Te estaba buscando, para que no te me escapes."
     y "Jajaja ya te prometí que iríamos a algún lado hoy."
     
-    show chica inexpresiva
+    show chica molesta
     r "Bueno..."
     r "..."
     y "Estás bien? Te veo alicaída o preocupada"
@@ -1132,7 +1153,7 @@ label dia_2:
     y "B-bueno...si tú lo dices...pero si te encuentras mal hazmelo saber eh?"
     r "..."
     r "Claro...."
-    r "Conque ahora si te preocupas eh?" # Susurrando
+    r "Conque ahora si te preocupas eh?" 
     y "Eh? Dijiste algo?"
     
     show chica hablando
@@ -1154,7 +1175,7 @@ label dia_2:
         yalign 0.2 
     with fade 
     
-    play sound "Musica/Efectos/campana_puerta.ogg"
+    play sound "Musica/Efectos/campana_puerta.mp3"
 
     "El sitio es bastante bonito, la verdad. Quién diría que cerca habría una cafetería tan acogedora."
     "Aunque... qué raro. No hay absolutamente nadie más aquí. Ni siquiera escucho el ruido de la calle a través de los cristales."
@@ -1182,12 +1203,7 @@ label dia_2:
     show chica hablando
     r "Vamos a esa mesa de ahí."
 
-    # *sentados en la mesa*
-    scene fondo_cafeteria: 
-        xysize (1430, 700) 
-        xalign 0.5  
-        yalign 0.2 
-    with fade
+    pause 1.0
 
     show chica comiendo
     with dissolve
@@ -1200,7 +1216,7 @@ label dia_2:
     "Yo también debería comer."
     y "*masticando*"
     
-    show chica inexpresiva
+    show chica hablando
     r "Oye..."
     y "¿Mmm? *masticando*"
     
@@ -1209,7 +1225,7 @@ label dia_2:
     r "¿Crees que en el futuro seguiremos viniendo a sitios así? Digo...no sabemos qué es lo que nos deparará pero...crees que seguiremos juntos?"
     y "Eh? Pues claro que si, no sé porqué dudas."
     
-    show chica inexpresiva
+    show chica inquieta
     r "Hmm"
     r "No sé... a veces miro hacia adelante y...no veo nada. Como si mi futuro fuera una pared en blanco."
     y "Qué cosas más raras dices hoy, de verdad. Anda, cómete la tarta que se le va a derretir la nata. "
@@ -1222,18 +1238,17 @@ label dia_2:
     
     y "Oye, ¿no te gusta?"
     
-    show chica rota
+    show chica molesta
     r "Es que se me ha vuelto a revolver el estómago."
     r "Siento como si hubiera tragado algo muy fuerte... algo que me está quemando por dentro."
     y "¿Quieres que nos vayamos? Estás muy pálida."
     r "No. Quédate ahí sentado."
 
-    # *la música de la cafetería se distorsiona un segundo y baja de volumen*
     stop music
-    play sound "Musica/Efectos/glitch.ogg"
+    play sound "Musica/Efectos/sonido_glitch.mp3"
     with vpunch 
 
-    show chica inexpresiva
+    show chica inquieta
     r "Mírame a los ojos."
     r "Si algún día te digo que no puedo más... que me duele demasiado y voy a desaparecer..."
     r "Me ayudarías? Vendrías a salvarme?"
@@ -1253,17 +1268,17 @@ label mentira_tres:
     $ decisiones_tomadas["dia_2_eleccion_1"] = "mentira"
 
     r "..."
-    show chica rota
+    show chica resoplando
     r "Es verdad...es una tontería preocuparse por algo así no?"
     r "Es más fácil dejar que todo pase y no tomar responsabilidad por ello."
     y "Te estás montando unas películas tú sola... Será el azúcar de los dulces que te ha subido a la cabeza."
     
-    show chica inexpresiva
+    show chica inquieta
     r "..."
     r "Sí. Claro. Será eso."
     y "Anda, vámonos ya a casa que necesitas descansar de verdad."
     
-    play sound "Musica/Efectos/glitch.ogg"
+    play sound "Musica/Efectos/sonido_glitch.mp3"
     with hpunch
     
     show chica resoplando
@@ -1271,11 +1286,12 @@ label mentira_tres:
     "Uf, qué alivio. Por un momento me estaba asustando de verdad. A veces es tan dramática..."
 
     stop music
+
     v "Siempre igual, si sigues así nada cambiará..."
     y "¿Q-qué??"
     
-    # Vuelve la musica
-    $ reproducir_pista()
+    play music "Musica/canciones/Two_Chairs_by_the_Window.ogg" volume 0.5 fadein 2.0
+
     
     show chica inquieta
     r "¿?"
@@ -1306,8 +1322,8 @@ label verdad_tres:
     r "Aunque me duele que hayas tenido que esperar a que me queme por dentro para darte cuenta."
     y "¿Qué te quema? ¡Rocío! ¿Quieres que vayamos al médico? Estás sudando frío."
 
-    # *la música alegre vuelve de golpe al volumen máximo*
-    $ reproducir_pista()
+    # *la música alegre vuelve de golpe
+    play music "Musica/canciones/Two_Chairs_by_the_Window.ogg" fadein 2.0
     
     scene fondo_cafeteria:
         xysize (1430, 700) 
@@ -1354,30 +1370,27 @@ label dia_2_escena_2:
     r "La verdad es que me alegro que ahora quedemos más a menudo y podamos hacer planes como estos."
     y "Ya...yo también, hacía tiempo que no probaba una tarta tan rica."
     
-    show chica orgullosa
     r "Ni yo ni yo"
     "Pero...si creo que ni se la comió al final"
     
-    show chica apenada
+    show chica pensando
     r "Ojalá momentos así duren para siempre pero...ya sabes, en algún momento nos tendremos que separar."
     y "No tiene porqué ser así."
     y "Es decir......habíamos decidido ir a la misma universidad no? Y sino sale bien siempre podemos quedarnos en la misma ciudad. "
     y "Al final siempre estaremos juntos y de vez en cuando volveremos a sitios como estos a pasar el día."
     
-    show chica inexpresiva
+    show chica inquieta
     r "..."
     y "No te pongas tan dramática tonta, aunque en un futuro estudiemos algo diferente o trabajemos en cosas diferentes, siempre nos tendremos el uno al otro no?"
     y "Así fue siempre"
     r "..."
-    
-    show chica rota
     r "Por mucho que lo digas ahora ya es tarde..."
     r "Siempre tardas en darte cuenta de las cosas no? Siempre fuistes así."
     "Rocío....está llorando?"
     y "R-Rocío? "
     r "..."
     
-    show chica apenada
+    show chica reverencia
     r "Da igual"
     r "Perdona, se me ha metido algo en el ojo. Ya digo tonterías."
 
@@ -1399,7 +1412,7 @@ label mentira_cuatro:
     "Por un momento la he visto tan frágil que parecía que iba a desaparecer."
     "Mejor la llevo a casa rápido y me conecto al PC para distraerme."
     
-    show chica rota
+    show chica inquieta
     r "Siento...mucho frío, vamos a darnos prisa."
     "Hace un sol que derrite, pero ella está temblando."
     "Ah....mi cabeza vuelve a doler...siento que va a estallar."
@@ -1414,20 +1427,20 @@ label verdad_cuatro:
     y "Sé que te he fallado en el pasado y que a veces soy un insensible."
     y "Perdóname."
     
-    show chica inexpresiva
+    show chica molesta
     r "..."
     r "De nada sirve pedir perdón ahora."
     y "¿Qué?"
     
     stop music
     
-    show chica apenada
+    show chica reverencia
     r "Nada, una broma estúpida. "
     r "Llévame a casa ya, por favor. Hace... hace mucho frío."
     "Hace un sol que derrite, pero ella está temblando."
     "Ah....mi cabeza vuelve a doler...siento que va a estallar."
     
-    $ reproducir_pista()
+    play music "Musica/canciones/Two_Chairs_by_the_Window.ogg" fadein 2.0
     jump dia_2_escena_3
 
 
@@ -1453,11 +1466,11 @@ label dia_2_escena_3:
     r "jeje... Me lo he pasado bien"
     y "Igual yo, habrá que repetir algún día de estos"
     
-    show chica inexpresiva
+    show chica inquieta
     r "Si...habrá que...repetir..."
     y "¿?"
     
-    show chica apenada
+    show chica molesta
     r "Me iré de inmediato a descansar, no sé porqué pero me siento muy muy cansada."
     y "Oke, deberías descansar la verdad."
     
@@ -1465,7 +1478,7 @@ label dia_2_escena_3:
     r "Supongo que nos vemos mañana"
     y "Seh, hasta mañana!!"
     
-    show chica inexpresiva
+    show chica inquieta
     r "..."
     y "¿Eh? ¿Te encuentras bien?"
     "Parece que aún no entra en casa"
@@ -1474,7 +1487,7 @@ label dia_2_escena_3:
     r "Prométeme..."
     y "¿?"
     
-    show chica rota
+    show chica reverencia
     r "Prométeme que no harás ninguna locura si?"
     y "¿Q-qué?"
     r "Prométeme que si me pasa algo no harás alguna locura"
@@ -1550,6 +1563,8 @@ label dia_2_noche:
 
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
+    $ nota_1_descifrada = True
+
     scene black with fade
 
     window show
@@ -1573,6 +1588,18 @@ label dia_2_noche:
     $ apps_pc["galeria"]["titulo"] = "recuerdos_muertos"
     $ apps_pc["musica"]["titulo"] = "ruido.exe"
     $ apps_pc["chat"]["titulo"] = "NO_ESTOY_SOLO"
+
+    # música cambiada a terror
+    python:
+        lista_canciones = [
+            {"titulo": "n o   m e   i g n o r e s", "autor": "t u   c u l p a", "ruta": "Musica/canciones/musica_terror.ogg"}
+        ]
+        indice_cancion = 0
+        cancion_actual = "n o   m e   i g n o r e s"
+        artista_actual = "t u   c u l p a"
+        musica_pausada = False
+
+    play music "Musica/canciones/musica_terror.ogg" loop
 
     # *fondo de pantalla más oscurecido*
     scene fondo_escritorio_corrupto2 with fade
@@ -1623,7 +1650,7 @@ label evento_webcam_dia2:
     show screen escritorio_pc
     
     window hide
-    play sound "Musica/Efectos/glitch.ogg"
+    play sound "Musica/Efectos/sonido_glitch.mp3"
     with vpunch
 
     window show
@@ -1631,7 +1658,7 @@ label evento_webcam_dia2:
     "¿Estará descompuesta o será el virus?"
     
     $ contenido_webcam = "gif"
-    play sound "Musica/Efectos/glitch.ogg"
+    play sound "Musica/Efectos/sonido_glitch.mp3"
     "Espera....qué...qué es eso del fondo?"
 
     v "ERES UN COBARDE"
@@ -1832,6 +1859,10 @@ label dia_3:
 
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
+    stop music fadeout 1.0
+    pause 1.0
+    play music "Musica/canciones/Input_Denied.ogg" volume 0.7 fadein 2.0
+
     window show
     scene black with fade
     
@@ -1872,7 +1903,6 @@ label dia_3:
     "Es como si el mundo entero se hubiera congelado."
     
     y "¡¿Rocío?! ¡¿Hay alguien?!"
-    # play sound "Musica/Efectos/eco_vacio.ogg"
     
     "Nada."
     "El pecho me vuelve a arder. Un pánico helado empieza a subir por mi garganta."
@@ -1896,7 +1926,6 @@ label dia_3:
     "..."
     "Iré a ver a la clase de Rocío a ver si está ahí"
 
-    # *El aula con cables de hospital*
     scene fondo_aula_tetrica:
         xysize (1430, 700) 
         xalign 0.5  
@@ -1907,7 +1936,6 @@ label dia_3:
     "¿Y por qué el aire es tan pesado... tan frío?"
     y "R-Rocío... ¿eres tú?"
 
-    # Muestra a la chica de espaldas o rota
     show chica rota with dissolve
 
     r "..."
@@ -1926,38 +1954,54 @@ label dia_3:
     r "A mí ya no me duele nada. "
     r "Pero a ti sí. Mírate el brazo izquierdo."
 
-    play sound "Musica/Efectos/monitor_cardiaco.ogg"
+    stop music
+
+    show expression "#000000cc" as sombra_fondo with Dissolve(0.5)
+
+    play sound "Musica/Efectos/sonido_glitch.mp3"
+    
+    play sound "Musica/Efectos/monitor_cardiaco.mp3" loop
     with hpunch
     
     y "¿M-mi brazo? "
-    show brazo_intravenosa:
+    show brazo:
         xalign 0.5 
-        yalign 0.5
+        yalign 0.2
         xysize (800, 600)
+        alpha 0.0 
+        easein 0.2 alpha 1.0 
+        easeout 0.2 alpha 0.5 
+        easein 0.2 alpha 1.0 
     with hpunch
 
     y "¡Aaaah! ¡¿Qué es esto?!"
     y "Tengo... tengo una vía intravenosa clavada en el brazo. La sangre está subiendo por el tubo hacia la oscuridad del techo. ¡¿En qué momento ha aparecido esto?!"
 
+    play sound "Musica/Efectos/sonido_glitch.mp3"
+    hide brazo with dissolve
+    hide sombra_fondo with dissolve
+
     y "¡Rocío, ayúdame! ¡Quítame esto!"
     r "No puedo. "
     r "Y tú tampoco puedes solo. Estás atrapado."
 
-    stop sound
+    stop sound fadeout 1.5
     
+    play music "Musica/canciones/Input_Denied.ogg" volume 0.7 fadein 2.0
+
     r "Pero no estamos solos, ¿verdad?"
     y "¿Con quién hablas?"
     r "Hablo con quien te está guiando."
     
     # Ruptura de la 4ª pared
-    play sound "Musica/Efectos/glitch.ogg"
+    play sound "Musica/Efectos/sonido_glitch.mp3"
     with vpunch
     
     r "Sé que me estás escuchando."
     r "Él está demasiado asustado, pero tú puedes ver la verdad."
     r "Te acabo de enviar un mensaje. Búscalo."
 
-    # ENVÍO DEL SEGUNDO CORREO REAL
+    # ENVÍO DEL CORREO REAL
     $ enviar_correo_real(pc_email)
     
     y "¿Un mensaje? ¡Rocío, no tengo el móvil encima!"
@@ -2015,8 +2059,7 @@ label final_neutro:
     $ estilo_interfaz = "dia_normal"
     $ persistent.final_alcanzado = "neutro"
     
-    # Música distorsionada
-    play music "Musica/Efectos/cancion3.ogg"
+    play music "Musica/canciones/chalk_and_sunlight.ogg"
     
     scene fondo_cafeteria:
         xysize (1430, 700) 
@@ -2049,7 +2092,6 @@ label final_neutro:
     hide cartel with dissolve
     pause 1.0
     
-    # Llamamos a los créditos guapos
     call screen creditos_finales
     
     return
@@ -2074,7 +2116,7 @@ label despertar:
     y "Y luego... yo. Tirado en el suelo de mi habitación."
     y "Recuerdo el frío repentino... el dolor agudo antes de que todo empezara a volverse borroso... antes de que el mundo se apagara."
 
-    play sound "Musica/Efectos/glitch.ogg"
+    play sound "Musica/Efectos/sonido_glitch.mp3"
     with vpunch
     
     y "Duele... Me quema. Siento que me ahogo de verdad en mi propia culpa."
@@ -2094,10 +2136,13 @@ label despertar:
 
 label final_malo:
     $ persistent.final_alcanzado = "malo"
-    play sound "Musica/Efectos/monitor_cardiaco.ogg" loop
+    play sound "Musica/Efectos/monitor_cardiaco.mp3" loop
     
     scene black with fade
-    
+
+    $ estilo_interfaz = "dia_normal"
+    $ default_mouse = "cursor_normal"
+
     scene fondo_hospital:
         xysize (1430, 700) 
         xalign 0.5  
@@ -2109,7 +2154,6 @@ label final_malo:
     y "Físicamente he sobrevivido, pero... mi alma se apagó ese 'último día'."
     y "Durante todo mi coma me dediqué a huir de la verdad. Fui un cobarde en mis sueños y lo sigo siendo ahora."
     
-    stop sound # Se paran los médicos, solo queda el pitido
     
     y "Llevo horas solo en esta habitación."
     y "Ah...........no sé ni porqué sigo vivo, es mi culpa que ella..."
@@ -2118,12 +2162,10 @@ label final_malo:
     y "Miro la vía intravenosa en mi brazo... la misma que vi en mi sueño. Y los cables del monitor."
     y "Lo siento, Rocío... Espero que así puedas perdonarme..."
     
-    play sound "Musica/Efectos/puerta_cerrando.mp3" # O un sonido de cables desconectándose
+
+    play sound "Musica/Efectos/sonido_pitido.mp3" 
     with hpunch
-    
-    # Pitido plano
-    # play sound "Musica/Efectos/flatline.ogg"
-    
+        
     show expression Text("FINAL MALO\nCulpa", font="gui/fonts/Micro5.ttf", size=100, color="#ffffff") as cartel at truecenter
     with dissolve
     
@@ -2132,17 +2174,20 @@ label final_malo:
     hide cartel with dissolve
     pause 1.0
     
+    stop sound
     call screen creditos_finales
     
     return
 
 
-
 label final_bueno:
     $ persistent.final_alcanzado = "bueno"
     play sound "Musica/Efectos/monitor_cardiaco.ogg" loop
-    
+
     scene black with fade
+
+    $ estilo_interfaz = "dia_normal"
+    $ default_mouse = "cursor_normal"
 
     scene fondo_hospital:
         xysize (1430, 700) 
@@ -2154,7 +2199,7 @@ label final_bueno:
     y "Llevo horas en esta cama de hospital, mirando al techo blanco."
     y "Me duele cada respiración. La culpa sigue ahí, recordándome que le fallé cuando más me necesitaba."
 
-    # play sound "Musica/Efectos/vibracion_movil.ogg"
+    play sound "Musica/Efectos/vibracion_movil.mp3"
     
     y "Giro la cabeza. Han dejado mis cosas ahí."
     y "Agarro el móvil. Las manos me tiemblan."
@@ -2162,7 +2207,19 @@ label final_bueno:
     y "¿¡De ROCÍO!?"
     y "*abro el mensaje, preparándome para leer cuánto me odiaba al final*"
 
-    # Cambia el nombre en la caja de diálogo para simular el móvil
+    show expression "#000000cc" as sombra_fondo with Dissolve(0.5)
+
+    show telefono:
+        xalign 0.5 
+        yalign 0.2
+        xysize (800, 600)
+        alpha 0.0 
+        easein 0.2 alpha 1.0 
+        easeout 0.2 alpha 0.5 
+        easein 0.2 alpha 1.0 
+    
+    play music "Musica/canciones/Between_The_Sleeping_Hours.ogg" loop fadein 2.0
+
     r "Hola, tonto. Si estás leyendo esto, es que ya no estoy."
     r "Sé que no contestaste mis llamadas. Sé que estabas en tu mundo. Y está bien."
     r "No podías salvarme siempre. Mi cabeza era mi propio laberinto y yo ya no quería buscar la salida."
@@ -2177,7 +2234,10 @@ label final_bueno:
     y "Las lágrimas caen sobre la pantalla, pero ya no son lágrimas de culpa. Son de tristeza. La echo de menos."
     y "Cierro los ojos, y por fin lo entiendo. "
     y "Yo no fui su verdugo."
-    
+
+    hide telefono with dissolve
+    hide sombra_fondo with dissolve
+
     y "Suelto el móvil sobre la cama."
     y "Levanto mi mano débil y miro por la ventana."
     y "La luz inunda la habitación, dándome un calor que hacía días que no sentía."
@@ -2185,7 +2245,6 @@ label final_bueno:
     y "Pero ya no voy a castigarme más."
     y "Te lo prometo, Rocío. Viviré por los dos."
 
-    # play music "Musica/Efectos/cancion1.ogg" fadein 2.0
     scene white with fade
     
     show expression Text("FINAL BUENO\nPerdón", font="gui/fonts/Micro5.ttf", size=100, color="#000000") as cartel at truecenter
@@ -2195,6 +2254,7 @@ label final_bueno:
     hide cartel with dissolve
     pause 1.0
     
+    stop music
     call screen creditos_finales
     
     return
@@ -2203,7 +2263,8 @@ label final_bueno:
 # --- ETIQUETAS DE BUCLE POST-JUEGO ---
 label bucle_postgame_neutro:
     $ estilo_interfaz = "dia_normal"
-    play music "Musica/Efectos/cancion3.ogg"
+    $ default_mouse = "cursor_normal"
+    play music "Musica/canciones/Two_Chairs_by_the_Window.ogg"
     scene fondo_cafeteria:
         xysize (1430, 700) 
         xalign 0.5  
@@ -2220,7 +2281,7 @@ label bucle_postgame_neutro:
 
 label bucle_postgame_malo:
     scene black
-    # play sound "Musica/Efectos/flatline.ogg"
+    play sound "Musica/Efectos/sonido_pitido.mp3"
     show expression Text("Los MUERTOS no tienen segundas oportunidades", size=150, color= "#ffffff") as cartel at truecenter
     pause 3.0
     return

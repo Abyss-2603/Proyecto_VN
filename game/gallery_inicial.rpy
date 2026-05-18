@@ -15,7 +15,7 @@ image cg8_full = Solid("#000000")
 init python:
     g = Gallery()
 
-    g.locked_button = "images/menus/boton_block.png"
+    g.locked_button = Transform("images/menus/boton_block.png", xysize=(250, 150), fit="cover")
     g.transition = dissolve
 
     # --- HUECO 1 ---
@@ -37,23 +37,3 @@ init python:
     g.button("cg4")
     g.condition("persistent.cg4_desbloqueada")
     g.image("cg4_full")
-
-    # --- HUECO 5 ---
-    g.button("cg5")
-    g.condition("persistent.cg5_desbloqueada")
-    g.image("cg5_full")
-
-    # --- HUECO 6 ---
-    g.button("cg6")
-    g.condition("persistent.cg6_desbloqueada")
-    g.image("cg6_full")
-
-    # --- HUECO 7 ---
-    g.button("cg7")
-    g.condition("persistent.cg7_desbloqueada")
-    g.image("cg7_full")
-
-    # --- HUECO 8 ---
-    g.button("cg8")
-    g.condition("persistent.cg8_desbloqueada")
-    g.image("cg8_full")
