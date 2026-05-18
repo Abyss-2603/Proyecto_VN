@@ -568,6 +568,16 @@ label chat_nodo_3:
     $ recibir_mensaje("Rocío", "Te la vuelvo a mandar entonces.")
     pause 1.5
     $ recibir_mensaje("Rocío", "IMG:images/escritorioPC/galeria/imagen_infancia.png")
+
+    # guardar el desbloqueo de la imagen en el momento que sale
+    python:
+        persistent.cg4_desbloqueada = True
+        renpy.save_persistent()
+        if "images/escritorioPC/galeria/imagen_infancia.png" not in store.lista_fotos:
+            store.lista_fotos.append("images/escritorioPC/galeria/imagen_infancia.png")
+            store.lista_fotos = list(store.lista_fotos)
+            renpy.notify("Imagen guardada en el sistema")
+
     pause 1.0
     $ recibir_mensaje("Rocío", "¡¡¿Has visto qué lindos?! Me la pasó mi madre el otro día.")
     pause 1.0
@@ -2269,7 +2279,7 @@ label final_bueno:
     scene black with fade
     
     show expression Text("FINAL BUENO\nPerdón", font="gui/fonts/Micro5.ttf", size=100, color="#ffffff", text_align=0.5) as cartel at truecenter
-    with dissolve
+    with dissolve
     
     pause 5.0 
     

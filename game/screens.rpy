@@ -3183,7 +3183,6 @@ screen ventana_chat():
                                                 imagebutton:
                                                     idle Transform(ruta_limpia, xysize=(200, 150), fit="cover") 
                                                     hover Transform(ruta_limpia, xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
-                                                    # DOBLE ACCIÓN: Zoom + Guardado
                                                     action [Show("zoom_galeria", img=ruta_limpia), Function(guardar_foto_chat, ruta_limpia)]                                                  
                                                     xalign 0.5
                                             else:
@@ -3204,7 +3203,6 @@ screen ventana_chat():
                                                 imagebutton:
                                                     idle Transform(ruta_limpia, xysize=(200, 150), fit="cover") 
                                                     hover Transform(ruta_limpia, xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
-                                                    # DOBLE ACCIÓN: Zoom + Guardado
                                                     action [Show("zoom_galeria", img=ruta_limpia), Function(guardar_foto_chat, ruta_limpia)]
                                                     xalign 0.5
                                             else:
@@ -3405,40 +3403,48 @@ screen ventana_galeria():
                         draggable True
                         scrollbars "vertical"
                         
+                        # huecos de imagenes
                         vpgrid:
                             cols 2        
                             spacing 40  
                             xalign 0.5
                             yalign 0.5
                             
-                            # HUECO 1
                             vbox:
                                 spacing 10
                                 xalign 0.5
-                                add g.make_button("cg1", Transform("images/escritorioPC/galeria/cuarto_destrozado.png", xysize=(250, 150), fit="cover"))
+                                if persistent.cg1_desbloqueada:
+                                    imagebutton idle Transform("images/escritorioPC/galeria/cuarto_destrozado.png", xysize=(250, 150), fit="cover") action Show("zoom_galeria", img="images/escritorioPC/galeria/cuarto_destrozado.png") mouse "pc_select"
+                                else:
+                                    imagebutton idle Transform("images/menus/boton_block.png", xysize=(250, 150), fit="contain") action NullAction()
                                 text "Imagen 1" font "gui/fonts/VT323.ttf" size 25 color "#ffffff" xalign 0.5
-                                
-                            # HUECO 2
+                            
                             vbox:
                                 spacing 10
                                 xalign 0.5
-                                add g.make_button("cg2", Transform("images/escritorioPC/galeria/ojo.png", xysize=(250, 150), fit="cover"))
+                                if persistent.cg2_desbloqueada:
+                                    imagebutton idle Transform("images/escritorioPC/galeria/ojo.png", xysize=(250, 150), fit="cover") action Show("zoom_galeria", img="images/escritorioPC/galeria/ojo.png") mouse "pc_select"
+                                else:
+                                    imagebutton idle Transform("images/menus/boton_block.png", xysize=(250, 150), fit="contain") action NullAction()
                                 text "Imagen 2" font "gui/fonts/VT323.ttf" size 25 color "#ffffff" xalign 0.5
-                                
-                            # HUECO 3
+                            
                             vbox:
                                 spacing 10
                                 xalign 0.5
-                                add g.make_button("cg3", Transform("images/escritorioPC/galeria/pastillas.png", xysize=(250, 150), fit="cover"))
+                                if persistent.cg3_desbloqueada:
+                                    imagebutton idle Transform("images/escritorioPC/galeria/pastillas.png", xysize=(250, 150), fit="cover") action Show("zoom_galeria", img="images/escritorioPC/galeria/pastillas.png") mouse "pc_select"
+                                else:
+                                    imagebutton idle Transform("images/menus/boton_block.png", xysize=(250, 150), fit="contain") action NullAction()
                                 text "Imagen 3" font "gui/fonts/VT323.ttf" size 25 color "#ffffff" xalign 0.5
                                 
-                            # HUECO 4
                             vbox:
                                 spacing 10
                                 xalign 0.5
-                                add g.make_button("cg4", Transform("images/escritorioPC/galeria/imagen_infancia.png", xysize=(250, 150), fit="cover"))
+                                if persistent.cg4_desbloqueada:
+                                    imagebutton idle Transform("images/escritorioPC/galeria/imagen_infancia.png", xysize=(250, 150), fit="cover") action Show("zoom_galeria", img="images/escritorioPC/galeria/imagen_infancia.png") mouse "pc_select"
+                                else:
+                                    imagebutton idle Transform("images/menus/boton_block.png", xysize=(250, 150), fit="contain") action NullAction()
                                 text "Imagen 4" font "gui/fonts/VT323.ttf" size 25 color "#ffffff" xalign 0.5
-
 # ventana de Webcam
 screen ventana_webcam():
     zorder 10
