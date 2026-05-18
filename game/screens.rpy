@@ -3504,7 +3504,7 @@ default susto_webcam_hecho = False
 screen creditos_finales():
     zorder 100
     
-    on "show" action Play("music", "Musica/canciones/Three_O_Clock_Sunbeams.ogg", loop=False)
+    on "show" action Play("music", "Musica/canciones/Three_O_Clock_Sunbeams.mp3", loop=False)
 
     # Fondo negro total
     add Solid("#000000")

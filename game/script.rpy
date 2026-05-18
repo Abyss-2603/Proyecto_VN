@@ -643,6 +643,8 @@ label transicion_dia_1:
             apps_pc[app]["abierta"] = False
             apps_pc[app]["minimizada"] = False
 
+    $ mostrar_boton_finalizar = False
+
     window hide
     stop music fadeout 2.0
 
@@ -877,6 +879,8 @@ label dia_1_noche:
     $ renpy.save_persistent()
 
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
+
+    $ mostrar_boton_finalizar = False
 
     play sound "Musica/Efectos/sonido_inicioSistema.ogg"
 
@@ -1113,6 +1117,8 @@ label dia_2:
     $ persistent.nube_decisiones = decisiones_tomadas
     $ renpy.save_persistent()
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
+
+    
 
     window show 
 
@@ -1563,6 +1569,7 @@ label dia_2_noche:
 
     $ guardar_progreso(capitulo_actual, decisiones_tomadas)
 
+    $ mostrar_boton_finalizar = False
     $ nota_1_descifrada = True
 
     scene black with fade
@@ -2080,6 +2087,9 @@ label final_neutro:
     r "Nope, nada de nada. Vayamos antes de que cierren."
     
     window hide
+    $ quick_menu = False
+    stop music fadeout 2.0
+    
     scene black with fade
     pause 0.5
     
@@ -2162,11 +2172,17 @@ label final_malo:
     y "Miro la vía intravenosa en mi brazo... la misma que vi en mi sueño. Y los cables del monitor."
     y "Lo siento, Rocío... Espero que así puedas perdonarme..."
     
+    window hide
+    $ quick_menu = False
+    stop music fadeout 2.0
+
+    scene black with fade
+    pause 1.0
 
     play sound "Musica/Efectos/sonido_pitido.mp3" 
     with hpunch
         
-    show expression Text("FINAL MALO\nCulpa", font="gui/fonts/Micro5.ttf", size=100, color="#ffffff") as cartel at truecenter
+    show expression Text("FINAL MALO\nCulpa", font="gui/fonts/Micro5.ttf", size=100, color="#ffffff", text_align=0.5) as cartel at truecenter
     with dissolve
     
     pause 5.0 
@@ -2174,7 +2190,7 @@ label final_malo:
     hide cartel with dissolve
     pause 1.0
     
-    stop sound
+    stop sound fadeout 2.0
     call screen creditos_finales
     
     return
@@ -2212,7 +2228,7 @@ label final_bueno:
     show telefono:
         xalign 0.5 
         yalign 0.2
-        xysize (800, 600)
+        zoom 0.6
         alpha 0.0 
         easein 0.2 alpha 1.0 
         easeout 0.2 alpha 0.5 
@@ -2245,16 +2261,21 @@ label final_bueno:
     y "Pero ya no voy a castigarme más."
     y "Te lo prometo, Rocío. Viviré por los dos."
 
-    scene white with fade
+    window hide
+    $ quick_menu = False
+    stop sound fadeout 2.0
+    stop music fadeout 2.0
+
+    scene black with fade
     
-    show expression Text("FINAL BUENO\nPerdón", font="gui/fonts/Micro5.ttf", size=100, color="#000000") as cartel at truecenter
+    show expression Text("FINAL BUENO\nPerdón", font="gui/fonts/Micro5.ttf", size=100, color="#ffffff", text_align=0.5) as cartel at truecenter
+    with dissolve
     
     pause 5.0 
     
     hide cartel with dissolve
     pause 1.0
     
-    stop music
     call screen creditos_finales
     
     return
