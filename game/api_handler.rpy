@@ -27,6 +27,13 @@ init python:
                 if response.getcode() in [200, 201]:
                     renpy.store.persistent.nombre_jugador = username
                     renpy.store.persistent.pc_email = email
+
+                    renpy.store.persistent.final_alcanzado = None
+                    renpy.store.persistent.cg1_desbloqueada = False
+                    renpy.store.persistent.cg2_desbloqueada = False
+                    renpy.store.persistent.cg3_desbloqueada = False
+                    renpy.store.persistent.cg4_desbloqueada = False
+
                     renpy.notify("¡Éxito! Cuenta creada. Por favor, inicia sesión.")
                     renpy.store.pc_pass = ""
                     renpy.store.pc_pass_confirm = ""

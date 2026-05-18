@@ -686,6 +686,7 @@ screen aviso_legal():
                 xalign 0.5
 
 # Ventana de Galería
+# Ventana de Galería
 screen gallery():
     tag menu
 
@@ -707,7 +708,6 @@ screen gallery():
         yalign 0.55
         padding (40, 40) 
         
-        # CUADRÍCULA DE 4 HUECOS 
         grid 4 1:
             spacing 40 
             
@@ -717,7 +717,7 @@ screen gallery():
                 frame:
                     background Solid("#000") padding (5,5) xysize (280, 200) 
                     if persistent.cg1_desbloqueada:
-                        imagebutton idle Transform("images/escritorioPC/galeria/cuarto_destrozado.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                        imagebutton idle Transform("images/escritorioPC/galeria/cuarto_destrozado.png", xysize=(270, 190), fit="contain") action Show("zoom_galeria", img="images/escritorioPC/galeria/cuarto_destrozado.png") xalign 0.5 yalign 0.5
                     else:
                         imagebutton idle Transform("images/menus/boton_block.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
                 text "Imagen 1" font "gui/fonts/Jacquard24.ttf" size 40 color "#ffffff" xalign 0.5 
@@ -728,7 +728,7 @@ screen gallery():
                 frame:
                     background Solid("#000") padding (5,5) xysize (280, 200)
                     if persistent.cg2_desbloqueada:
-                        imagebutton idle Transform("images/escritorioPC/galeria/ojo.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                        imagebutton idle Transform("images/escritorioPC/galeria/ojo.png", xysize=(270, 190), fit="contain") action Show("zoom_galeria", img="images/escritorioPC/galeria/ojo.png") xalign 0.5 yalign 0.5
                     else:
                         imagebutton idle Transform("images/menus/boton_block.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
                 text "Imagen 2" font "gui/fonts/Jacquard24.ttf" size 40 color "#ffffff" xalign 0.5
@@ -739,7 +739,7 @@ screen gallery():
                 frame:
                     background Solid("#000") padding (5,5) xysize (280, 200)
                     if persistent.cg3_desbloqueada:
-                        imagebutton idle Transform("images/escritorioPC/galeria/pastillas.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                        imagebutton idle Transform("images/escritorioPC/galeria/pastillas.png", xysize=(270, 190), fit="contain") action Show("zoom_galeria", img="images/escritorioPC/galeria/pastillas.png") xalign 0.5 yalign 0.5
                     else:
                         imagebutton idle Transform("images/menus/boton_block.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
                 text "Imagen 3" font "gui/fonts/Jacquard24.ttf" size 40 color "#ffffff" xalign 0.5
@@ -750,12 +750,12 @@ screen gallery():
                 frame:
                     background Solid("#000") padding (5,5) xysize (280, 200)
                     if persistent.cg4_desbloqueada:
-                        imagebutton idle Transform("images/escritorioPC/galeria/imagen_infancia.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
+                        imagebutton idle Transform("images/escritorioPC/galeria/imagen_infancia.png", xysize=(270, 190), fit="contain") action Show("zoom_galeria", img="images/escritorioPC/galeria/imagen_infancia.png") xalign 0.5 yalign 0.5
                     else:
                         imagebutton idle Transform("images/menus/boton_block.png", xysize=(270, 190), fit="contain") action NullAction() xalign 0.5 yalign 0.5
                 text "Imagen 4" font "gui/fonts/Jacquard24.ttf" size 40 color "#ffffff" xalign 0.5
 
-    ## 4. BOTÓN VOLVER
+    ## BOTÓN VOLVER
     imagebutton:        
         idle Transform("images/menus/boton_volver_blanco.png", zoom=1)
         hover Transform("images/menus/boton_volver_rojo.png", zoom=1)
@@ -763,7 +763,6 @@ screen gallery():
         action Return()
         xalign 0.5 
         yalign 0.95
-
 
 ## Pantalla del menú del juego #################################################
 ##
@@ -3180,11 +3179,13 @@ screen ventana_chat():
                                             xmaximum 500 
                                             
                                             if msg.startswith("IMG:"):
+                                                $ ruta_limpia = msg.replace("IMG:", "").strip()
                                                 imagebutton:
-                                                    idle Transform(msg.replace("IMG:", "").strip(), xysize=(200, 150), fit="cover") 
-                                                    hover Transform(msg.replace("IMG:", "").strip(), xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
-                                                    
-                                                    action [Show("zoom_galeria", img=ruta_limpia), Function(guardar_foto_chat, ruta_limpia)]                                                    xalign 0.5
+                                                    idle Transform(ruta_limpia, xysize=(200, 150), fit="cover") 
+                                                    hover Transform(ruta_limpia, xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
+                                                    # DOBLE ACCIÓN: Zoom + Guardado
+                                                    action [Show("zoom_galeria", img=ruta_limpia), Function(guardar_foto_chat, ruta_limpia)]                                                  
+                                                    xalign 0.5
                                             else:
                                                 text "[msg]":
                                                     color "#fff" 
@@ -3198,12 +3199,13 @@ screen ventana_chat():
                                             xalign 0.0
                                             xmaximum 500
                                             
-                                            # MAGIA: Lo mismo para los mensajes de Rocío
                                             if msg.startswith("IMG:"):
+                                                $ ruta_limpia = msg.replace("IMG:", "").strip()
                                                 imagebutton:
-                                                    idle Transform(msg.replace("IMG:", "").strip(), xysize=(200, 150), fit="cover") 
-                                                    hover Transform(msg.replace("IMG:", "").strip(), xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
-                                                    action Show("zoom_galeria", img=msg.replace("IMG:", "").strip())
+                                                    idle Transform(ruta_limpia, xysize=(200, 150), fit="cover") 
+                                                    hover Transform(ruta_limpia, xysize=(200, 150), fit="cover", matrixcolor=BrightnessMatrix(0.1))
+                                                    # DOBLE ACCIÓN: Zoom + Guardado
+                                                    action [Show("zoom_galeria", img=ruta_limpia), Function(guardar_foto_chat, ruta_limpia)]
                                                     xalign 0.5
                                             else:
                                                 text "[msg]":

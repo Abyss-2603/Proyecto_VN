@@ -2,9 +2,8 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 3260: keyword argument 'xalign' appears more than once in a imagebutton statement.
-    xalign 0.5
-          ^
+File "game/screens.rpy", line 3193: Indentation mismatch.
+    else:
 
-Ren'Py Version: Ren'Py 8.5.0.25111603
-Mon May 18 01:01:52 2026
+Ren'Py Version: Ren'Py 8.5.2.26010301
+Mon May 18 15:01:45 2026
